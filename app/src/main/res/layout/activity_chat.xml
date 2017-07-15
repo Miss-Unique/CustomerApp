@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/mainCommentLayout"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey_300"
+        android:layout_above="@+id/sendComment"
+        android:nestedScrollingEnabled="true"
+        android:padding="6dp"
+        android:windowSoftInputMode="adjustResize"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:id="@+id/sendComment"
+        android:background="@drawable/edittext_bg_whitebg"
+        android:layout_alignParentBottom="true"
+        android:windowSoftInputMode="adjustResize">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Type Your Comment"
+                android:padding="10dp"
+                android:id="@+id/typeComment"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/edittext_bg_greystroke"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/ic_attach_photo"
+                android:id="@+id/photoattach"
+                />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/docattach"
+                android:background="@mipmap/ic_attach_doc"
+                />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sendButton"
+            android:elevation="@dimen/activity_horizontal_margin"
+            android:layout_gravity="center_horizontal"
+            android:background="@mipmap/ic_send"
+            android:layout_marginLeft="5dp"/>
+
+    </LinearLayout>
+</RelativeLayout>
+        </RelativeLayout>
+
