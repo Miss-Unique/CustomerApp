@@ -1,6 +1,7 @@
 package com.example.soumyaagarwal.customerapp.CustomerLogin;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.soumyaagarwal.customerapp.CustomerApp;
 import com.example.soumyaagarwal.customerapp.Model.Customer;
 import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.tablayout.Tabs;
@@ -31,6 +33,8 @@ public class CustomerLogin extends AppCompatActivity {
     DatabaseReference database;
     CustomerSession session;
     TextInputLayout input_email, input_password;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,13 @@ public class CustomerLogin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_login);
         session = new CustomerSession(getApplicationContext());
+        sharedPreferences = getSharedPreferences("myFCMToken",MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        if(FirebaseInstanceId.getInstance().getToken()!=null)
+        {
+            editor.putString("myFCMToken",FirebaseInstanceId.getInstance().getToken());
+            editor.commit();
+        }
         if(session.isolduser()==true)
         {
             goToTabLayout();
@@ -97,11 +108,23 @@ public class CustomerLogin extends AppCompatActivity {
                     } else
                     {
                         session.create_oldusersession(Username);
-                        Intent intent = new Intent(CustomerLogin.this, Tabs.class);
-                        intent.putExtra("page",0);
-                        startActivity(intent);
-                        finish();
+                        CustomerApp.setOnlineStatus(Username);
+
+                        String myFCMToken;
+                        if(FirebaseInstanceId.getInstance().getToken()==null)
+                            myFCMToken =sharedPreferences.getString("myFCMToken","");
+
+                        else
+                            myFCMToken = FirebaseInstanceId.getInstance().getToken();
+
+                        if(!myFCMToken.equals("")) {
+                            DBREF.child("Fcmtokens").child(Username).child("token").setValue(myFCMToken);
+                            goToTabLayout();
+                        }
+                        else
+                            Toast.makeText(CustomerLogin.this,"You will need to clear the app data or reinstall the app to make it work properly",Toast.LENGTH_LONG).show();
                     }
+
                 }
                 else
                 {

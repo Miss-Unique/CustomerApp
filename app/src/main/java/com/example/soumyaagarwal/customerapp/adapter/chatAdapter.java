@@ -26,7 +26,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 
 public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> {
     ArrayList<ChatMessage> list = new ArrayList<>();
@@ -38,9 +43,10 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
     private SparseBooleanArray animationItemsIndex;
     private boolean reverseAllAnimations = false;
     private ChatAdapterListener listener;
+    private HashMap<DatabaseReference,ValueEventListener> commentStatusHashMap,progressListenerHashmap;
 
 
-    public chatAdapter(ArrayList<ChatMessage> list, Context context, String dbTableKey, ChatAdapterListener listener) {
+    public chatAdapter(ArrayList<ChatMessage> list, Context context, String dbTableKey,ChatAdapterListener listener) {
         this.list = list;
         this.context = context;
         session = new CustomerSession(context);
@@ -48,6 +54,8 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
         selectedItems = new SparseBooleanArray();
         animationItemsIndex = new SparseBooleanArray();
         this.listener =  listener;
+        commentStatusHashMap = new HashMap<>();
+        progressListenerHashmap = new HashMap<>();
 
     }
 
@@ -78,6 +86,7 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
             holder.status.setVisibility(View.GONE);
         }
         applyClickEvents(holder,position);
+        //applyProgressBar(holder,comment);
         String type = comment.getType();
         switch (type) {
             case "text":
@@ -187,8 +196,8 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
     }
 
     private void applyStatus(ChatMessage comment, final MyViewHolder holder) {
-        holder.dbCommentStatus = FirebaseDatabase.getInstance().getReference().child("MeChat").child("Chats").child(dbTablekey).child("ChatMessages").child(comment.getId()).child("status").getRef();
-        holder.dbCommentStatusListener = holder.dbCommentStatus.addValueEventListener(new ValueEventListener() {
+        final DatabaseReference dbCommentStatus = DBREF.child("Chats").child(dbTablekey).child("ChatMessages").child(comment.getId()).child("status").getRef();
+        ValueEventListener dbCommentStatusListener = dbCommentStatus.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -205,10 +214,11 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
                             break;
                         case "3":
                             holder.status.setImageResource(R.mipmap.ic_read);                   //read
-                            holder.dbCommentStatus.removeEventListener(this);
+                            dbCommentStatus.removeEventListener(this);
                             break;
                     }
                 }
+
             }
 
             @Override
@@ -216,11 +226,13 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
 
             }
         });
+        if(dbCommentStatusListener!=null)
+            commentStatusHashMap.put(dbCommentStatus,dbCommentStatusListener);
     }
 
     private void applyprogressbar(ChatMessage comment, final MyViewHolder holder) {
-        holder.dbUploadProgress = FirebaseDatabase.getInstance().getReference().child("MeChat").child("Chats").child(dbTablekey).child("ChatMessages").child(comment.getId()).child("imgurl").getRef();
-        holder.dbUploadProgressListener = holder.dbUploadProgress.addValueEventListener(new ValueEventListener() {
+        final DatabaseReference dbUploadProgress = DBREF.child("Chats").child(dbTablekey).child("ChatMessages").child(comment.getId()).child("imgurl").getRef();
+        ValueEventListener dbUploadProgressListener = dbUploadProgress.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -231,7 +243,8 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
                     }
                     else
                     {
-                        holder.progressBar.setVisibility(View.INVISIBLE);
+                        holder.progressBar.setVisibility(View.GONE);
+                        dbUploadProgress.removeEventListener(this);
                     }
                 }
             }
@@ -241,6 +254,11 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
 
             }
         });
+        if(dbUploadProgressListener!=null)
+        {
+            progressListenerHashmap.put(dbUploadProgress,dbUploadProgressListener);
+        }
+
     }
     public void showProgressBar(final MyViewHolder holder)
     {
@@ -261,8 +279,7 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
         TextView meSender_Timestampdate, meSender_Timestamptime, commentString;
         LinearLayout parent_layout,messageContainer;
         ImageView photo, status;
-        DatabaseReference dbCommentStatus, dbUploadProgress;
-        ValueEventListener dbCommentStatusListener, dbUploadProgressListener;
+
         ProgressBar progressBar;
         ImageButton download_chatimage;
 
@@ -332,15 +349,15 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
         void onMessageRowClicked(int position);
 
         void onRowLongClicked(int position);
-        void download_chatimageClicked(int position, MyViewHolder holder);
+        void download_chatimageClicked(int position,MyViewHolder holder);
 
     }
     private void applyRowAnimation(MyViewHolder holder, int position) {
-            if ((reverseAllAnimations && animationItemsIndex.get(position, false)) || currentSelectedIndex == position) {
-                //FlipAnimator.flipView(mContext, holder.iconBack, holder.iconFront, false);
+        if ((reverseAllAnimations && animationItemsIndex.get(position, false)) || currentSelectedIndex == position) {
+            //FlipAnimator.flipView(mContext, holder.iconBack, holder.iconFront, false);
 
-                resetCurrentIndex();
-            }
+            resetCurrentIndex();
+        }
 
     }
     private void applyClickEvents(final MyViewHolder holder, final int position) {
@@ -367,6 +384,20 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
                 listener.download_chatimageClicked(position,holder);
             }
         });
+    }
+
+    public  void removeListeners()
+    {
+        Iterator<HashMap.Entry<DatabaseReference,ValueEventListener>> iterator2 = commentStatusHashMap.entrySet().iterator();
+        while (iterator2.hasNext()) {
+            HashMap.Entry<DatabaseReference,ValueEventListener> entry = (HashMap.Entry<DatabaseReference,ValueEventListener>) iterator2.next();
+            if(entry.getValue()!=null) entry.getKey().removeEventListener(entry.getValue());
+        }
+        Iterator<HashMap.Entry<DatabaseReference,ValueEventListener>> iterator = progressListenerHashmap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            HashMap.Entry<DatabaseReference,ValueEventListener> entry = (HashMap.Entry<DatabaseReference,ValueEventListener>) iterator.next();
+            if(entry.getValue()!=null) entry.getKey().removeEventListener(entry.getValue());
+        }
     }
 }
 

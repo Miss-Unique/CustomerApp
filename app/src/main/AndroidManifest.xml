@@ -28,7 +28,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".tablayout.Tabs" />
-
+        <service android:name=".services.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".services.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
         <receiver android:name=".CheckInternetConnectivity.NetWatcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

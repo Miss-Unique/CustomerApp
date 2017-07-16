@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
 import com.example.soumyaagarwal.customerapp.Model.ChatMessage;
 import com.example.soumyaagarwal.customerapp.Model.Customer;
+import com.example.soumyaagarwal.customerapp.Model.NameAndStatus;
 import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.adapter.ViewImageAdapter;
 import com.example.soumyaagarwal.customerapp.adapter.chatAdapter;
@@ -71,7 +72,8 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
     private ImageButton sendButton;
     Intent intent;
     private RecyclerView recyclerView;
-    DatabaseReference dbChat;
+    DatabaseReference dbChat,dbOnlineStatus;
+    ValueEventListener dbOnlineStatusVle;
     private String otheruserkey, mykey;
     LinearLayoutManager linearLayoutManager;
     private MarshmallowPermissions marshmallowPermissions;
@@ -108,6 +110,31 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
         intent = getIntent();
         dbTableKey = intent.getStringExtra("dbTableKey");
         otheruserkey = intent.getStringExtra("otheruserkey");
+
+        dbOnlineStatus = DBREF.child("Users").child("Usersessions").child(otheruserkey).getRef();
+        dbOnlineStatusVle = dbOnlineStatus.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                {
+                    NameAndStatus nameAndStatus = dataSnapshot.getValue(NameAndStatus.class);
+                    getSupportActionBar().setTitle(nameAndStatus.getName());
+                    if(nameAndStatus.getOnline())
+                    {
+                        getSupportActionBar().setSubtitle("Online");
+                    }
+                    else
+                    {
+                        getSupportActionBar().setSubtitle("Offline");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         System.out.println("recevier token chat act oncreate"+getRecivertoken(otheruserkey));
 
@@ -361,6 +388,9 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
         super.onDestroy();
         if(dbChatlistener!=null)
             dbChat.removeEventListener(dbChatlistener);
+        if(dbOnlineStatusVle!=null)
+            dbOnlineStatus.removeEventListener(dbOnlineStatusVle);
+        mAdapter.removeListeners();
     }
 
     ////maintain all the clicks on buttons on this page
