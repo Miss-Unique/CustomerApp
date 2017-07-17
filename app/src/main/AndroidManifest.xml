@@ -61,7 +61,9 @@
 
         <service android:name=".services.UploadFileService" />
 
-        <activity android:name=".chat.ChatActivity"></activity>
+        <activity android:name=".chat.ChatActivity">
+
+        </activity>
 
         <activity
             android:name="com.zfdang.multiple_images_selector.ImagesSelectorActivity"

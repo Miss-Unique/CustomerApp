@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/mainCommentLayout"
     android:focusable="true"
+    android:fitsSystemWindows="true"
     android:focusableInTouchMode="true">
 
     <android.support.v7.widget.RecyclerView
@@ -15,7 +16,7 @@
         android:layout_above="@+id/sendComment"
         android:nestedScrollingEnabled="true"
         android:padding="6dp"
-        android:windowSoftInputMode="adjustResize"/>
+        />
 
     <RelativeLayout
         android:layout_width="match_parent"

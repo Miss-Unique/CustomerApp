@@ -3,6 +3,14 @@ package com.example.soumyaagarwal.customerapp.CustomerLogin;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.soumyaagarwal.customerapp.Model.NameAndStatus;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
+
 /**
  * Created by SoumyaAgarwal on 7/11/2017.
  */
@@ -23,12 +31,31 @@ public class CustomerSession {
         editor = pref.edit();
     }
 
-    public void create_oldusersession(String username_get)
+    public void create_oldusersession(final String username_get)
     {
-        editor.putBoolean(is_loggedin,true);
-        editor.putString(username,username_get);
-        editor.putString("designation","coordinator");
-        editor.commit();
+
+        DatabaseReference dbOnlineStatus = DBREF.child("Users").child("Usersessions").child(username_get).getRef();
+        dbOnlineStatus.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                {
+                    NameAndStatus nameAndStatus = dataSnapshot.getValue(NameAndStatus.class);
+                    editor.putString(is_loggedin,"true");
+                    editor.putString(username,username_get);
+                    editor.putString("name",nameAndStatus.getName());
+                    editor.commit();
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     public Boolean isolduser()
