@@ -18,4 +18,12 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="chat" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBarOverlay">false</item>
+    </style>
+
 </resources>
