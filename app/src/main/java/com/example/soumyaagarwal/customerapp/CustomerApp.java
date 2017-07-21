@@ -2,6 +2,7 @@ package com.example.soumyaagarwal.customerapp;
 
 import com.example.soumyaagarwal.customerapp.CheckInternetConnectivity.NetWatcher;
 import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
+import com.example.soumyaagarwal.customerapp.Model.Notif;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
@@ -9,6 +10,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Created by SoumyaAgarwal on 7/11/2017.
@@ -18,6 +22,8 @@ public class CustomerApp extends android.support.multidex.MultiDexApplication {
     private static CustomerApp mInstance;
     public static DatabaseReference DBREF;
     private CustomerSession session;
+    public static SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy hh:mm aa");
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -74,4 +80,25 @@ public class CustomerApp extends android.support.multidex.MultiDexApplication {
         }
 
     }
+    public static void sendNotif(final String senderId, final String receiverId, final String type, final String content, final String taskId)
+    {
+        long idLong = Calendar.getInstance().getTimeInMillis();
+        final String id=String.valueOf(idLong);
+        final String timestamp = formatter.format(Calendar.getInstance().getTime());
+        DBREF.child("Fcmtokens").child(receiverId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String receiverFCMToken=dataSnapshot.getValue(String.class);
+                Notif newNotif = new Notif(id,timestamp,type,senderId,receiverId,receiverFCMToken,content,taskId);
+                DBREF.child("Notification").child(receiverId).setValue(newNotif);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 }
