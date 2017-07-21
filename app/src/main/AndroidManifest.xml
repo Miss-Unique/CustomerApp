@@ -69,6 +69,7 @@
             android:name="com.zfdang.multiple_images_selector.ImagesSelectorActivity"
             android:configChanges="orientation|screenSize" />
 
+        <activity android:name=".notification.NotificationActivity"></activity>
     </application>
 
 </manifest>
