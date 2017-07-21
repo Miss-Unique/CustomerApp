@@ -31,30 +31,15 @@ public class CustomerSession {
         editor = pref.edit();
     }
 
-    public void create_oldusersession(final String username_get)
+    public void create_oldusersession(final String username_get,String name)
     {
 
-        DatabaseReference dbOnlineStatus = DBREF.child("Users").child("Usersessions").child(username_get).getRef();
-        dbOnlineStatus.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())
-                {
-                    NameAndStatus nameAndStatus = dataSnapshot.getValue(NameAndStatus.class);
+
                     editor.putString(is_loggedin,"true");
                     editor.putString(username,username_get);
-                    editor.putString("name",nameAndStatus.getName());
+                    editor.putString("name",name);
                     editor.commit();
 
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
     }
 
