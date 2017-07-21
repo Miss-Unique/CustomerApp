@@ -53,9 +53,11 @@ public class NotificationActivity extends AppCompatActivity implements notificat
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s)
             {
-                notif = dataSnapshot.getValue(Notif.class);
-                list.add(notif);
-                adapter.notifyDataSetChanged();
+                if (dataSnapshot.exists()) {
+                    notif = dataSnapshot.getValue(Notif.class);
+                    list.add(notif);
+                    adapter.notifyDataSetChanged();
+                }
             }
 
             @Override

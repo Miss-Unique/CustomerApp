@@ -215,6 +215,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "916235673487-pp7olbvafakbjc4c5t35t0ga393cjr7g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pulkit.flex",
+            "certificate_hash": "a03fa1cee1cf2412ce91c65c212248b815c6a1bf"
+          }
+        },
+        {
+          "client_id": "916235673487-9dsu653e7van0csns6guirbjiolpqvbs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pulkit.flex",
+            "certificate_hash": "53f07998ce5059cef18d91184819c3eeecf8844e"
+          }
+        },
+        {
           "client_id": "916235673487-2g2uqg9si1cbetjcf21eme9dk062q1kf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -258,6 +274,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "916235673487-8jb706kr0ptl72rsl8hk4fp5g759ndh4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pulkit.employeeapp",
+            "certificate_hash": "a03fa1cee1cf2412ce91c65c212248b815c6a1bf"
+          }
+        },
         {
           "client_id": "916235673487-q6uhcgg6lg5ajr38vi6of6maui6gcuu1.apps.googleusercontent.com",
           "client_type": 1,
@@ -310,6 +334,22 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "916235673487-r531ptvlb8ndfiubu6q0p5vtagio6l2m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.soumyaagarwal.customerapp",
+            "certificate_hash": "31cad116df2f160369b3baa6e48beb217a575095"
+          }
+        },
+        {
+          "client_id": "916235673487-q76njfkejitls7g877gs9sods0jpsv54.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.soumyaagarwal.customerapp",
+            "certificate_hash": "a03fa1cee1cf2412ce91c65c212248b815c6a1bf"
+          }
+        },
         {
           "client_id": "916235673487-vmstf14tf0pf0rlk1f48qegf1tanj59s.apps.googleusercontent.com",
           "client_type": 1,
