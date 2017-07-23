@@ -33,14 +33,10 @@ public class CustomerSession {
 
     public void create_oldusersession(final String username_get,String name)
     {
-
-
-                    editor.putString(is_loggedin,"true");
+                    editor.putBoolean(is_loggedin,true);
                     editor.putString(username,username_get);
                     editor.putString("name",name);
                     editor.commit();
-
-
     }
 
     public Boolean isolduser()
