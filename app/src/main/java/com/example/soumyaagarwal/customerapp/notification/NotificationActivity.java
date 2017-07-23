@@ -1,5 +1,6 @@
 package com.example.soumyaagarwal.customerapp.notification;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.example.soumyaagarwal.customerapp.Model.Notif;
 import com.example.soumyaagarwal.customerapp.R;
+import com.example.soumyaagarwal.customerapp.Task.TaskDetail;
 import com.example.soumyaagarwal.customerapp.adapter.notification_adapter;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -83,7 +85,11 @@ public class NotificationActivity extends AppCompatActivity implements notificat
     }
 
     @Override
-    public void onNotificationRowClicked(int position) {
-
+    public void onNotificationRowClicked(int position)
+    {
+        Intent intent = new Intent(getApplicationContext(),TaskDetail.class);
+        Notif notif = list.get(position);
+        intent.putExtra("task_id", notif.getTaskId());
+        startActivity(intent);
     }
 }
