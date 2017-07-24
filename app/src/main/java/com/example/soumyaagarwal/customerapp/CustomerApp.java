@@ -55,8 +55,8 @@ public class CustomerApp extends android.support.multidex.MultiDexApplication {
             final FirebaseDatabase database = FirebaseDatabase.getInstance();
             final DatabaseReference myConnectionsRef = DBREF.child("Users").child("Usersessions").child(userkey).child("online").getRef();
 
-// stores the timestamp of my last disconnect (the last time I was seen online)
-//            final DatabaseReference lastOnlineRef = database.getReference().child("Users").child("Usersessions").child(userkey).child("lastseen").getRef();
+            // stores the timestamp of my last disconnect (the last time I was seen online)
+            // final DatabaseReference lastOnlineRef = database.getReference().child("Users").child("Usersessions").child(userkey).child("lastseen").getRef();
 
             final DatabaseReference connectedRef = database.getReference(".info/connected");
             connectedRef.addValueEventListener(new ValueEventListener() {
@@ -68,7 +68,7 @@ public class CustomerApp extends android.support.multidex.MultiDexApplication {
                         myConnectionsRef.onDisconnect().setValue(Boolean.FALSE);
 
                         // when I disconnect, update the last time I was seen online
-//                        lastOnlineRef.onDisconnect().setValue(Calendar.getInstance().getTime()+"");
+                        //lastOnlineRef.onDisconnect().setValue(Calendar.getInstance().getTime()+"");
                     }
                 }
 
