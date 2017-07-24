@@ -107,7 +107,7 @@ public class CustomerLogin extends AppCompatActivity {
                         Toast.makeText(getBaseContext(), "Wrong Password", Toast.LENGTH_SHORT).show();
                     } else
                     {
-                        session.create_oldusersession(Username);
+                        session.create_oldusersession(Username,customer.getName());
                         CustomerApp.setOnlineStatus(Username);
 
                         String myFCMToken;

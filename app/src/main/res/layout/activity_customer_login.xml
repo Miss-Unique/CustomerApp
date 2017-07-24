@@ -11,8 +11,7 @@
         android:layout_height="fill_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:background="#3d5afe">
+        android:padding="@dimen/activity_horizontal_margin">
 
 
         <ImageView
@@ -30,7 +29,7 @@
             android:padding="4dp"
             android:text="Login"
             android:textAlignment="center"
-            android:textColor="@color/light"
+            android:textColor="@color/colorPrimary"
             android:textSize="50dp" />
 
         <android.support.design.widget.TextInputLayout

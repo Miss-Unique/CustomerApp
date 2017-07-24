@@ -81,11 +81,11 @@ public class ChatHome extends Fragment implements chatListAdapter.chatListAdapte
 
         CustomerSession coordinatorSession = new CustomerSession(getActivity());
         mykey = coordinatorSession.getUsername();
-        dbChatList = DBREF.child("Users").child("Userchats").child(mykey).getRef();
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        dbChatList = DBREF.child("Users").child("Userchats").child(mykey).getRef();
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         mAdapter = new chatListAdapter(list,getActivity(),this);
         recyclerView.setAdapter(mAdapter);

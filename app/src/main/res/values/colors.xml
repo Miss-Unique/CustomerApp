@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#d84315</color>
+    <color name="colorPrimaryDark">#bf360c</color>
+    <color name="colorAccent">#ffc339</color>
     <color name="grey_100">#F5F5F5</color>
     <color name="grey_300">#E0E0E0</color>
+    <color name="grey_500">#c2c1c1</color>
     <color name="from">#000000</color>
     <color name="subject">#111111</color>
     <color name="timestamp">#4285f4</color>
@@ -26,6 +27,5 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="yellow">#ffd54f</color>
-
 
 </resources>
