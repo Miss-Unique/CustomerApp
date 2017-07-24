@@ -85,12 +85,12 @@ public class CustomerApp extends android.support.multidex.MultiDexApplication {
         long idLong = Calendar.getInstance().getTimeInMillis();
         final String id=String.valueOf(idLong);
         final String timestamp = formatter.format(Calendar.getInstance().getTime());
-        DBREF.child("Fcmtokens").child(receiverId).addListenerForSingleValueEvent(new ValueEventListener() {
+        DBREF.child("Fcmtokens").child(receiverId).child("token").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String receiverFCMToken=dataSnapshot.getValue(String.class);
                 Notif newNotif = new Notif(id,timestamp,type,senderId,receiverId,receiverFCMToken,content,taskId);
-                DBREF.child("Notification").child(receiverId).setValue(newNotif);
+                DBREF.child("Notification").child(receiverId).child(id).setValue(newNotif);
 
             }
 
