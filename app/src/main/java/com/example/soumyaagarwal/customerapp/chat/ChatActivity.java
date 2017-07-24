@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.widget.Space;
@@ -26,6 +27,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -110,18 +112,6 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-/*
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
- //       getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-//        toolbar.setTitleTextColor(getResources().getColor(R.color.transparent));
-*/
-
- //       getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
         marshmallowPermissions = new MarshmallowPermissions(this);
         compressMe = new CompressMe(this);
         actionModeCallback = new ActionModeCallback();
@@ -172,9 +162,6 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
         photoattach = (ImageButton) findViewById(R.id.photoattach);
         docattach = (ImageButton) findViewById(R.id.docattach);
 
-        space = (Space) findViewById(R.id.space);
-        scroll = (ScrollView) findViewById(R.id.scroll);
-
         photoattach.setOnClickListener(this);
         docattach.setOnClickListener(this);
 
@@ -187,39 +174,17 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
         typeComment.setFocusableInTouchMode(true);
         typeComment.setFocusable(true);
 
-        loadData();
-
-        space.setVisibility(View.GONE);
-
-
-        typeComment.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        typeComment.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus && space.getVisibility() == View.GONE){
-
-                    int x = space.getVisibility();
-
-
-
-/*
-                    new Handler().postDelayed(new Runnable() {
-                        public void run() {
-                            scroll.fullScroll(ScrollView.FOCUS_DOWN);
-                        }
-                    }, 100);
-           */
-                    scroll.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        scroll.fullScroll(ScrollView.FOCUS_DOWN);
-                    }
-                });
-
-                    space.setVisibility(View.VISIBLE);
-                }
-
+            public void onClick(View v) {
+                if(chatList.size()>0)
+                    recyclerView.scrollToPosition(chatList.size()-1);
             }
         });
+
+        loadData();
+
+
 
     }
 
@@ -380,13 +345,8 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
                     chatList.add(comment);
                     mAdapter.notifyDataSetChanged();
 
-                    scroll.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            scroll.fullScroll(ScrollView.FOCUS_DOWN);
-                        }
-                    });
-
+                    if(chatList.size()>0)
+                        recyclerView.scrollToPosition(chatList.size()-1);
 
                 }
             }
@@ -421,16 +381,8 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
+        super.onBackPressed();
 
-        space.setVisibility(View.GONE);
-
-        scroll.post(new Runnable() {
-            @Override
-            public void run() {
-                scroll.fullScroll(ScrollView.FOCUS_DOWN);
-            }
-        });
 
     }
 
@@ -481,40 +433,7 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
 
                 }
 
-          //      typeComment.requestFocus();
 
-
-
-                scroll.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        space.setVisibility(View.GONE);
-                        scroll.fullScroll(ScrollView.FOCUS_DOWN);
-                        space.setVisibility(View.VISIBLE);
-                    }
-                });
-
-                /*
-                typeComment.post(new Runnable() {
-                    public void run() {
-                        typeComment.requestFocusFromTouch();
-                        InputMethodManager lManager = (InputMethodManager)getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        lManager.showSoftInput(typeComment, 0);
-                    }
-                });
-*/
-
-                typeComment.requestFocus();
-                typeComment.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        inputMethodManager.showSoftInput(typeComment, InputMethodManager.SHOW_IMPLICIT);
-                    }
-                }, 150);
-                /*
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);*/
                 break;
 
             case R.id.photoattach:
