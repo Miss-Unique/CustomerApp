@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
 import com.example.soumyaagarwal.customerapp.Model.ChatListModel;
 import com.example.soumyaagarwal.customerapp.Model.ChatMessage;
 import com.example.soumyaagarwal.customerapp.R;
@@ -26,14 +27,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
-
 public class chatListAdapter extends RecyclerView.Adapter<chatListAdapter.MyViewHolder> {
     ArrayList<ChatListModel> list = new ArrayList<>();
     private Context context;
     private chatListAdapterListener listener;
     private HashMap<DatabaseReference,ChildEventListener> hashMapCHE;
     private HashMap<DatabaseReference,ValueEventListener> hashMapVLE;
-    SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+    private SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+    private CustomerSession customerSession;
+    private String mykey;
 
 
     public chatListAdapter(ArrayList<ChatListModel> list, Context context, chatListAdapterListener listener) {
@@ -42,6 +44,8 @@ public class chatListAdapter extends RecyclerView.Adapter<chatListAdapter.MyView
         this.listener = listener;
         hashMapCHE = new HashMap<>();
         hashMapVLE = new HashMap<>();
+        customerSession = new CustomerSession(context);
+        mykey = customerSession.getUsername();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -107,11 +111,11 @@ public class chatListAdapter extends RecyclerView.Adapter<chatListAdapter.MyView
 
     private void applyProfilePicture(MyViewHolder holder, ChatListModel message) {
 
-            holder.imgProfile.setImageResource(R.drawable.bg_circle);
-            holder.imgProfile.setColorFilter(message.getColor());
-            char icontext = message.getName().toUpperCase().charAt(0);
-            holder.icon_text.setText(icontext + "");
-            holder.icon_text.setVisibility(View.VISIBLE);
+        holder.imgProfile.setImageResource(R.drawable.bg_circle);
+        holder.imgProfile.setColorFilter(message.getColor());
+        char icontext = message.getName().toUpperCase().charAt(0);
+        holder.icon_text.setText(icontext + "");
+        holder.icon_text.setVisibility(View.VISIBLE);
 
     }
 
@@ -139,7 +143,7 @@ public class chatListAdapter extends RecyclerView.Adapter<chatListAdapter.MyView
                     String timestamp = formatter.format(Calendar.getInstance().getTime());
                     String senderTimestamp = chatMessage.getSendertimestamp().substring(0,11);
                     if(timestamp.equals(senderTimestamp))
-                       senderTimestamp = chatMessage.getSendertimestamp().substring(12).trim();
+                        senderTimestamp = chatMessage.getSendertimestamp().substring(12).trim();
 
                     holder.timestamp.setText(senderTimestamp);
                 }
@@ -199,19 +203,17 @@ public class chatListAdapter extends RecyclerView.Adapter<chatListAdapter.MyView
 
 
     private void findunreadmsgs(final MyViewHolder holder, final ChatListModel topic) {
-        String a="nil";
-        DatabaseReference dbTopicLastComment = DBREF.child("Chats").child(topic.getDbTableKey()).child("ChatMessages").getRef();
-        System.out.println(topic.getDbTableKey()+" unreadmsgs called " + dbTopicLastComment);
+        DatabaseReference dbTopicLastComment = DBREF.child("Chats").child(topic.getDbTableKey()).child("ChatMessages").orderByChild("status").equalTo("2").getRef();
 
-        ValueEventListener valueEventListener = dbTopicLastComment.orderByChild("status").equalTo("2").addValueEventListener(new ValueEventListener() {
+        ValueEventListener valueEventListener = dbTopicLastComment.orderByChild("receiverUId").equalTo(mykey).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
 
                     holder.relunread.setVisibility(View.VISIBLE);
 
-                System.out.println(dataSnapshot.getChildrenCount()+" unreadmsgs " + dataSnapshot.getValue());
-                holder.tvunread.setText(String.valueOf(dataSnapshot.getChildrenCount()));
+                    System.out.println(dataSnapshot.getChildrenCount()+" unreadmsgs " + dataSnapshot.getValue());
+                    holder.tvunread.setText(String.valueOf(dataSnapshot.getChildrenCount()));
                 }
                 else
                 {
