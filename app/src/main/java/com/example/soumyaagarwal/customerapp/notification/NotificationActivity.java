@@ -8,6 +8,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
 import com.example.soumyaagarwal.customerapp.Model.Notif;
 import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.Task.TaskDetail;
@@ -29,13 +30,15 @@ public class NotificationActivity extends AppCompatActivity implements notificat
     List<Notif> list = new ArrayList<>();
     Notif notif  = new Notif();
     String Username;
+    CustomerSession session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
 
-        Username = getIntent().getStringExtra("Username");
+        session = new CustomerSession(getApplicationContext());
+        Username = session.getUsername();
 
         recview = (RecyclerView) findViewById(R.id.notification_list);
         recview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

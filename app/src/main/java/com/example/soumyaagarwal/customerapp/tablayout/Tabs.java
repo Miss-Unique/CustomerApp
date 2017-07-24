@@ -73,7 +73,6 @@ public class Tabs extends AppCompatActivity implements TabLayout.OnTabSelectedLi
         switch (item.getItemId()){
             case R.id.notif:
                 Intent intent = new Intent(getApplicationContext(), NotificationActivity.class);
-                intent.putExtra("Username",session.getUsername());
                 startActivity(intent);
                 break;
         }
