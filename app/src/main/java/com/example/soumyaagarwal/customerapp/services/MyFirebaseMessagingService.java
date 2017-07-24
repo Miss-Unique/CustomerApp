@@ -92,7 +92,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             }
         });
-
     }
 
 
@@ -154,7 +153,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             });
         }
     }
-
 
     private boolean isAppIsInForeground(Context context) {
         boolean isInForeground = false;
