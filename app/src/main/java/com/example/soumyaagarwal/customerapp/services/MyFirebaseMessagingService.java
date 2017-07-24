@@ -15,6 +15,7 @@ import android.util.Log;
 import com.example.soumyaagarwal.customerapp.Model.NameAndStatus;
 import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.chat.ChatActivity;
+import com.example.soumyaagarwal.customerapp.notification.NotificationActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,11 +28,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
-
-
-/**
- * Created by ghanendra on 20/06/2017.
- */
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -54,14 +50,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String body = remoteMessage.getData().get("body");
             String senderuid = remoteMessage.getData().get("senderuid");
             String taskId = remoteMessage.getData().get("taskId");
-            String id = remoteMessage.getData().get("id");
+            String id = remoteMessage.getData().get("msgid");
             if (body != null && taskId != null && senderuid != null)
                 sendGeneralNotification(body, senderuid, taskId, id);
         }
     }
 
     private void sendGeneralNotification(final String body, String senderuid, String taskId, final String id) {
-        Intent intent = new Intent(this, ChatActivity.class); //TODO set the Intent to notification activity
+        Intent intent = new Intent(this, NotificationActivity.class); //TODO set the Intent to notification activity
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);

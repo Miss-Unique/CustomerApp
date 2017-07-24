@@ -229,7 +229,6 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
                         adapter = new ViewImageAdapter(photoPaths, this);
                         rv.setAdapter(adapter);
 
-
                         final String[] item = {photoPaths.get(0)};
                         ImageViewlarge.setImageURI(Uri.parse(item[0]));
 
@@ -312,7 +311,6 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
 
         uploadFileService.uploadFile(filePath, type, mykey, otheruserkey, receiverToken, dbTableKey, dbChat, timestamp, id);
     }
-
 
     public void loadData() {
 
@@ -599,8 +597,6 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
                     }
                     break;
             }
-
-
         }
     }
 
@@ -633,6 +629,7 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
                         Log.e("firebase ", ";local tem file created  created " + localFile.toString());
                         dbChat = DBREF.child("Chats").child(dbTableKey).child("ChatMessages").getRef();
                         dbChat.child(comment.getId()).child("othersenderlocal_storage").setValue(localuri);
+                        comment.setOthersenderlocal_storage(localuri);
                         mAdapter.dismissProgressBar(holder);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -657,6 +654,7 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         dbChat = DBREF.child("Chats").child(dbTableKey).child("ChatMessages").getRef();
                         dbChat.child(comment.getId()).child("othersenderlocal_storage").setValue(localdocuri);
+                          comment.setOthersenderlocal_storage(localdocuri);
                         mAdapter.dismissProgressBar(holder);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
