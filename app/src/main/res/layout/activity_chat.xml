@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainCommentLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,14 +8,38 @@
     android:focusable="true"
     android:focusableInTouchMode="true">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/my_recycler_view"
+    <ScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey_300"
-        android:nestedScrollingEnabled="false"
         android:layout_above="@+id/sendComment"
-        android:padding="6dp" />
+        android:background="@color/grey_300"
+        android:fillViewport="true">
+
+        <android.support.percent.PercentRelativeLayout
+            android:id="@+id/pl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:scrollbars="none">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/my_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/grey_300"
+                android:padding="6dp"
+                android:nestedScrollingEnabled="false"/>
+
+            <android.support.v4.widget.Space
+                android:id="@+id/space"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@+id/my_recycler_view"
+                android:background="#FFFFFF"
+                app:layout_heightPercent="70%" />
+        </android.support.percent.PercentRelativeLayout>
+    </ScrollView>
 
     <RelativeLayout
         android:id="@+id/sendComment"
@@ -40,7 +64,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/edittext_bg_greystroke"
                 android:hint="Type Your Comment"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:descendantFocusability="beforeDescendants"/>
 
             <ImageButton
                 android:id="@+id/photoattach"

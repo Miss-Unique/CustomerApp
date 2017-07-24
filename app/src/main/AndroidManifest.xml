@@ -8,10 +8,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.camera" />
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".CustomerApp"
@@ -28,16 +28,40 @@
             </intent-filter>
         </activity>
         <activity android:name=".tablayout.Tabs" />
+
+        <activity android:name=".Task.TaskDetail" />
+
+        <activity android:name=".Task.CreateTask" />
+
+        <activity android:name=".chat.ChatActivity"/>
+
+        <activity
+            android:name="com.zfdang.multiple_images_selector.ImagesSelectorActivity"
+            android:configChanges="orientation|screenSize" />
+
+
         <service android:name=".services.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <service android:name=".services.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <service
+            android:name=".services.DownloadFileService"
+            android:exported="false" />
+
+        <service
+            android:name=".services.UploadTaskPhotosServices"
+            android:exported="false" />
+
+        <service android:name=".services.UploadFileService" />
+
         <receiver android:name=".CheckInternetConnectivity.NetWatcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,27 +72,6 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".Task.TaskDetail" />
-        <activity android:name=".Task.CreateTask" />
-
-        <service
-            android:name=".services.DownloadFileService"
-            android:exported="false"></service>
-
-        <service
-            android:name=".services.UploadTaskPhotosServices"
-            android:exported="false"></service>
-
-        <service android:name=".services.UploadFileService" />
-
-        <activity android:name=".chat.ChatActivity">
-
-        </activity>
-
-        <activity
-            android:name="com.zfdang.multiple_images_selector.ImagesSelectorActivity"
-            android:configChanges="orientation|screenSize" />
 
     </application>
-
 </manifest>

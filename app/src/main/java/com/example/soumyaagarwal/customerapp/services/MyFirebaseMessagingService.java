@@ -44,7 +44,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String chatref = remoteMessage.getData().get("chatref");
         String msgid = remoteMessage.getData().get("msgid");
         if (msg != null && chatref != null && msgid != null)
-            sendNotification(msg,chatref, msgid,senderuid);
+            sendNotification(msg, chatref, msgid, senderuid);
 
     }
 
@@ -53,8 +53,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         final DatabaseReference dbr = DBREF.child("Chats").child(chatref).child("ChatMessages").child(msgid).child("status");
         Intent intent = new Intent(this, ChatActivity.class);
 
-        intent.putExtra("otheruserkey",senderuid);
-        intent.putExtra("dbTableKey",chatref);
+        intent.putExtra("otheruserkey", senderuid);
+        intent.putExtra("dbTableKey", chatref);
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -78,34 +78,34 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             }
         });
-            DatabaseReference dbOnlineStatus = DBREF.child("Users").child("Usersessions").child(senderuid).getRef();
-            dbOnlineStatus.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        NameAndStatus nameAndStatus = dataSnapshot.getValue(NameAndStatus.class);
-                        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(MyFirebaseMessagingService.this)
-                                .setSmallIcon(R.mipmap.ic_chat_white)
-                                .setContentTitle("New Message from " + nameAndStatus.getName())
-                                .setContentText(msg)
-                                .setAutoCancel(true)
-                                .setSound(defaultSoundUri)
-                                .setContentIntent(pendingIntent);
-                        NotificationManager notificationManager =
-                                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                        int id = Integer.parseInt(msgid.substring(10));
-                        notificationManager.notify(id/* ID of notification */, notificationBuilder.build());
-
-                    }
-                    }
-
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+        DatabaseReference dbOnlineStatus = DBREF.child("Users").child("Usersessions").child(senderuid).getRef();
+        dbOnlineStatus.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    NameAndStatus nameAndStatus = dataSnapshot.getValue(NameAndStatus.class);
+                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(MyFirebaseMessagingService.this)
+                            .setSmallIcon(R.mipmap.ic_chat_white)
+                            .setContentTitle("New Message from " + nameAndStatus.getName())
+                            .setContentText(msg)
+                            .setAutoCancel(true)
+                            .setSound(defaultSoundUri)
+                            .setContentIntent(pendingIntent);
+                    NotificationManager notificationManager =
+                            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    int id = Integer.parseInt(msgid.substring(10));
+                    notificationManager.notify(id/* ID of notification */, notificationBuilder.build());
 
                 }
-            });
+            }
 
-        }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
 
 }
