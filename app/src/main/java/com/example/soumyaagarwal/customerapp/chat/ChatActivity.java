@@ -9,9 +9,11 @@ import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.widget.Space;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -26,11 +28,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
@@ -98,7 +102,8 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
     CompressMe compressMe;
     private AlertDialog viewSelectedImages;
     ViewImageAdapter adapter;
-    private Toolbar toolbar;
+    Space space;
+    ScrollView scroll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +121,7 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
 */
 
  //       getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        
+
         marshmallowPermissions = new MarshmallowPermissions(this);
         compressMe = new CompressMe(this);
         actionModeCallback = new ActionModeCallback();
@@ -167,6 +172,9 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
         photoattach = (ImageButton) findViewById(R.id.photoattach);
         docattach = (ImageButton) findViewById(R.id.docattach);
 
+        space = (Space) findViewById(R.id.space);
+        scroll = (ScrollView) findViewById(R.id.scroll);
+
         photoattach.setOnClickListener(this);
         docattach.setOnClickListener(this);
 
@@ -175,7 +183,43 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
         mAdapter = new chatAdapter(chatList, this, dbTableKey, this);
         recyclerView.setAdapter(mAdapter);
         sendButton.setOnClickListener(this);
+
+        typeComment.setFocusableInTouchMode(true);
+        typeComment.setFocusable(true);
+
         loadData();
+
+        space.setVisibility(View.GONE);
+
+
+        typeComment.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus && space.getVisibility() == View.GONE){
+
+                    int x = space.getVisibility();
+
+
+
+/*
+                    new Handler().postDelayed(new Runnable() {
+                        public void run() {
+                            scroll.fullScroll(ScrollView.FOCUS_DOWN);
+                        }
+                    }, 100);
+           */
+                    scroll.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scroll.fullScroll(ScrollView.FOCUS_DOWN);
+                    }
+                });
+
+                    space.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
 
     }
 
@@ -335,7 +379,15 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
 
                     chatList.add(comment);
                     mAdapter.notifyDataSetChanged();
-                    recyclerView.scrollToPosition(chatList.size() - 1);
+
+                    scroll.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            scroll.fullScroll(ScrollView.FOCUS_DOWN);
+                        }
+                    });
+
+
                 }
             }
 
@@ -364,13 +416,21 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+//        super.onBackPressed();
+
+        space.setVisibility(View.GONE);
+
+        scroll.post(new Runnable() {
+            @Override
+            public void run() {
+                scroll.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
 
     }
 
@@ -420,6 +480,41 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
                     typeComment.setText("");
 
                 }
+
+          //      typeComment.requestFocus();
+
+
+
+                scroll.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        space.setVisibility(View.GONE);
+                        scroll.fullScroll(ScrollView.FOCUS_DOWN);
+                        space.setVisibility(View.VISIBLE);
+                    }
+                });
+
+                /*
+                typeComment.post(new Runnable() {
+                    public void run() {
+                        typeComment.requestFocusFromTouch();
+                        InputMethodManager lManager = (InputMethodManager)getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        lManager.showSoftInput(typeComment, 0);
+                    }
+                });
+*/
+
+                typeComment.requestFocus();
+                typeComment.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputMethodManager.showSoftInput(typeComment, InputMethodManager.SHOW_IMPLICIT);
+                    }
+                }, 150);
+                /*
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);*/
                 break;
 
             case R.id.photoattach:
@@ -669,4 +764,6 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
                 break;
         }
     }
+
+
 }
