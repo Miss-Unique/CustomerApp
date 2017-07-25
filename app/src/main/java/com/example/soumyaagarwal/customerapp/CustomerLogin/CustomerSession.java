@@ -31,12 +31,23 @@ public class CustomerSession {
         editor = pref.edit();
     }
 
-    public void create_oldusersession(final String username_get,String name)
+    public void create_oldusersession(final String username_get,String name, String contact, String address)
     {
-                    editor.putBoolean(is_loggedin,true);
-                    editor.putString(username,username_get);
-                    editor.putString("name",name);
-                    editor.commit();
+        editor.putBoolean(is_loggedin,true);
+        editor.putString(username,username_get);
+        editor.putString("name",name);
+        editor.putString("contact",contact);
+        editor.putString("address",address);
+        editor.commit();
+    }
+
+    public void edit_oldusersession(String name, String contact, String address)
+    {
+        editor.putBoolean(is_loggedin,true);
+        editor.putString("name",name);
+        editor.putString("contact",contact);
+        editor.putString("address",address);
+        editor.commit();
     }
 
     public Boolean isolduser()
@@ -52,6 +63,10 @@ public class CustomerSession {
     {
         return pref.getString("name","");
     }
+
+    public String getContact (){return pref.getString("contact","");}
+
+    public String getAddress(){return pref.getString("address","");}
 
     public void clearoldusersession()
     {

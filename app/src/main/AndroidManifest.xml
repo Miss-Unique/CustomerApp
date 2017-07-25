@@ -12,7 +12,6 @@
 
     <uses-feature android:name="android.hardware.camera" />
 
-
     <application
         android:name=".CustomerApp"
         android:allowBackup="true"
@@ -28,38 +27,29 @@
             </intent-filter>
         </activity>
         <activity android:name=".tablayout.Tabs" />
-
         <activity android:name=".Task.TaskDetail" />
-
         <activity android:name=".Task.CreateTask" />
-
-        <activity android:name=".chat.ChatActivity"/>
-
+        <activity android:name=".chat.ChatActivity" />
         <activity
             android:name="com.zfdang.multiple_images_selector.ImagesSelectorActivity"
             android:configChanges="orientation|screenSize" />
-
 
         <service android:name=".services.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service android:name=".services.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
         <service
             android:name=".services.DownloadFileService"
             android:exported="false" />
-
         <service
             android:name=".services.UploadTaskPhotosServices"
             android:exported="false" />
-
         <service android:name=".services.UploadFileService" />
 
         <receiver android:name=".CheckInternetConnectivity.NetWatcher">
@@ -72,7 +62,8 @@
             </intent-filter>
         </receiver>
 
-
-        <activity android:name=".notification.NotificationActivity"></activity>
+        <activity android:name=".notification.NotificationActivity" />
+        <activity android:name=".MyProfile.MyProfile"></activity>
     </application>
+
 </manifest>
