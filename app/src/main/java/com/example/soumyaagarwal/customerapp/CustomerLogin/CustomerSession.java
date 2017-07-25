@@ -48,6 +48,10 @@ public class CustomerSession {
     {
         return pref.getString(username,"");
     }
+    public String getName()
+    {
+        return pref.getString("name","");
+    }
 
     public void clearoldusersession()
     {

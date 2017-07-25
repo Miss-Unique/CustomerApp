@@ -189,6 +189,7 @@ public class chatListAdapter extends RecyclerView.Adapter<chatListAdapter.MyView
                     else
                     {
                         holder.onlineStatus.setVisibility(View.GONE);
+
                     }
                 }
             }
@@ -204,20 +205,25 @@ public class chatListAdapter extends RecyclerView.Adapter<chatListAdapter.MyView
 
     private void findunreadmsgs(final MyViewHolder holder, final ChatListModel topic) {
         DatabaseReference dbTopicLastComment = DBREF.child("Chats").child(topic.getDbTableKey()).child("ChatMessages").orderByChild("status").equalTo("2").getRef();
-
-        ValueEventListener valueEventListener = dbTopicLastComment.orderByChild("receiverUId").equalTo(mykey).addValueEventListener(new ValueEventListener() {
+        final Integer[] count = {0};
+        ValueEventListener valueEventListener = dbTopicLastComment.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-
+                    String receiverUid=dataSnapshot.child("receiverUId").getValue(String.class);
+                    if(receiverUid.equals(mykey))
+                    {
+                        count[0]++;
+                    }
                     holder.relunread.setVisibility(View.VISIBLE);
 
                     System.out.println(dataSnapshot.getChildrenCount()+" unreadmsgs " + dataSnapshot.getValue());
-                    holder.tvunread.setText(String.valueOf(dataSnapshot.getChildrenCount()));
+                    holder.tvunread.setText(String.valueOf(count[0]));
                 }
                 else
                 {
                     holder.relunread.setVisibility(View.GONE);
+                    count[0]=0;
                 }
             }
 
