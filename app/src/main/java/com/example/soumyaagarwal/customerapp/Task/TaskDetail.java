@@ -71,7 +71,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
         setContentView(R.layout.activity_task_detail);
         session = new CustomerSession(getApplicationContext());
         marshmallowPermissions =new MarshmallowPermissions(this);
-        dbRef = FirebaseDatabase.getInstance().getReference().child("MeChat");
+        dbRef = DBREF;
         progressDialog = new ProgressDialog(this);
         download = (ImageButton)findViewById(R.id.download);
         progressBar = (ProgressBar)findViewById(R.id.progress);
@@ -156,7 +156,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                 task = dataSnapshot.getValue(Task.class);
                 setValue(task);
                 getSupportActionBar().setTitle(task.getName());
-                DatabaseReference dbCustomerName = FirebaseDatabase.getInstance().getReference().child("MeChat").child("Customer").child(task.getCustomerId()).getRef();
+                DatabaseReference dbCustomerName = DBREF.child("Customer").child(task.getCustomerId()).getRef();
                 dbCustomerName.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

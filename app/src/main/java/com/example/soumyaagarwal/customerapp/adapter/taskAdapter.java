@@ -20,6 +20,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
+
 public class taskAdapter extends  RecyclerView.Adapter<taskAdapter.MyViewHolder>
         {
         ArrayList<String> list = new ArrayList<>();
@@ -60,7 +62,7 @@ public class taskAdapter extends  RecyclerView.Adapter<taskAdapter.MyViewHolder>
 
             @Override
             public void onBindViewHolder(final taskAdapter.MyViewHolder holder, final int position) {
-                DatabaseReference refh = FirebaseDatabase.getInstance().getReference().child("MeChat").child("Task").child(list.get(position)).getRef();
+                DatabaseReference refh = DBREF.child("Task").child(list.get(position)).getRef();
 
                 refh.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -75,7 +77,7 @@ public class taskAdapter extends  RecyclerView.Adapter<taskAdapter.MyViewHolder>
                             holder.imgProfile.setColorFilter(task.getColor());
                             holder.timestamp.setText(task.getStartDate());
                             applyClickEvents(holder, position);
-                            DatabaseReference dbCustomerName = FirebaseDatabase.getInstance().getReference().child("MeChat").child("Customer").child(task.getCustomerId()).getRef();
+                            DatabaseReference dbCustomerName = DBREF.child("Customer").child(task.getCustomerId()).getRef();
                             dbCustomerName.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
