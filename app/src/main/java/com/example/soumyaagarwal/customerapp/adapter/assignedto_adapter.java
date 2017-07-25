@@ -23,6 +23,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
+
 public class assignedto_adapter extends  RecyclerView.Adapter<assignedto_adapter.MyViewHolder>
 {
     List<CompletedBy> list = new ArrayList<>();
@@ -54,7 +56,7 @@ public class assignedto_adapter extends  RecyclerView.Adapter<assignedto_adapter
     {
         emp = list.get(position);
 
-        DatabaseReference dbEmp = FirebaseDatabase.getInstance().getReference().child("MeChat").child("Employee").child(emp.getEmpId()).getRef();
+        DatabaseReference dbEmp = DBREF.child("Employee").child(emp.getEmpId()).getRef();
         dbEmp.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

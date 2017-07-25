@@ -58,7 +58,7 @@ public class CustomerLogin extends AppCompatActivity {
         button = (Button) findViewById(R.id.login);
         input_email = (TextInputLayout)findViewById(R.id.input_emaillogin);
         input_password = (TextInputLayout)findViewById(R.id.input_passwordlogin);
-        database = FirebaseDatabase.getInstance().getReference().child("MeChat").child("Customer").getRef();
+        database = DBREF.child("Customer").getRef();
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

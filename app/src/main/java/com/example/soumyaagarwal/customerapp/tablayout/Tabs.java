@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
 import com.example.soumyaagarwal.customerapp.R;
+import com.example.soumyaagarwal.customerapp.helper.MarshmallowPermissions;
 import com.example.soumyaagarwal.customerapp.notification.NotificationActivity;
 
 public class Tabs extends AppCompatActivity implements TabLayout.OnTabSelectedListener{
@@ -18,11 +19,19 @@ public class Tabs extends AppCompatActivity implements TabLayout.OnTabSelectedLi
     private ViewPager vpager;
     int page;
     CustomerSession session;
+    private MarshmallowPermissions marshmallowPermissions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabs);
+        marshmallowPermissions = new MarshmallowPermissions(this);
+        if(!marshmallowPermissions.checkPermissionForCamera())
+            marshmallowPermissions.requestPermissionForCamera();
+        if(!marshmallowPermissions.checkPermissionForExternalStorage())
+            marshmallowPermissions.requestPermissionForExternalStorage();
+        if(!marshmallowPermissions.checkPermissionForLocations())
+            marshmallowPermissions.requestPermissionForLocations();
 
         session = new CustomerSession(getApplicationContext());
         if(getIntent().getExtras()!=null)

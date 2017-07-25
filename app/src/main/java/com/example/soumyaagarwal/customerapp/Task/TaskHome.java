@@ -29,6 +29,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
+
 public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListener{
     RecyclerView task_list;
     DatabaseReference dbTask;
@@ -68,7 +70,7 @@ public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListene
         session = new CustomerSession(getActivity());
         marshMallowPermission = new MarshmallowPermissions(getActivity());
         progressDialog = new ProgressDialog(getActivity());
-        dbTask = FirebaseDatabase.getInstance().getReference().child("MeChat").child("Customer").child(session.getUsername()).child("Task").getRef();
+        dbTask = DBREF.child("Customer").child(session.getUsername()).child("Task").getRef();
         task_list = (RecyclerView) getView().findViewById(R.id.task_list);
         create_task = (FloatingActionButton)getView().findViewById(R.id.create_task);
         LoadData();
@@ -83,7 +85,7 @@ public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListene
             @Override
             public void onClick(View v)
             {
-                DatabaseReference dbCustomerName = FirebaseDatabase.getInstance().getReference().child("MeChat").child("Customer").child(session.getUsername()).getRef();
+                DatabaseReference dbCustomerName = DBREF.child("Customer").child(session.getUsername()).getRef();
                 dbCustomerName.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

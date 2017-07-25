@@ -25,7 +25,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapCharacters"
+                android:inputType="textCapSentences"
                 android:id="@+id/taskName"
                 android:layout_below="@+id/textView"
                 />
@@ -41,7 +41,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapCharacters"
+                android:inputType="textCapSentences"
                 android:id="@+id/custId"
                 android:enabled="false"
                 android:layout_below="@+id/textView"

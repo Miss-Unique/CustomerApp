@@ -23,6 +23,8 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.util.ArrayList;
 
+import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
+
 /**
  * Created by SoumyaAgarwal on 6/28/2017.
  */
@@ -103,7 +105,7 @@ public class UploadTaskPhotosServices extends IntentService
                     {
 
                         s++;
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("MeChat").child("Task").child(taskid).child("DescImages");
+                        DatabaseReference ref = DBREF.child("Task").child(taskid).child("DescImages");
                         ref.child(fileNameOnFirebase).setValue(taskSnapshot.getDownloadUrl().toString());
 
                         if (f+s==totalnoofimages)
