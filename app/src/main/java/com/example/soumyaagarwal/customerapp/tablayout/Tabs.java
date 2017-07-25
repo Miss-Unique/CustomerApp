@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
+import com.example.soumyaagarwal.customerapp.MyProfile.MyProfile;
 import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.helper.MarshmallowPermissions;
 import com.example.soumyaagarwal.customerapp.notification.NotificationActivity;
@@ -83,6 +84,10 @@ public class Tabs extends AppCompatActivity implements TabLayout.OnTabSelectedLi
             case R.id.notif:
                 Intent intent = new Intent(getApplicationContext(), NotificationActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.profile:
+                Intent intent2 = new Intent(getApplicationContext(), MyProfile.class);
+                startActivity(intent2);
                 break;
         }
         return true;

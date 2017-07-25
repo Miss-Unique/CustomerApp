@@ -86,7 +86,7 @@ public class chatListAdapter extends RecyclerView.Adapter<chatListAdapter.MyView
         applyProfilePicture(holder, topic);
         applyLastMessage(holder, topic);
         applyOnlineStatus(holder,topic);
-        findunreadmsgs(holder,topic);
+//        findunreadmsgs(holder,topic);
     }
 
     @Override
@@ -203,7 +203,7 @@ public class chatListAdapter extends RecyclerView.Adapter<chatListAdapter.MyView
     }
 
 
-    private void findunreadmsgs(final MyViewHolder holder, final ChatListModel topic) {
+/*    private void findunreadmsgs(final MyViewHolder holder, final ChatListModel topic) {
         DatabaseReference dbTopicLastComment = DBREF.child("Chats").child(topic.getDbTableKey()).child("ChatMessages").orderByChild("status").equalTo("2").getRef();
         final Integer[] count = {0};
         ValueEventListener valueEventListener = dbTopicLastComment.addValueEventListener(new ValueEventListener() {
@@ -233,7 +233,7 @@ public class chatListAdapter extends RecyclerView.Adapter<chatListAdapter.MyView
             }
         });
         hashMapVLE.put(dbTopicLastComment,valueEventListener);
-    }
+    }*/
 
     public void removeListeners()
     {
