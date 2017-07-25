@@ -13,6 +13,7 @@ import com.example.soumyaagarwal.customerapp.Model.Notif;
 import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.Task.TaskDetail;
 import com.example.soumyaagarwal.customerapp.adapter.notification_adapter;
+import com.example.soumyaagarwal.customerapp.tablayout.Tabs;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,6 +50,13 @@ public class NotificationActivity extends AppCompatActivity implements notificat
         recview.setAdapter(adapter);
 
         preparelist();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, Tabs.class);
+        startActivity(intent);
+        finish();
     }
 
     private void preparelist()
