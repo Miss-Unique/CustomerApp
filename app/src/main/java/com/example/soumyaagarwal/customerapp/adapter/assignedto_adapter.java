@@ -83,30 +83,37 @@ public class assignedto_adapter extends  RecyclerView.Adapter<assignedto_adapter
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView employeename,employeeDesig,icon_text;
         LinearLayout employee_row;
+        ImageButton callme, msgme;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            employeename = (TextView)
-                    itemView.findViewById(R.id.employeeName);
-
-            employeeDesig = (TextView)
-                    itemView.findViewById(R.id.employeeDesig);
-
+            employeename = (TextView) itemView.findViewById(R.id.employeeName);
+            employeeDesig = (TextView) itemView.findViewById(R.id.employeeDesig);
             icon_text = (TextView)itemView.findViewById(R.id.icon_text);
             employee_row = (LinearLayout)itemView.findViewById(R.id.employee_row);
+            callme = (ImageButton)itemView.findViewById(R.id.callme);
+            msgme = (ImageButton)itemView.findViewById(R.id.msgme);
         }
     }
 
     public interface assignedto_adapterListener {
-        void onEmployeeRowClicked(int position);
+        void onMSGMEclicked(int position);
+        void onCALLMEclicked(int position);
     }
     private void applyClickEvents(MyViewHolder holder, final int position) {
 
-        holder.employee_row.setOnClickListener(new View.OnClickListener() {
+        holder.callme.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                listener.onEmployeeRowClicked(position);
+            public void onClick(View v) {
+                listener.onCALLMEclicked(position);
+            }
+        });
+
+        holder.msgme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onMSGMEclicked(position);
             }
         });
     }
