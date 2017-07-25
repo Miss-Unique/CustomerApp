@@ -94,7 +94,7 @@ public class CustomerLogin extends AppCompatActivity {
 
     private void login() {
 
-        DatabaseReference db = database.child(Username).getRef();
+        DatabaseReference db = DBREF.child("Customer").child(Username).getRef();
 
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
