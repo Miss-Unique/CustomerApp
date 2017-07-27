@@ -24,7 +24,7 @@ public class MyProfile extends AppCompatActivity {
     EditText name, num, add, username;
     CustomerSession session;
     AlertDialog customerEditDetails;
-    String Name, Num, Add, temp_name,temp_add,temp_num;
+    String Name, Num, Add, temp_name, temp_add, temp_num;
     DatabaseReference db;
 
     @Override
@@ -32,10 +32,10 @@ public class MyProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
 
-        name = (EditText)findViewById(R.id.name);
-        num = (EditText)findViewById(R.id.num);
-        add = (EditText)findViewById(R.id.add);
-        username = (EditText)findViewById(R.id.username);
+        name = (EditText) findViewById(R.id.name);
+        num = (EditText) findViewById(R.id.num);
+        add = (EditText) findViewById(R.id.add);
+        username = (EditText) findViewById(R.id.username);
 
         session = new CustomerSession(getApplicationContext());
         db = DBREF.child("Customer").child(session.getUsername());
@@ -59,15 +59,15 @@ public class MyProfile extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.profile_menu,menu);
+        getMenuInflater().inflate(R.menu.profile_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.edit:
-                final EditText name_new,num_new,add_new;
+                final EditText name_new, num_new, add_new;
                 Button sub;
                 customerEditDetails = new AlertDialog.Builder(this)
                         .setTitle("Edit Profile")
@@ -91,17 +91,16 @@ public class MyProfile extends AppCompatActivity {
                         temp_name = name_new.getText().toString();
                         temp_num = num_new.getText().toString();
 
-                        if(TextUtils.isEmpty(temp_add) || TextUtils.isEmpty(temp_name) || TextUtils.isEmpty(temp_num))
-                            Toast.makeText(MyProfile.this,"Enter details...",Toast.LENGTH_SHORT).show();
+                        if (TextUtils.isEmpty(temp_add) || TextUtils.isEmpty(temp_name) || TextUtils.isEmpty(temp_num))
+                            Toast.makeText(MyProfile.this, "Enter details...", Toast.LENGTH_SHORT).show();
 
-                        else
-                        {
+                        else {
                             db.child("name").setValue(temp_name);
                             db.child("address").setValue(temp_add);
                             db.child("phone_num").setValue(temp_num);
                             DBREF.child("Users").child("Usersessions").child(session.getUsername()).child("num").setValue(temp_num);
 
-                            session.edit_oldusersession(temp_name,temp_num,temp_add);
+                            session.edit_oldusersession(temp_name, temp_num, temp_add);
                             customerEditDetails.dismiss();
 
                             name.setText(temp_name);

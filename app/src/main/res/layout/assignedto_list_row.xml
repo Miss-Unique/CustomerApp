@@ -16,8 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_margin="5dp"
-            >
+            android:layout_margin="5dp">
             <RelativeLayout
                 android:id="@+id/icon_front"
                 android:layout_width="wrap_content"
@@ -72,13 +71,13 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/callme"
                 android:background="@drawable/ic_call_me"
-                android:layout_margin="4dp"/>
+                android:layout_margin="6dp"/>
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/msgme"
                 android:background="@drawable/ic_chat"
-                android:layout_margin="4dp"/>
+                android:layout_margin="6dp"/>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

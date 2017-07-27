@@ -86,7 +86,7 @@ public class chatListAdapter extends RecyclerView.Adapter<chatListAdapter.MyView
         applyProfilePicture(holder, topic);
         applyLastMessage(holder, topic);
         applyOnlineStatus(holder,topic);
-        findunreadmsgs(holder,topic);
+//        findunreadmsgs(holder,topic);
     }
 
     @Override
@@ -202,28 +202,28 @@ public class chatListAdapter extends RecyclerView.Adapter<chatListAdapter.MyView
         hashMapVLE.put(dbOnlineStatus,valueEventListener);
     }
 
-    private void findunreadmsgs(final MyViewHolder holder, final ChatListModel topic) {
-        String a="nil";
-        DatabaseReference dbTopicLastComment = DBREF.child("Chats").child(topic.getDbTableKey()).child("ChatMessages").getRef();
-        System.out.println(topic.getDbTableKey()+" unreadmsgs called " + dbTopicLastComment);
-        final Integer[] countunreadmessages = {0};
-        ValueEventListener valueEventListener = dbTopicLastComment.orderByChild("status").equalTo("2").addValueEventListener(new ValueEventListener() {
+
+/*    private void findunreadmsgs(final MyViewHolder holder, final ChatListModel topic) {
+        DatabaseReference dbTopicLastComment = DBREF.child("Chats").child(topic.getDbTableKey()).child("ChatMessages").orderByChild("status").equalTo("2").getRef();
+        final Integer[] count = {0};
+        ValueEventListener valueEventListener = dbTopicLastComment.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    ChatMessage chatMessage = new ChatMessage();
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        chatMessage = ds.getValue(ChatMessage.class);
-                        if (chatMessage.getReceiverUId().equals(mykey))
-                            countunreadmessages[0]++;
+                if(dataSnapshot.exists()){
+                    String receiverUid=dataSnapshot.child("receiverUId").getValue(String.class);
+                    if(receiverUid.equals(mykey))
+                    {
+                        count[0]++;
                     }
-                    if (countunreadmessages[0] != 0) {
-                        holder.relunread.setVisibility(View.VISIBLE);
-                        holder.tvunread.setText(String.valueOf(countunreadmessages[0]));
-                    } else {
-                        holder.relunread.setVisibility(View.GONE);
-                        countunreadmessages[0] = 0;
-                    }
+                    holder.relunread.setVisibility(View.VISIBLE);
+
+                    System.out.println(dataSnapshot.getChildrenCount()+" unreadmsgs " + dataSnapshot.getValue());
+                    holder.tvunread.setText(String.valueOf(count[0]));
+                }
+                else
+                {
+                    holder.relunread.setVisibility(View.GONE);
+                    count[0]=0;
                 }
             }
 
@@ -233,8 +233,7 @@ public class chatListAdapter extends RecyclerView.Adapter<chatListAdapter.MyView
             }
         });
         hashMapVLE.put(dbTopicLastComment,valueEventListener);
-    }
-
+    }*/
 
     public void removeListeners()
     {
