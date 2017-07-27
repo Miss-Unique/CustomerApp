@@ -187,8 +187,22 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
 
         loadData();
 
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.chat_menu,menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.item1:
+                //TODO Phone call
+                break;
+        }
+        return true;
     }
 
     private String getRecivertoken(String otheruserkey) {
@@ -211,7 +225,6 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
         });
         return receiverToken;
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
