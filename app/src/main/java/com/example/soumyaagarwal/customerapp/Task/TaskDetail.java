@@ -433,6 +433,6 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
 
     @Override
     public void onCALLMEclicked(int position) {
-
+        // TODO phone call
     }
 }
