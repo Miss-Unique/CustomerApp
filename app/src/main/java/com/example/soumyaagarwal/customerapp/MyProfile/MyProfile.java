@@ -98,6 +98,7 @@ public class MyProfile extends AppCompatActivity {
                             db.child("name").setValue(temp_name);
                             db.child("address").setValue(temp_add);
                             db.child("phone_num").setValue(temp_num);
+                            DBREF.child("Users").child("Usersessions").child(session.getUsername()).child("num").setValue(temp_num);
 
                             session.edit_oldusersession(temp_name, temp_num, temp_add);
                             customerEditDetails.dismiss();

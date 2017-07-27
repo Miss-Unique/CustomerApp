@@ -8,11 +8,21 @@ public class NameAndStatus {
     private String id;
     private String name;
     private Boolean online;
+    private String num;
 
-    public NameAndStatus(String id, String name, Boolean online) {
+    public NameAndStatus(String id, String name, Boolean online,String num) {
         this.id = id;
         this.name = name;
         this.online = online;
+        this.num = num;
+    }
+
+    public String getNum() {
+        return num;
+    }
+
+    public void setNum(String num) {
+        this.num = num;
     }
 
     public NameAndStatus() {
