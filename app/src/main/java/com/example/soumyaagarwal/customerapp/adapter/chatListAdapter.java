@@ -86,7 +86,7 @@ public class chatListAdapter extends RecyclerView.Adapter<chatListAdapter.MyView
         applyProfilePicture(holder, topic);
         applyLastMessage(holder, topic);
         applyOnlineStatus(holder,topic);
-//        findunreadmsgs(holder,topic);
+        findunreadmsgs(holder,topic);
     }
 
     @Override
@@ -210,20 +210,20 @@ public class chatListAdapter extends RecyclerView.Adapter<chatListAdapter.MyView
         ValueEventListener valueEventListener = dbTopicLastComment.orderByChild("status").equalTo("2").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     ChatMessage chatMessage = new ChatMessage();
-                    for(DataSnapshot ds:dataSnapshot.getChildren()) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         chatMessage = ds.getValue(ChatMessage.class);
-                        if(chatMessage.getReceiverUId().equals(mykey))
+                        if (chatMessage.getReceiverUId().equals(mykey))
                             countunreadmessages[0]++;
                     }
-                    holder.relunread.setVisibility(View.VISIBLE);
-                    holder.tvunread.setText(String.valueOf(countunreadmessages[0]));
-                }
-                else
-                {
-                    holder.relunread.setVisibility(View.GONE);
-                    countunreadmessages[0]=0;
+                    if (countunreadmessages[0] != 0) {
+                        holder.relunread.setVisibility(View.VISIBLE);
+                        holder.tvunread.setText(String.valueOf(countunreadmessages[0]));
+                    } else {
+                        holder.relunread.setVisibility(View.GONE);
+                        countunreadmessages[0] = 0;
+                    }
                 }
             }
 
