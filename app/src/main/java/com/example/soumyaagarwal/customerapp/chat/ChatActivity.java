@@ -639,7 +639,7 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
                 String uriSting = System.currentTimeMillis() + ".jpg";
 
                 final File localFile = new File(rootPath, uriSting);
-                final String localuri = (rootPath.getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg");
+                final String localuri = (rootPath.getAbsolutePath() + "/" + uriSting);
                 str.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
@@ -665,7 +665,7 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
                 uriSting = System.currentTimeMillis() + ".jpg";
 
                 final File localdocFile = new File(rootPath, uriSting);
-                final String localdocuri = (rootPath.getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg");
+                final String localdocuri = (rootPath.getAbsolutePath() + "/" + uriSting);
                 str.getFile(localdocFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
