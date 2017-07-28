@@ -99,12 +99,13 @@
                         android:layout_height="wrap_content"
                         android:text="Job hasn't started yet"
                         android:id="@+id/assign_and_hideme"/>
+
                     <android.support.v7.widget.RecyclerView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:id="@+id/rec_assignedto"
-                        android:nestedScrollingEnabled="true"></android.support.v7.widget.RecyclerView>
+                        android:nestedScrollingEnabled="true"/>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView

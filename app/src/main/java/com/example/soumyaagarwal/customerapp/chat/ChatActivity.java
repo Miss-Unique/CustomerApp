@@ -102,6 +102,7 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
     CompressMe compressMe;
     private AlertDialog viewSelectedImages;
     ViewImageAdapter adapter;
+    String num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +131,7 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
                 if (dataSnapshot.exists()) {
 
                     NameAndStatus nameAndStatus = dataSnapshot.getValue(NameAndStatus.class);
+                    num = nameAndStatus.getNum();
                     getSupportActionBar().setTitle(nameAndStatus.getName());
                     if(nameAndStatus.getOnline())
                     {
@@ -200,6 +202,10 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
         switch (item.getItemId()){
             case R.id.item1:
                 //TODO Phone call
+
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel:"+ num));
+                startActivity(callIntent);
                 break;
         }
         return true;
@@ -396,8 +402,6 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
-
     }
 
     @Override
