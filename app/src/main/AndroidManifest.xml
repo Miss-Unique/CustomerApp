@@ -26,7 +26,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".tablayout.Tabs" />
+        <activity android:name=".tablayout.Tabs"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".Task.TaskDetail" />
         <activity android:name=".Task.CreateTask" />
         <activity android:name=".chat.ChatActivity" />
@@ -64,6 +65,11 @@
 
         <activity android:name=".notification.NotificationActivity" />
         <activity android:name=".MyProfile.MyProfile"></activity>
+
+        <activity
+            android:name=".drawer"
+            android:label="@string/title_activity_drawer1"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/one">
+        <item
+            android:id="@+id/first"
+            android:icon="@drawable/ic_profile_black"
+            android:title="Profile" />
+    </group>
+
+    <group android:id="@+id/two">
+        <item
+            android:id="@+id/second"
+            android:icon="@drawable/ic_portrait_black"
+            android:title="Coordinators" />
+    </group>
+
+    <group android:id="@+id/three">
+        <item
+            android:id="@+id/third"
+            android:icon="@drawable/ic_call_me"
+            android:title="Contact Us" />
+
+        <item
+            android:id="@+id/fourth"
+            android:icon="@drawable/bg_circle"
+            android:title="About Us" />
+    </group>
+
+</menu>

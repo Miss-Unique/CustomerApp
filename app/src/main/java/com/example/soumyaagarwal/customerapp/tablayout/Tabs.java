@@ -7,14 +7,16 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 
 import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
 import com.example.soumyaagarwal.customerapp.MyProfile.MyProfile;
 import com.example.soumyaagarwal.customerapp.R;
+import com.example.soumyaagarwal.customerapp.drawer;
 import com.example.soumyaagarwal.customerapp.helper.MarshmallowPermissions;
 import com.example.soumyaagarwal.customerapp.notification.NotificationActivity;
 
-public class Tabs extends AppCompatActivity implements TabLayout.OnTabSelectedListener{
+public class Tabs extends drawer implements TabLayout.OnTabSelectedListener {
 
     private TabLayout tab;
     private ViewPager vpager;
@@ -25,18 +27,21 @@ public class Tabs extends AppCompatActivity implements TabLayout.OnTabSelectedLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tabs);
+
+        FrameLayout frame = (FrameLayout) findViewById(R.id.frame);
+        getLayoutInflater().inflate(R.layout.activity_tabs, frame);
+
         marshmallowPermissions = new MarshmallowPermissions(this);
-        if(!marshmallowPermissions.checkPermissionForCamera())
+        if (!marshmallowPermissions.checkPermissionForCamera())
             marshmallowPermissions.requestPermissionForCamera();
-        if(!marshmallowPermissions.checkPermissionForExternalStorage())
+        if (!marshmallowPermissions.checkPermissionForExternalStorage())
             marshmallowPermissions.requestPermissionForExternalStorage();
-        if(!marshmallowPermissions.checkPermissionForLocations())
+        if (!marshmallowPermissions.checkPermissionForLocations())
             marshmallowPermissions.requestPermissionForLocations();
 
         session = new CustomerSession(getApplicationContext());
-        if(getIntent().getExtras()!=null)
-            page = getIntent().getIntExtra("page",0);
+        if (getIntent().getExtras() != null)
+            page = getIntent().getIntExtra("page", 0);
         else
             page = 0;
 
@@ -71,25 +76,5 @@ public class Tabs extends AppCompatActivity implements TabLayout.OnTabSelectedLi
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.tabsmenu,menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.notif:
-                Intent intent = new Intent(getApplicationContext(), NotificationActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.profile:
-                Intent intent2 = new Intent(getApplicationContext(), MyProfile.class);
-                startActivity(intent2);
-                break;
-        }
-        return true;
     }
 }
