@@ -14,7 +14,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
+import com.example.soumyaagarwal.customerapp.MyProfile.ContactCoordinator;
 import com.example.soumyaagarwal.customerapp.MyProfile.MyProfile;
+import com.example.soumyaagarwal.customerapp.MyProfile.phonebook;
 import com.example.soumyaagarwal.customerapp.notification.NotificationActivity;
 
 public class drawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -57,7 +59,6 @@ public class drawer extends AppCompatActivity implements NavigationView.OnNaviga
         }
     }
 
-
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -69,10 +70,12 @@ public class drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 startActivity(intent2);
                 break;
             case R.id.second:
-                //TODO Contact with coordinators
+                Intent intent = new Intent(getApplicationContext(), ContactCoordinator.class);
+                startActivity(intent);
                 break;
             case R.id.third:
-                //TODO Contact Numbers of the firm
+                Intent intent1 = new Intent(getApplicationContext(), phonebook.class);
+                startActivity(intent1);
                 break;
             case R.id.fourth:
                 //TODO About the firm
@@ -106,4 +109,5 @@ public class drawer extends AppCompatActivity implements NavigationView.OnNaviga
         super.onPostCreate(savedInstanceState);
 
     }
+
 }

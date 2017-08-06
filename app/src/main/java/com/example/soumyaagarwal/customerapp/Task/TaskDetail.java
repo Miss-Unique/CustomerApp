@@ -268,8 +268,6 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
             }
         });
 
-        //TODO : image ko download karwana hai kya ?
-        //image forwarding ka koi option ?
         dbDescImages.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -416,7 +414,6 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
 
     @Override
     public void onCALLMEclicked(int position) {
-        // TODO phone call
 
         CompletedBy completedBy = assignedtoList.get(position);
         id = completedBy.getEmpId();

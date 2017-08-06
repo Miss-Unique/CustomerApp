@@ -31,19 +31,16 @@ import java.util.ArrayList;
 
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 
-public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListener{
+public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListener {
     RecyclerView task_list;
     DatabaseReference dbTask;
     LinearLayoutManager linearLayoutManager;
-    private ArrayList<String> TaskList= new ArrayList<>();
+    private ArrayList<String> TaskList = new ArrayList<>();
     private taskAdapter mAdapter;
     Activity context;
     MarshmallowPermissions marshMallowPermission;
-    private static final int PICK_FILE_REQUEST = 1;
-    private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
-    ProgressDialog progressDialog ;
-    DatabaseReference dbQuotation;
-    private String custId="nocust";
+    ProgressDialog progressDialog;
+    private String custId = "nocust";
     CustomerSession session;
     FloatingActionButton create_task;
 
@@ -72,10 +69,10 @@ public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListene
         progressDialog = new ProgressDialog(getActivity());
         dbTask = DBREF.child("Customer").child(session.getUsername()).child("Task").getRef();
         task_list = (RecyclerView) getView().findViewById(R.id.task_list);
-        create_task = (FloatingActionButton)getView().findViewById(R.id.create_task);
+        create_task = (FloatingActionButton) getView().findViewById(R.id.create_task);
         LoadData();
-        mAdapter = new taskAdapter(TaskList,getContext(),this);
-        linearLayoutManager=new LinearLayoutManager(getContext());
+        mAdapter = new taskAdapter(TaskList, getContext(), this);
+        linearLayoutManager = new LinearLayoutManager(getContext());
         task_list.setLayoutManager(linearLayoutManager);
         task_list.setItemAnimator(new DefaultItemAnimator());
         task_list.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
@@ -83,19 +80,17 @@ public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListene
 
         create_task.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 DatabaseReference dbCustomerName = DBREF.child("Customer").child(session.getUsername()).getRef();
                 dbCustomerName.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String customername = dataSnapshot.child("name").getValue(String.class);
                         Intent intent = new Intent(getActivity(), CreateTask.class);
-                        intent.putExtra("customerId",session.getUsername());
-                        intent.putExtra("customerName",customername);
+                        intent.putExtra("customerId", session.getUsername());
+                        intent.putExtra("customerName", customername);
                         startActivity(intent);
                         getActivity().finish();
-
                     }
 
                     @Override
@@ -110,19 +105,17 @@ public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListene
     @Override
     public void onMessageRowClicked(int position) {
 
-            Intent intent = new Intent(getContext(),TaskDetail.class);
-            String taskid = TaskList.get(position);
-            intent.putExtra("task_id",taskid);
-            startActivity(intent);
+        Intent intent = new Intent(getContext(), TaskDetail.class);
+        String taskid = TaskList.get(position);
+        intent.putExtra("task_id", taskid);
+        startActivity(intent);
     }
 
-    void LoadData()
-    {
+    void LoadData() {
 
         dbTask.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s)
-            {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists()) {
                     String taskid = dataSnapshot.getKey();
                     TaskList.add(taskid);
