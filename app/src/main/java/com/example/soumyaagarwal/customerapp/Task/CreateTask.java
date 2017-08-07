@@ -52,7 +52,7 @@ import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 
 public class CreateTask extends AppCompatActivity implements CalendarDatePickerDialogFragment.OnDateSetListener {
     DatabaseReference dbRef;
-    EditText taskName,startDate,endDate,quantity,description,custId;
+    EditText taskName,startDate,endDate,quantity,description;
     RecyclerView desc_photo_grid;
     ImageButton written_desc, photo_desc;
     String customerId,customerName,curdate;
@@ -65,7 +65,7 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
     private int REQUEST_CODE =1;
     private String desc;
     LinearLayoutManager linearLayoutManager;
-    GridLayoutManager imagegrid;
+    LinearLayoutManager imagegrid;
     ViewImageAdapter adapter;
     taskimagesadapter tadapter;
     CompressMe compressMe;
@@ -74,7 +74,7 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
-        //Fresco.initialize(getApplicationContext());
+
         marshMallowPermission = new MarshmallowPermissions(this);
         compressMe = new CompressMe(this);
         getSupportActionBar().setTitle("Create New Task");
@@ -155,9 +155,6 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
             }
         });
 
-
-        custId = (EditText) findViewById(R.id.custId);
-        custId.setText(customerId+": "+customerName);
         submit_task = (Button)findViewById(R.id.submit_task);
         Calendar c = Calendar.getInstance();
         curdate = dateFormat.format(c.getTime());
@@ -204,7 +201,6 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
                 serviceIntent.putExtra("taskid", "task" + curTime);
                 startService(serviceIntent);
                 finish();
-
             }
 
             Intent intent = new Intent(CreateTask.this, Tabs.class);
@@ -212,9 +208,6 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
             startActivity(intent);
             finish();
         }
-
-
-
     }
 
     private int getRandomMaterialColor(String typeColor) {
@@ -281,7 +274,6 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
                     adapter = new ViewImageAdapter(picUriList, this);
                     rv.setAdapter(adapter);
 
-
                     final String[] item = {picUriList.get(0)};
                     ImageViewlarge.setImageURI(Uri.parse(item[0]));
 
@@ -328,10 +320,10 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
                             if (i>0) {
                                 desc_photo_grid.setVisibility(View.VISIBLE);
 
-                                imagegrid = new GridLayoutManager(getApplicationContext(),2);
+                                imagegrid = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
                                 desc_photo_grid.setLayoutManager(imagegrid);
                                 desc_photo_grid.setItemAnimator(new DefaultItemAnimator());
-                                desc_photo_grid.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
+                                desc_photo_grid.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.HORIZONTAL));
 
                                 tadapter = new taskimagesadapter(picUriList, getApplicationContext());
                                 desc_photo_grid.setAdapter(tadapter);

@@ -2,11 +2,63 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center"
+        android:id="@+id/r">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Images"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true">
+
+            <ProgressBar
+                android:id="@+id/progresshere"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/download_taskdetail_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_download_white" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginLeft="7dp"
+        android:layout_below="@+id/r"
+        android:id="@+id/l"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+    </LinearLayout>
 
     <com.example.soumyaagarwal.customerapp.helper.TouchImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/image" />
+        android:id="@+id/image"
+        android:layout_below="@+id/l"/>
 
 </RelativeLayout>

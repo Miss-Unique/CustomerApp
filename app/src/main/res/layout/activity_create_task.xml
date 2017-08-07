@@ -29,62 +29,8 @@
                 android:id="@+id/taskName"
                 android:layout_below="@+id/textView"
                 />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Customer Id and Name: "
-                android:textColor="#000000"
-                android:textSize="20dp"
-                android:layout_marginTop="10dp"
-                android:id="@+id/textView1" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapSentences"
-                android:id="@+id/custId"
-                android:enabled="false"
-                android:layout_below="@+id/textView"
-                />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Start Date: "
-                android:textColor="#000000"
-                android:textSize="20dp"
-                android:layout_marginTop="10dp"
-                android:id="@+id/textView2" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="date"
-                android:id="@+id/startDate"
-                android:hint="DD/MM/YYYY"
-                android:enabled="false"
-                android:layout_below="@+id/textView"
-                />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Expected End Date: "
-                android:textColor="#000000"
-                android:textSize="20dp"
-                android:layout_marginTop="10dp"
-                android:id="@+id/textView3" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hapticFeedbackEnabled="true"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:id="@+id/endDate"
-                android:hint="DD/MM/YYYY"
-                android:layout_below="@+id/textView"
-                />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -146,6 +92,46 @@
                 android:visibility="gone"
                 android:id="@+id/desc_photo_grid">
             </android.support.v7.widget.RecyclerView>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Start Date: "
+                android:textColor="#000000"
+                android:textSize="20dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/textView2" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:id="@+id/startDate"
+                android:hint="DD/MM/YYYY"
+                android:enabled="false"
+                android:layout_below="@+id/textView"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Expected End Date: "
+                android:textColor="#000000"
+                android:textSize="20dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/textView3" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hapticFeedbackEnabled="true"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:id="@+id/endDate"
+                android:hint="DD/MM/YYYY"
+                android:layout_below="@+id/textView"
+                />
 
             <Button
                 android:layout_width="wrap_content"

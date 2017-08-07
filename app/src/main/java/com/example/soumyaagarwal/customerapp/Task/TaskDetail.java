@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -31,27 +34,33 @@ import com.example.soumyaagarwal.customerapp.adapter.taskdetailDescImageAdapter;
 import com.example.soumyaagarwal.customerapp.chat.ChatActivity;
 import com.example.soumyaagarwal.customerapp.helper.MarshmallowPermissions;
 import com.example.soumyaagarwal.customerapp.services.DownloadFileService;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 
-public class TaskDetail extends AppCompatActivity implements taskdetailDescImageAdapter.ImageAdapterListener, assignedto_adapter.assignedto_adapterListener {
+public class TaskDetail extends AppCompatActivity implements taskdetailDescImageAdapter.ImageAdapterListener, assignedto_adapter.assignedto_adapterListener, bigimage_adapter.bigimage_adapterListener {
 
     private DatabaseReference dbRef, dbTask, dbAssigned, dbMeasurement, dbDescImages;
     ImageButton download;
     ProgressBar progressBar;
     private Task task;
-    private String customername, mykey, id, dbTablekey, task_id;
+    private String mykey, id, dbTablekey, task_id;
     EditText startDate, endDate, quantity, description;
     RecyclerView rec_assignedto, rec_measurement, rec_DescImages;
     assignedto_adapter adapter_assignedto;
@@ -172,9 +181,6 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
     }
 
     private void launchLibrary() {
-        //TODO : loader aur completion of download show karna hai
-        //download.setVisibility(View.GONE);
-        //progressBar.setVisibility(View.VISIBLE);
         final String[] url = new String[1];
         dbQuotation.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -196,7 +202,6 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
 
             }
         });
-
     }
 
     private void prepareListData() {
@@ -334,7 +339,6 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
 
     @Override
     public void onImageClicked(int position) {
-
         viewSelectedImages = new AlertDialog.Builder(TaskDetail.this)
                 .setTitle("Images").setView(R.layout.view_image_on_click).create();
         viewSelectedImages.show();
@@ -346,7 +350,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
         bigimage.setItemAnimator(new DefaultItemAnimator());
         bigimage.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.HORIZONTAL));
 
-        adapter = new bigimage_adapter(DescImages, this);
+        adapter = new bigimage_adapter(DescImages, this, this);
         bigimage.setAdapter(adapter);
 
         bigimage.scrollToPosition(position);
@@ -431,6 +435,43 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
 
             }
         });
+    }
 
+    @Override
+    public void ondownloadButtonClicked(final int position, final bigimage_adapter.MyViewHolder holder) {
+        if (!marshmallowPermissions.checkPermissionForExternalStorage()) {
+            marshmallowPermissions.requestPermissionForExternalStorage();
+        } else {
+            holder.progressBar.setVisibility(View.VISIBLE);
+            holder.download_taskdetail_image.setVisibility(View.GONE);
+            String url = DescImages.get(position);
+            StorageReference str = FirebaseStorage.getInstance().getReferenceFromUrl(url);
+            File rootPath = new File(Environment.getExternalStorageDirectory(), "MeChat/TaskDetailImages");
+
+            if (!rootPath.exists()) {
+                rootPath.mkdirs();
+            }
+            String uriSting = System.currentTimeMillis() + ".jpg";
+
+            final File localFile = new File(rootPath, uriSting);
+
+            str.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Log.e("firebase ", ";local tem file created  created " + localFile.toString());
+                    holder.download_taskdetail_image.setVisibility(View.VISIBLE);
+                    holder.progressBar.setVisibility(View.GONE);
+                    Toast.makeText(TaskDetail.this, "Image " + position + 1 + " Downloaded", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Log.e("firebase ", ";local tem file not created  created " + exception.toString());
+                    holder.download_taskdetail_image.setVisibility(View.VISIBLE);
+                    holder.progressBar.setVisibility(View.GONE);
+                    Toast.makeText(TaskDetail.this, "Failed to download image " + position + 1, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }
