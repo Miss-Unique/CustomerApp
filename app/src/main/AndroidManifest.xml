@@ -4,12 +4,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-feature android:name="android.hardware.camera" />
 
     <application
@@ -30,6 +28,11 @@
         <activity android:name=".Task.TaskDetail" />
         <activity android:name=".Task.CreateTask" />
         <activity android:name=".chat.ChatActivity" />
+        <receiver android:name=".CheckInternetConnectivity.NetWatcher">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
         <activity
             android:name="com.zfdang.multiple_images_selector.ImagesSelectorActivity"
             android:configChanges="orientation|screenSize" />
@@ -51,16 +54,6 @@
             android:name=".services.UploadTaskPhotosServices"
             android:exported="false" />
         <service android:name=".services.UploadFileService" />
-
-        <receiver android:name=".CheckInternetConnectivity.NetWatcher">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.PACKAGE_FIRST_LAUNCH" />
-                <action android:name="android.intent.action.REBOOT" />
-            </intent-filter>
-        </receiver>
 
         <activity android:name=".notification.NotificationActivity" />
         <activity android:name=".MyProfile.MyProfile"></activity>
