@@ -119,14 +119,31 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="8dp">
-                    <TextView
+                    <RelativeLayout
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Quotation "
                         android:textColor="@color/black"
                         android:textSize="15dp"
                         android:id="@+id/textView6"
-                        android:layout_marginBottom="5dp"/>
+                        android:layout_marginBottom="5dp"
+                        android:layout_centerVertical="true"/>
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="Approve Quote"
+                            android:id="@+id/approveQuote"
+                            android:padding="5dp"
+                            android:visibility="gone"
+                            android:elevation="5dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:background="@drawable/button_bg_yellow"/>
+                    </RelativeLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -222,6 +239,18 @@
                         android:drawableRight="@drawable/ic_drop_down"
                         android:id="@+id/open_measurement"
                         android:layout_marginBottom="5dp"/>
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Approve Measurement"
+                        android:id="@+id/approveMeasurement"
+                        android:padding="5dp"
+                        android:elevation="5dp"
+                        android:visibility="gone"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/button_bg_yellow"/>
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
