@@ -366,7 +366,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                         }
                     });
                 } else {
-                    appByCustomer.setVisibility(View.GONE);
+                    appByCustomer.setText(" No");
                     uploadStatus.setText(" No");
                     approveQuote.setVisibility(View.GONE);
                     download.setVisibility(View.GONE);
