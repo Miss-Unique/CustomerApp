@@ -1,7 +1,9 @@
 package com.example.soumyaagarwal.customerapp;
 
-import com.example.soumyaagarwal.customerapp.CheckInternetConnectivity.NetWatcher;
+import android.support.design.widget.CoordinatorLayout;
+
 import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
+import com.example.soumyaagarwal.customerapp.Model.Coordinator;
 import com.example.soumyaagarwal.customerapp.Model.Notif;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.FirebaseApp;
@@ -10,7 +12,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -45,9 +46,6 @@ public class CustomerApp extends android.support.multidex.MultiDexApplication {
             return mInstance;
         }
 
-        public void setConnectivityListener(NetWatcher.ConnectivityReceiverListener listener) {
-            NetWatcher.connectivityReceiverListener = listener;
-        }
 
     public static void setOnlineStatus(String userkey)
     {
@@ -140,5 +138,4 @@ public class CustomerApp extends android.support.multidex.MultiDexApplication {
         });
 
     }
-
 }
