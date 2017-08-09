@@ -117,10 +117,10 @@ public class CustomerApp extends android.support.multidex.MultiDexApplication {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             String receiverFCMToken=dataSnapshot.getValue(String.class);
                             if(!receiverFCMToken.equals("")&&receiverFCMToken!=null){
-                            Notif newNotif = new Notif(id,timestamp,type,senderId,receiverId,receiverFCMToken,content,taskId);
-                            DBREF.child("Notification").child(receiverId).child(id).setValue(newNotif);
+                                Notif newNotif = new Notif(id,timestamp,type,senderId,receiverId,receiverFCMToken,content,taskId);
+                                DBREF.child("Notification").child(receiverId).child(id).setValue(newNotif);
 
-                        }
+                            }
                         }
 
                         @Override
@@ -138,6 +138,4 @@ public class CustomerApp extends android.support.multidex.MultiDexApplication {
         });
 
     }
-
-
 }

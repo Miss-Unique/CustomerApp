@@ -2,6 +2,7 @@ package com.example.soumyaagarwal.customerapp.Task;
 
 import android.app.ProgressDialog;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
@@ -14,7 +15,10 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -50,9 +54,12 @@ import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
+import static com.example.soumyaagarwal.customerapp.CustomerApp.sendNotif;
+import static com.example.soumyaagarwal.customerapp.CustomerApp.sendNotifToAllCoordinators;
 
 public class TaskDetail extends AppCompatActivity implements taskdetailDescImageAdapter.ImageAdapterListener, assignedto_adapter.assignedto_adapterListener, bigimage_adapter.bigimage_adapterListener {
 
@@ -78,6 +85,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
     bigimage_adapter adapter;
     CustomerSession session;
     String num;
+    private Button approveQuote,approveMeasurement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +101,8 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
         appByCustomer = (TextView) findViewById(R.id.appByCustomer);
         assign_and_hideme = (TextView) findViewById(R.id.assign_and_hideme);
         measure_and_hideme = (TextView) findViewById(R.id.measure_and_hideme);
-
+        approveQuote = (Button) findViewById(R.id.approveQuote);
+        approveMeasurement = (Button)findViewById(R.id.approveMeasurement);
         startDate = (EditText) findViewById(R.id.startDate);
         endDate = (EditText) findViewById(R.id.endDate);
         quantity = (EditText) findViewById(R.id.quantity);
@@ -247,6 +256,19 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                     measurement item = dataSnapshot.getValue(measurement.class);
                     measurementList.add(item);
                     adapter_measurement.notifyDataSetChanged();
+                    approveMeasurement.setVisibility(View.VISIBLE);
+                    approveMeasurement.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            sendNotifToAllCoordinators(mykey,"approveMeaurement",session.getName()+ " approved the measurements for "+task.getName(),task_id);
+                            sendNotif(mykey,mykey,"approveMeasurement","You approved the measurements for "+task.getName(),task_id);
+                            Toast.makeText(TaskDetail.this,"You approved the measurements for "+task.getName(),Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+                else
+                {
+                    approveMeasurement.setVisibility(View.GONE);
                 }
             }
 
@@ -308,7 +330,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
         });
     }
 
-    void setValue(Task task) {
+    void setValue(final Task task) {
         startDate.setText(task.getStartDate());
         endDate.setText(task.getExpEndDate());
         quantity.setText(task.getQty());
@@ -316,17 +338,38 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
             description.setVisibility(View.VISIBLE);
             description.setText(task.getDesc());
         }
-        dbQuotation.addListenerForSingleValueEvent(new ValueEventListener() {
+        dbQuotation.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     appByCustomer.setVisibility(View.VISIBLE);
-                    Quotation quotation = dataSnapshot.getValue(Quotation.class);
+                    final Quotation quotation = dataSnapshot.getValue(Quotation.class);
+                    if(quotation.getApprovedByCust()!=null)
                     appByCustomer.setText(" " + quotation.getApprovedByCust());
                     uploadStatus.setText(" Yes");
+                    approveQuote.setVisibility(View.VISIBLE);
+                    download.setVisibility(View.VISIBLE);
+                    approveQuote.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!quotation.getApprovedByCust().equals("Yes")) {
+                                sendNotifToAllCoordinators(mykey, "approveQuotation", session.getName() + " approved the quotation for " + task.getName(), task_id);
+                                sendNotif(mykey, mykey, "approveQuotation", "You approved the quotation for " + task.getName(), task_id);
+                                dbQuotation.child("approvedByCust").setValue("Yes");
+                                Toast.makeText(TaskDetail.this,"You approved the quotation for " + task.getName(),Toast.LENGTH_LONG).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(TaskDetail.this,"Quotation Already Approved",Toast.LENGTH_LONG).show();
+                            }
+
+                        }
+                    });
                 } else {
                     appByCustomer.setVisibility(View.GONE);
                     uploadStatus.setText(" No");
+                    approveQuote.setVisibility(View.GONE);
+                    download.setVisibility(View.GONE);
                 }
             }
 
@@ -474,4 +517,56 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
             });
         }
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.task_detail_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item1:
+                DatabaseReference dbTaskCompleteStatus = DBREF.child("Customer").child(task.getCustomerId()).child("Task").child(task_id).getRef();
+                dbTaskCompleteStatus.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            String status = dataSnapshot.getValue(String.class);
+                            if (status.equals("complete")) {
+                                final AlertDialog.Builder builderCompleteTask = new AlertDialog.Builder(TaskDetail.this);
+                                builderCompleteTask.setMessage("Are you sure you want to mark this task as complete??")
+                                        .setCancelable(false)
+                                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                            public void onClick(final DialogInterface dialog, final int id) {
+                                                sendNotifToAllCoordinators(mykey, "completeJob", session.getName()+" marked the task"+task.getName()+" as complete", task_id);
+                                                sendNotif(mykey, mykey, "completeJob", "You marked task " + task.getName() + " as successfully completed", task_id);
+                                                Toast.makeText(TaskDetail.this, "You marked task " + task.getName() + " as successfully completed", Toast.LENGTH_SHORT).show();
+                                                dialog.dismiss();
+
+                                            }
+                                        })
+                                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                AlertDialog alert = builderCompleteTask.create();
+                                alert.show();
+                            }
+                        }
+                        else {
+                            Toast.makeText(TaskDetail.this, "Task is yet to be completed", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                                break;
+                            }
+            return true;
+        }
 }
