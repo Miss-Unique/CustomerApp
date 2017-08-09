@@ -27,13 +27,11 @@ import java.util.List;
 public class notification_adapter extends  RecyclerView.Adapter<notification_adapter.MyViewHolder> {
     List<Notif> list = new ArrayList<>();
     private Context context;
-    private NotificationAdapterListener listener;
     private SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
 
-    public notification_adapter(List<Notif> list, Context c, NotificationAdapterListener listener) {
+    public notification_adapter(List<Notif> list, Context c) {
         this.list = list;
         this.context = c;
-        this.listener = listener;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -68,7 +66,6 @@ public class notification_adapter extends  RecyclerView.Adapter<notification_ada
         holder.notif_message.setText(notif.getContent());
         String caps = notif.getSenderId().toUpperCase();
         holder.icon_text.setText(caps.charAt(0)+"");
-        applyClickEvents(holder,position);
         applyProfilePicture(holder);
 
         String timestamp = formatter.format(Calendar.getInstance().getTime());
@@ -82,10 +79,6 @@ public class notification_adapter extends  RecyclerView.Adapter<notification_ada
     @Override
     public int getItemCount() {
         return list.size();
-    }
-
-    public interface NotificationAdapterListener {
-        void onNotificationRowClicked(int position);
     }
 
     private void applyProfilePicture(MyViewHolder holder) {
@@ -108,14 +101,4 @@ public class notification_adapter extends  RecyclerView.Adapter<notification_ada
         return returnColor;
     }
 
-    private void applyClickEvents(MyViewHolder holder, final int position) {
-
-        holder.row.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view) {
-                listener.onNotificationRowClicked(position);
-            }
-        });
-    }
 }

@@ -24,7 +24,7 @@ import java.util.List;
 
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 
-public class NotificationActivity extends AppCompatActivity implements notification_adapter.NotificationAdapterListener{
+public class NotificationActivity extends AppCompatActivity{
 
     RecyclerView recview;
     notification_adapter adapter;
@@ -46,7 +46,7 @@ public class NotificationActivity extends AppCompatActivity implements notificat
         recview.setItemAnimator(new DefaultItemAnimator());
         recview.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
 
-        adapter = new notification_adapter(list, getApplicationContext(),this);
+        adapter = new notification_adapter(list, getApplicationContext());
         recview.setAdapter(adapter);
 
         preparelist();
@@ -95,12 +95,4 @@ public class NotificationActivity extends AppCompatActivity implements notificat
         });
     }
 
-    @Override
-    public void onNotificationRowClicked(int position)
-    {
-        Intent intent = new Intent(getApplicationContext(),TaskDetail.class);
-        Notif notif = list.get(position);
-        intent.putExtra("task_id", notif.getTaskId());
-        startActivity(intent);
-    }
 }
