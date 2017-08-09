@@ -3,6 +3,7 @@ package com.example.soumyaagarwal.customerapp.Task;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -27,6 +28,8 @@ import android.widget.Toast;
 
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.calendardatepicker.MonthAdapter;
+import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
+import com.example.soumyaagarwal.customerapp.Model.Customer;
 import com.example.soumyaagarwal.customerapp.Model.Task;
 import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.adapter.ViewImageAdapter;
@@ -49,6 +52,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
+import static com.example.soumyaagarwal.customerapp.CustomerApp.sendNotif;
+import static com.example.soumyaagarwal.customerapp.CustomerApp.sendNotifToAllCoordinators;
 
 public class CreateTask extends AppCompatActivity implements CalendarDatePickerDialogFragment.OnDateSetListener {
     DatabaseReference dbRef;
@@ -69,6 +74,7 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
     ViewImageAdapter adapter;
     taskimagesadapter tadapter;
     CompressMe compressMe;
+    CustomerSession customerSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +85,9 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
         compressMe = new CompressMe(this);
         getSupportActionBar().setTitle("Create New Task");
         dbRef= DBREF;
-        Intent intent = getIntent();
-        customerName = intent.getStringExtra("customerName");
-        customerId = intent.getStringExtra("customerId");
+        customerSession = new CustomerSession(this);
+        customerName = customerSession.getName();
+        customerId = customerSession.getUsername();
         taskName = (EditText) findViewById(R.id.taskName);
         startDate = (EditText) findViewById(R.id.startDate);
         endDate = (EditText) findViewById(R.id.endDate);
@@ -183,6 +189,7 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
         long curTime = Calendar.getInstance().getTimeInMillis();
         curTime = 9999999999999L-curTime;
 
+        String task_id = "task"+curTime;
         if(TextUtils.isEmpty(taskname)||TextUtils.isEmpty(qty)||(TextUtils.isEmpty(desc)&& picUriList.size()==0)||TextUtils.isEmpty(enddate)||TextUtils.isEmpty(startdate))
         {
             Toast.makeText(CreateTask.this,"Fill all the details",Toast.LENGTH_SHORT).show();
@@ -198,11 +205,14 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
             if (picUriList.size()>0) {
                 Intent serviceIntent = new Intent(getApplicationContext(), UploadTaskPhotosServices.class);
                 serviceIntent.putStringArrayListExtra("picUriList", picUriList);
-                serviceIntent.putExtra("taskid", "task" + curTime);
+                serviceIntent.putExtra("taskid", task_id);
                 startService(serviceIntent);
                 finish();
             }
-
+            String contentforme = "You created a new Job "+taskname;
+            sendNotif(customerId,customerId,"createJob",contentforme,task_id);
+            String contentforother = customerName +" created new Job "+taskname;
+            sendNotifToAllCoordinators(customerId,"createJob",contentforother,task_id);
             Intent intent = new Intent(CreateTask.this, Tabs.class);
             intent.putExtra("page",0);
             startActivity(intent);
@@ -247,8 +257,6 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
             if (data != null) {
                 mResults = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
                 assert mResults != null;
-
-                // show results in textview
                 System.out.println(String.format("Totally %d images selected:", mResults.size()));
                 for (String result : mResults) {
                     String l = compressMe.compressImage(result,getApplicationContext());
@@ -375,4 +383,5 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
             }
         }
     }
+
 }
