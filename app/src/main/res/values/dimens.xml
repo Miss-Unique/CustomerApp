@@ -14,4 +14,6 @@
     <dimen name="icon_text">22dp</dimen>
     <dimen name="icon_unread">14sp</dimen>
     <dimen name="timestamp">12dp</dimen>
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
 </resources>

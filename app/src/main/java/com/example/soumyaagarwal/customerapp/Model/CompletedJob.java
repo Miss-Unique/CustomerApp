@@ -1,17 +1,15 @@
 package com.example.soumyaagarwal.customerapp.Model;
 
 /**
- * Created by RajK on 04-06-2017.
+ * Created by RajK on 07-08-2017.
  */
 
-public class CompletedBy {
+public class CompletedJob {
     private String empId;
     private String dateassigned;
     private String datecompleted;
-    private String note;
-
-
     private String assignedByUsername,assignedByName;
+    private String coordinatorNote,empployeeNote;
 
     public String getAssignedByUsername() {
         return assignedByUsername;
@@ -29,14 +27,34 @@ public class CompletedBy {
         this.assignedByName = assignedByName;
     }
 
-    public String getNote() {
-        return note;
+    public CompletedJob(String empId, String dateassigned, String datecompleted, String assignedByUsername, String assignedByName, String coordinatorNote, String empployeeNote) {
+        this.empId = empId;
+        this.dateassigned = dateassigned;
+        this.datecompleted = datecompleted;
+        this.assignedByUsername = assignedByUsername;
+        this.assignedByName = assignedByName;
+        this.coordinatorNote = coordinatorNote;
+        this.empployeeNote = empployeeNote;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public CompletedJob() {
     }
 
+    public String getCoordinatorNote() {
+        return coordinatorNote;
+    }
+
+    public void setCoordinatorNote(String coordinatorNote) {
+        this.coordinatorNote = coordinatorNote;
+    }
+
+    public String getEmpployeeNote() {
+        return empployeeNote;
+    }
+
+    public void setEmpployeeNote(String empployeeNote) {
+        this.empployeeNote = empployeeNote;
+    }
 
     public String getEmpId() {
         return empId;
@@ -62,16 +80,4 @@ public class CompletedBy {
         this.datecompleted = datecompleted;
     }
 
-
-    public CompletedBy() {
-    }
-
-    public CompletedBy(String empId, String dateassigned, String datecompleted, String note, String assignedByUsername, String assignedByName) {
-        this.empId = empId;
-        this.dateassigned = dateassigned;
-        this.datecompleted = datecompleted;
-        this.note = note;
-        this.assignedByUsername = assignedByUsername;
-        this.assignedByName = assignedByName;
-    }
 }

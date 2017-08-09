@@ -22,98 +22,95 @@ import java.util.ArrayList;
 
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 
-public class taskAdapter extends  RecyclerView.Adapter<taskAdapter.MyViewHolder>
-        {
-        ArrayList<String> list = new ArrayList<>();
-        private Context context;
-        private TaskAdapterListener listener;
+public class taskAdapter extends RecyclerView.Adapter<taskAdapter.MyViewHolder> {
+    ArrayList<String> list = new ArrayList<>();
+    private Context context;
+    private TaskAdapterListener listener;
 
-        public taskAdapter(ArrayList<String> list, Context context, TaskAdapterListener listener)
-        {
-            this.list = list;
-            this.listener = listener;
-            this.context = context;
+    public taskAdapter(ArrayList<String> list, Context context, TaskAdapterListener listener) {
+        this.list = list;
+        this.listener = listener;
+        this.context = context;
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView taskname, customername, timestamp, icon_text;
+        ImageView imgProfile;
+        public LinearLayout messageContainer;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            taskname = (TextView) itemView.findViewById(R.id.tv_taskname);
+            customername = (TextView) itemView.findViewById(R.id.tv_customerName);
+            timestamp = (TextView) itemView.findViewById(R.id.timestamp);
+            icon_text = (TextView) itemView.findViewById(R.id.icon_text);
+            imgProfile = (ImageView) itemView.findViewById(R.id.icon_profile);
+            messageContainer = (LinearLayout) itemView.findViewById(R.id.message_container);
         }
+    }
 
-            public class MyViewHolder extends RecyclerView.ViewHolder
-            {
-                TextView taskname,customername,timestamp,icon_text;
-                ImageView imgProfile;
-                public LinearLayout messageContainer;
+    @Override
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_list_row, parent, false);
+        return new MyViewHolder(view);
 
-                public MyViewHolder(View itemView) {
-                    super(itemView);
-                    taskname = (TextView) itemView.findViewById(R.id.tv_taskname);
-                    customername = (TextView) itemView.findViewById(R.id.tv_customerName);
-                    timestamp = (TextView) itemView.findViewById(R.id.timestamp);
-                    icon_text =(TextView)itemView.findViewById(R.id.icon_text);
-                    imgProfile = (ImageView)itemView.findViewById(R.id.icon_profile);
-                    messageContainer = (LinearLayout)itemView.findViewById(R.id.message_container);
+    }
+
+    @Override
+    public void onBindViewHolder(final taskAdapter.MyViewHolder holder, final int position) {
+        DatabaseReference refh = DBREF.child("Task").child(list.get(position)).getRef();
+
+        refh.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Task task = dataSnapshot.getValue(Task.class);
+                    holder.taskname.setText(task.getName());
+                    String iconText = task.getName().toUpperCase();
+                    holder.icon_text.setText(iconText.charAt(0) + "");
+                    holder.imgProfile.setImageResource(R.drawable.bg_circle);
+                    holder.imgProfile.setColorFilter(task.getColor());
+                    holder.timestamp.setText(task.getStartDate());
+                    applyClickEvents(holder, position);
+                    DatabaseReference dbCustomerName = DBREF.child("Customer").child(task.getCustomerId()).getRef();
+                    dbCustomerName.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String customername = dataSnapshot.child("name").getValue(String.class);
+                            holder.customername.setText(customername);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
             }
 
             @Override
-            public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-            {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_list_row,parent,false);
-                return new MyViewHolder(view);
+            public void onCancelled(DatabaseError databaseError) {
 
             }
+        });
+    }
 
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    public interface TaskAdapterListener {
+        void onMessageRowClicked(int position);
+    }
+
+    private void applyClickEvents(MyViewHolder holder, final int position) {
+
+        holder.messageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onBindViewHolder(final taskAdapter.MyViewHolder holder, final int position) {
-                DatabaseReference refh = DBREF.child("Task").child(list.get(position)).getRef();
-
-                refh.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists())
-                        {
-                            Task task = dataSnapshot.getValue(Task.class);
-                            holder.taskname.setText(task.getName());
-                            String iconText = task.getName().toUpperCase();
-                            holder.icon_text.setText(iconText.charAt(0) + "");
-                            holder.imgProfile.setImageResource(R.drawable.bg_circle);
-                            holder.imgProfile.setColorFilter(task.getColor());
-                            holder.timestamp.setText(task.getStartDate());
-                            applyClickEvents(holder, position);
-                            DatabaseReference dbCustomerName = DBREF.child("Customer").child(task.getCustomerId()).getRef();
-                            dbCustomerName.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    String customername = dataSnapshot.child("name").getValue(String.class);
-                                    holder.customername.setText(customername);
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+            public void onClick(View view) {
+                listener.onMessageRowClicked(position);
             }
-            @Override
-            public int getItemCount() {
-                return list.size();
-            }
-            public interface TaskAdapterListener
-            {
-                void onMessageRowClicked(int position);
-            }
-            private void applyClickEvents(MyViewHolder holder, final int position) {
-
-                holder.messageContainer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        listener.onMessageRowClicked(position);
-                    }
-                });
-            }
-        }
+        });
+    }
+}

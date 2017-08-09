@@ -6,7 +6,6 @@ package com.example.soumyaagarwal.customerapp.Model;
 
 public class Coordinator {
     private String name,username,password,contact, address;
-
     public Coordinator() {
     }
 

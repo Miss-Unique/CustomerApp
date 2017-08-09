@@ -7,10 +7,4 @@
         android:title="Notifications"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/profile"
-        android:icon="@drawable/ic_profile"
-        android:title="My Profile"
-        app:showAsAction="always" />
-
 </menu>
