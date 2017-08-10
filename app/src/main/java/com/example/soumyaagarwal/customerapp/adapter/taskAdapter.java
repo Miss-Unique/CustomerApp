@@ -34,14 +34,13 @@ public class taskAdapter extends RecyclerView.Adapter<taskAdapter.MyViewHolder> 
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView taskname, customername, timestamp, icon_text;
+        TextView taskname, timestamp, icon_text;
         ImageView imgProfile;
         public LinearLayout messageContainer;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             taskname = (TextView) itemView.findViewById(R.id.tv_taskname);
-            customername = (TextView) itemView.findViewById(R.id.tv_customerName);
             timestamp = (TextView) itemView.findViewById(R.id.timestamp);
             icon_text = (TextView) itemView.findViewById(R.id.icon_text);
             imgProfile = (ImageView) itemView.findViewById(R.id.icon_profile);
@@ -72,19 +71,6 @@ public class taskAdapter extends RecyclerView.Adapter<taskAdapter.MyViewHolder> 
                     holder.imgProfile.setColorFilter(task.getColor());
                     holder.timestamp.setText(task.getStartDate());
                     applyClickEvents(holder, position);
-                    DatabaseReference dbCustomerName = DBREF.child("Customer").child(task.getCustomerId()).getRef();
-                    dbCustomerName.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String customername = dataSnapshot.child("name").getValue(String.class);
-                            holder.customername.setText(customername);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
                 }
             }
 
