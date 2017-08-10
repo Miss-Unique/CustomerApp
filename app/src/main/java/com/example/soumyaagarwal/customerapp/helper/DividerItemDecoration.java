@@ -14,10 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-/**
- * Created by Ravi Tamada on 21/02/17.
- * www.androidhive.info
- */
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private static final int[] ATTRS = new int[]{
@@ -42,7 +38,6 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         }
         mOrientation = orientation;
     }
-
     @Override
     public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
         if (mOrientation == VERTICAL_LIST) {

@@ -1,17 +1,13 @@
 package com.example.soumyaagarwal.customerapp.chat;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,23 +19,18 @@ import com.example.soumyaagarwal.customerapp.Model.ChatListModel;
 import com.example.soumyaagarwal.customerapp.Model.NameAndStatus;
 import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.adapter.chatListAdapter;
-import com.example.soumyaagarwal.customerapp.adapter.taskAdapter;
-import com.example.soumyaagarwal.customerapp.helper.MarshmallowPermissions;
+import com.example.soumyaagarwal.customerapp.helper.DividerItemDecoration;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 
