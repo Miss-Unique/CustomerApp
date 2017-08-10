@@ -18,7 +18,8 @@
         android:clickable="true"
         android:orientation="vertical"
         android:paddingLeft="72dp"
-        android:paddingRight="@dimen/padding_list_row">
+        android:paddingRight="@dimen/padding_list_row"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/tv_taskname"
@@ -30,23 +31,6 @@
             android:textColor="#000000"
             android:textSize="@dimen/msg_text_primary"
             android:textStyle="bold" />
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_marginTop="2dp">
-        <TextView
-            android:id="@+id/tv_customerName"
-            android:text="Customer Name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:lines="1"
-            android:textColor="@color/message"
-            android:textSize="@dimen/msg_text_secondary"
-            android:textStyle="bold" />
-
-        </LinearLayout>
     </LinearLayout>
 
     <RelativeLayout

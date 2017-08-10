@@ -91,6 +91,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_detail);
+
         session = new CustomerSession(getApplicationContext());
         marshmallowPermissions = new MarshmallowPermissions(this);
         dbRef = DBREF;

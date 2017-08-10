@@ -36,16 +36,16 @@ public class DownloadFileService extends IntentService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int icon = R.mipmap.ic_upload;
+        int icon = R.mipmap.ic_download;
         mBuilder = new NotificationCompat.Builder(
                 getApplicationContext());
         mBuilder.setSmallIcon(icon)
-                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.ic_upload))
+                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.ic_download))
                 .setContentTitle(getString(R.string.app_name))
                 .setOngoing(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setColor(getApplicationContext().getResources().getColor(R.color.white))
-                .setContentText("Uploading quotations...");
+                .setContentText("Downloading Quotation...");
         synchronized (this) {
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(0, mBuilder.build());
@@ -85,7 +85,7 @@ public class DownloadFileService extends IntentService {
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                 Log.e("firebase ", ";local tem file created  created " + localFile.toString());
                 Toast.makeText(DownloadFileService.this, "Downloaded Quotation", Toast.LENGTH_SHORT).show();
-                updateNotification("Succesfully Uploaded");
+                updateNotification("Succesfully Downloaded");
                 stopSelf();
 
             }
@@ -93,7 +93,7 @@ public class DownloadFileService extends IntentService {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 Toast.makeText(DownloadFileService.this, "Download Failed", Toast.LENGTH_SHORT).show();
-                updateNotification("Upload failed");
+                updateNotification("Download failed");
                 stopSelf();
                 Log.e("firebase ", ";local tem file not created  created " + exception.toString());
             }
