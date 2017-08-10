@@ -367,7 +367,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                         }
                     });
                 } else {
-                    appByCustomer.setVisibility(View.GONE);
+                    appByCustomer.setText(" No");
                     uploadStatus.setText(" No");
                     approveQuote.setVisibility(View.GONE);
                     download.setVisibility(View.GONE);
@@ -527,7 +527,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.item1:
+            case R.id.taskcomplete:
                 DatabaseReference dbTaskCompleteStatus = DBREF.child("Customer").child(task.getCustomerId()).child("Task").child(task_id).getRef();
                 dbTaskCompleteStatus.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -555,10 +555,11 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                                 AlertDialog alert = builderCompleteTask.create();
                                 alert.show();
                             }
+                            else {
+                                Toast.makeText(TaskDetail.this, "Task is yet to be completed", Toast.LENGTH_LONG).show();
+                            }
                         }
-                        else {
-                            Toast.makeText(TaskDetail.this, "Task is yet to be completed", Toast.LENGTH_LONG).show();
-                        }
+
                     }
 
                                     @Override
