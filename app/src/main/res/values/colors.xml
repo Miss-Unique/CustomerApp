@@ -29,5 +29,8 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="yellow">#ffd54f</color>
+    <color name="backgroundColor">#c8ffbd39</color>
+    <color name="backgroundColorLight">#fff3cd</color>
+
 
 </resources>

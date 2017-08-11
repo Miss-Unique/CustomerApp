@@ -78,17 +78,14 @@ public class drawer extends AppCompatActivity implements NavigationView.OnNaviga
             case R.id.first:
                 Intent intent2 = new Intent(getApplicationContext(), MyProfile.class);
                 startActivity(intent2);
-                finish();
                 break;
             case R.id.second:
                 Intent intent = new Intent(getApplicationContext(), ContactCoordinator.class);
                 startActivity(intent);
-                finish();
                 break;
             case R.id.third:
                 Intent intent1 = new Intent(getApplicationContext(), phonebook.class);
                 startActivity(intent1);
-                finish();
                 break;
             case R.id.fourth:
                 //TODO About the firm

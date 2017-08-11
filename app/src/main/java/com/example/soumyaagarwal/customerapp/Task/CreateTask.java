@@ -14,7 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
+import com.example.soumyaagarwal.customerapp.helper.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -306,17 +306,26 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
                             int i = picUriList.indexOf(item[0]);
                             if (i == picUriList.size() - 1)
                                 i = 0;
-                            picUriList.remove(item[0]);
-                            adapter.selectedPosition = i;
-                            adapter.notifyDataSetChanged();
-                            item[0] = picUriList.get(i);
-                            ImageViewlarge.setImageURI(Uri.parse(item[0]));
+                            if(picUriList.size()==1)
+                            {
+                                picUriList.clear();
+                                viewSelectedImages.dismiss();
+
+                            }
+                            else {
+                                picUriList.remove(item[0]);
+                                adapter.selectedPosition = i;
+                                adapter.notifyDataSetChanged();
+                                item[0] = picUriList.get(i);
+                                ImageViewlarge.setImageURI(Uri.parse(item[0]));
+                            }
                         }
                     });
 
                     canceldone.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            picUriList.clear();
                             viewSelectedImages.dismiss();
                         }
                     });
@@ -338,6 +347,7 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
                                 viewSelectedImages.dismiss();
 
                             } else {
+                                picUriList.clear();
                                 viewSelectedImages.dismiss();
                             }
                             //onpressing save button dont forget to add this
