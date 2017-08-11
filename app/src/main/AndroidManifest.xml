@@ -7,7 +7,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <uses-feature android:name="android.hardware.camera" />
 
     <application
@@ -30,9 +31,10 @@
         <activity android:name=".Task.TaskDetail" />
         <activity android:name=".Task.CreateTask" />
         <activity android:name=".chat.ChatActivity" />
+
         <receiver android:name=".CheckInternetConnectivity.NetWatcher">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
         <activity
@@ -55,7 +57,6 @@
         <service
             android:name=".services.UploadTaskPhotosServices"
             android:exported="false" />
-        <service android:name=".services.UploadFileService" />
 
         <activity android:name=".notification.NotificationActivity" />
         <activity android:name=".MyProfile.MyProfile" />
@@ -65,6 +66,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MyProfile.ContactCoordinator" />
         <activity android:name=".MyProfile.phonebook"></activity>
+
+        <service
+            android:name=".services.UploadPhotoAndFile"
+            android:exported="false"></service>
+
     </application>
 
 </manifest>
