@@ -24,7 +24,6 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
 import com.example.soumyaagarwal.customerapp.Model.CompletedBy;
 import com.example.soumyaagarwal.customerapp.Model.Quotation;
@@ -49,14 +48,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import org.w3c.dom.Text;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 import static com.example.soumyaagarwal.customerapp.CustomerApp.sendNotif;
 import static com.example.soumyaagarwal.customerapp.CustomerApp.sendNotifToAllCoordinators;
@@ -367,7 +363,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                         }
                     });
                 } else {
-                    appByCustomer.setVisibility(View.GONE);
+                    appByCustomer.setText(" No");
                     uploadStatus.setText(" No");
                     approveQuote.setVisibility(View.GONE);
                     download.setVisibility(View.GONE);
@@ -527,7 +523,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.item1:
+            case R.id.taskcomplete:
                 DatabaseReference dbTaskCompleteStatus = DBREF.child("Customer").child(task.getCustomerId()).child("Task").child(task_id).getRef();
                 dbTaskCompleteStatus.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -555,10 +551,11 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                                 AlertDialog alert = builderCompleteTask.create();
                                 alert.show();
                             }
+                            else {
+                                Toast.makeText(TaskDetail.this, "Task is yet to be completed", Toast.LENGTH_LONG).show();
+                            }
                         }
-                        else {
-                            Toast.makeText(TaskDetail.this, "Task is yet to be completed", Toast.LENGTH_LONG).show();
-                        }
+
                     }
 
                                     @Override

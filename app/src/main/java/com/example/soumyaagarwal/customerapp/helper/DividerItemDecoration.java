@@ -3,6 +3,8 @@ package com.example.soumyaagarwal.customerapp.helper;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,11 +18,8 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     };
 
     public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
-
     public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
-
     private Drawable mDivider;
-
     private int mOrientation;
 
     public DividerItemDecoration(Context context, int orientation) {
@@ -57,6 +56,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
             final int top = child.getBottom() + params.bottomMargin;
             final int bottom = top + mDivider.getIntrinsicHeight();
             mDivider.setBounds(left, top, right, bottom);
+            mDivider.setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY);
             mDivider.draw(c);
         }
     }
@@ -73,6 +73,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
             final int left = child.getRight() + params.rightMargin;
             final int right = left + mDivider.getIntrinsicHeight();
             mDivider.setBounds(left, top, right, bottom);
+            mDivider.setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY);
             mDivider.draw(c);
         }
     }
@@ -86,4 +87,3 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 }
-

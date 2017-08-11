@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
+import com.example.soumyaagarwal.customerapp.Model.Customer;
 import com.example.soumyaagarwal.customerapp.Model.Task;
 import com.example.soumyaagarwal.customerapp.R;
 import com.google.firebase.database.DataSnapshot;
@@ -26,15 +28,17 @@ public class taskAdapter extends RecyclerView.Adapter<taskAdapter.MyViewHolder> 
     ArrayList<String> list = new ArrayList<>();
     private Context context;
     private TaskAdapterListener listener;
+    private CustomerSession customerSession;
 
     public taskAdapter(ArrayList<String> list, Context context, TaskAdapterListener listener) {
         this.list = list;
         this.listener = listener;
         this.context = context;
+        customerSession = new CustomerSession(context);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView taskname, timestamp, icon_text;
+        TextView taskname, timestamp, icon_text,tv_status;
         ImageView imgProfile;
         public LinearLayout messageContainer;
 
@@ -44,6 +48,7 @@ public class taskAdapter extends RecyclerView.Adapter<taskAdapter.MyViewHolder> 
             timestamp = (TextView) itemView.findViewById(R.id.timestamp);
             icon_text = (TextView) itemView.findViewById(R.id.icon_text);
             imgProfile = (ImageView) itemView.findViewById(R.id.icon_profile);
+            tv_status=(TextView)itemView.findViewById(R.id.tv_status);
             messageContainer = (LinearLayout) itemView.findViewById(R.id.message_container);
         }
     }
@@ -63,14 +68,37 @@ public class taskAdapter extends RecyclerView.Adapter<taskAdapter.MyViewHolder> 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    Task task = dataSnapshot.getValue(Task.class);
-                    holder.taskname.setText(task.getName());
-                    String iconText = task.getName().toUpperCase();
-                    holder.icon_text.setText(iconText.charAt(0) + "");
-                    holder.imgProfile.setImageResource(R.drawable.bg_circle);
-                    holder.imgProfile.setColorFilter(task.getColor());
-                    holder.timestamp.setText(task.getStartDate());
-                    applyClickEvents(holder, position);
+                    final Task task = dataSnapshot.getValue(Task.class);
+                            holder.taskname.setText(task.getName());
+                            String iconText = task.getName().toUpperCase();
+                            holder.icon_text.setText(iconText.charAt(0) + "");
+                            holder.imgProfile.setImageResource(R.drawable.bg_circle);
+                            holder.imgProfile.setColorFilter(task.getColor());
+                            holder.timestamp.setText(task.getStartDate());
+
+                            applyClickEvents(holder, position);
+
+                  final DatabaseReference dbTask = DBREF.child("Customer").child(customerSession.getUsername()).child("Task").child(list.get(position)).getRef();
+                    dbTask.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String status = dataSnapshot.getValue(String.class);
+                            if(status.equals("pending"))
+                                holder.tv_status.setText("Pending");
+                            else{
+                                holder.tv_status.setText("Complete");
+                                dbTask.removeEventListener(this);
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+
                 }
             }
 

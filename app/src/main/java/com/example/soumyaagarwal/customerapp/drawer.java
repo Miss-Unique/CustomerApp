@@ -6,18 +6,29 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
+import com.example.soumyaagarwal.customerapp.Model.CustomerAccount;
 import com.example.soumyaagarwal.customerapp.MyProfile.ContactCoordinator;
 import com.example.soumyaagarwal.customerapp.MyProfile.MyProfile;
 import com.example.soumyaagarwal.customerapp.MyProfile.phonebook;
 import com.example.soumyaagarwal.customerapp.notification.NotificationActivity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 
 public class drawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -27,7 +38,6 @@ public class drawer extends AppCompatActivity implements NavigationView.OnNaviga
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer1);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         session = new CustomerSession(getApplicationContext());
@@ -80,6 +90,44 @@ public class drawer extends AppCompatActivity implements NavigationView.OnNaviga
             case R.id.fourth:
                 //TODO About the firm
                 break;
+            case R.id.fifth:
+                final AlertDialog customerAccountDialog;
+
+                customerAccountDialog = new AlertDialog.Builder(this)
+                        .setView(R.layout.account_info_layout)
+                        .create();
+                customerAccountDialog.show();
+                final Button edit;
+                final EditText total, advance, balance;
+                total = (EditText) customerAccountDialog.findViewById(R.id.total);
+                advance = (EditText) customerAccountDialog.findViewById(R.id.advance);
+                balance = (EditText) customerAccountDialog.findViewById(R.id.balance);
+                edit = (Button) customerAccountDialog.findViewById(R.id.okButton);
+                DatabaseReference dbaccountinfo = DBREF.child("Customer").child(session.getUsername()).getRef();
+                dbaccountinfo.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            CustomerAccount customerAccount = dataSnapshot.getValue(CustomerAccount.class);
+                            total.setText(customerAccount.getTotal() + "");
+                            advance.setText(customerAccount.getAdvance() + "");
+                            balance.setText((customerAccount.getTotal() - customerAccount.getAdvance()) + "");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                edit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        customerAccountDialog.dismiss();
+                    }
+                });
+                    break;
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

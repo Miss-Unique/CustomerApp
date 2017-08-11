@@ -6,6 +6,11 @@
             android:id="@+id/first"
             android:icon="@drawable/ic_profile_black"
             android:title="Profile" />
+        <item
+            android:id="@+id/fifth"
+            android:icon="@drawable/ic_account_balance_wallet_black_24dp"
+            android:title="Profile" />
+
     </group>
 
     <group android:id="@+id/two">

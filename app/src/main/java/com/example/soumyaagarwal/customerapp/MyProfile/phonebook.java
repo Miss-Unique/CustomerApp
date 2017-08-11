@@ -10,7 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import com.example.soumyaagarwal.customerapp.Model.Phonebook;
 import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.adapter.phonebook_adapter;
-import com.example.soumyaagarwal.customerapp.helper.DividerItemDecoration;
+import com.example.soumyaagarwal.customerapp.notification.NotificationActivity;
+import com.example.soumyaagarwal.customerapp.tablayout.Tabs;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -88,4 +89,11 @@ public class phonebook extends AppCompatActivity implements phonebook_adapter.ph
         callIntent.setData(Uri.parse("tel:" + num));
         startActivity(callIntent);
     }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, Tabs.class);
+        startActivity(intent);
+        finish();
+    }
+
 }
