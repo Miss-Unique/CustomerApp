@@ -78,14 +78,17 @@ public class drawer extends AppCompatActivity implements NavigationView.OnNaviga
             case R.id.first:
                 Intent intent2 = new Intent(getApplicationContext(), MyProfile.class);
                 startActivity(intent2);
+                finish();
                 break;
             case R.id.second:
                 Intent intent = new Intent(getApplicationContext(), ContactCoordinator.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.third:
                 Intent intent1 = new Intent(getApplicationContext(), phonebook.class);
                 startActivity(intent1);
+                finish();
                 break;
             case R.id.fourth:
                 //TODO About the firm
@@ -103,15 +106,15 @@ public class drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 advance = (EditText) customerAccountDialog.findViewById(R.id.advance);
                 balance = (EditText) customerAccountDialog.findViewById(R.id.balance);
                 edit = (Button) customerAccountDialog.findViewById(R.id.okButton);
-                DatabaseReference dbaccountinfo = DBREF.child("Customer").child(session.getUsername()).getRef();
+                DatabaseReference dbaccountinfo = DBREF.child("Customer").child(session.getUsername()).child("Account").getRef();
                 dbaccountinfo.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             CustomerAccount customerAccount = dataSnapshot.getValue(CustomerAccount.class);
-                            total.setText(customerAccount.getTotal() + "");
-                            advance.setText(customerAccount.getAdvance() + "");
-                            balance.setText((customerAccount.getTotal() - customerAccount.getAdvance()) + "");
+                            total.setText("Total "+customerAccount.getTotal() + "");
+                            advance.setText("Advance Paid "+customerAccount.getAdvance() + "");
+                            balance.setText("Balance "+(customerAccount.getTotal() - customerAccount.getAdvance()) + "");
                         }
                     }
 

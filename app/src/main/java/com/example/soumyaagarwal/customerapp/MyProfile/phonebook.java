@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import com.example.soumyaagarwal.customerapp.Model.Phonebook;
 import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.adapter.phonebook_adapter;
+import com.example.soumyaagarwal.customerapp.helper.DividerItemDecoration;
 import com.example.soumyaagarwal.customerapp.notification.NotificationActivity;
 import com.example.soumyaagarwal.customerapp.tablayout.Tabs;
 import com.google.firebase.database.ChildEventListener;

@@ -18,6 +18,8 @@ import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.tablayout.Tabs;
 import com.google.firebase.database.DatabaseReference;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 
 public class MyProfile extends AppCompatActivity {
@@ -89,6 +91,10 @@ public class MyProfile extends AppCompatActivity {
                         temp_add = add_new.getText().toString();
                         temp_name = name_new.getText().toString();
                         temp_num = num_new.getText().toString();
+
+
+                        temp_name = WordUtils.capitalizeFully(temp_name);
+                        temp_add= WordUtils.capitalizeFully(temp_add);
 
                         if (TextUtils.isEmpty(temp_add) || TextUtils.isEmpty(temp_name) || TextUtils.isEmpty(temp_num))
                             Toast.makeText(MyProfile.this, "Enter details...", Toast.LENGTH_SHORT).show();

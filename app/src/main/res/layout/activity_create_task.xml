@@ -35,11 +35,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapSentences"
+                android:id="@+id/custId"
+                android:enabled="false"
+                android:padding="10dp"
+                android:textColor="@color/colorPrimary"
+                android:drawableLeft="@drawable/ic_face_black_24dp"
+                android:hint="  Name"
+                android:background="@drawable/edittext_bg_whitebg"
+                android:textSize="18dp"
+                android:layout_marginTop="10dp"
+                />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences"
                 android:id="@+id/taskName"
                 android:padding="10dp"
                 android:textColor="@color/colorPrimary"
                 android:drawableLeft="@drawable/ic_business_center_black_24dp"
-                android:hint="Task Name"
+                android:hint="  Task Name"
                 android:background="@drawable/edittext_bg_whitebg"
                 android:textSize="18dp"
                 android:layout_marginTop="10dp"
@@ -52,7 +67,7 @@
                 android:padding="10dp"
                 android:textColor="@color/colorPrimary"
                 android:drawableLeft="@drawable/ic_format_list_numbered_black_24dp"
-                android:hint="Quantity"
+                android:hint="  Quantity"
                 android:background="@drawable/edittext_bg_whitebg"
                 android:textSize="18dp"
                 android:layout_marginTop="10dp"
@@ -104,7 +119,12 @@
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:id="@+id/description"
-                android:layout_below="@+id/textView"
+                android:padding="10dp"
+                android:textColor="@color/colorPrimary"
+                android:drawableLeft="@drawable/ic_edit_red_24dp"
+                android:background="@drawable/edittext_bg_whitebg"
+                android:textSize="18dp"
+                android:hint="  Type Here"
                 android:visibility="gone" />
 
             <android.support.v7.widget.RecyclerView
@@ -116,57 +136,69 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"></LinearLayout>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:drawableLeft="@drawable/ic_date_range_black_24dp"
-                android:textColor="@color/colorPrimaryDark"
-                android:layout_marginTop="20dp"
-                android:textSize="20dp"
-                android:text="  Timeline"
-                android:layout_alignParentTop="true"
-                android:textStyle="bold|italic"/>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_event_available_black_24dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20dp"
+                android:layout_marginTop="20dp"
+                android:text="  Timeline"
+                android:textStyle="bold|italic"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="5dp"
                 android:background="@color/colorPrimary"></LinearLayout>
 
-
-
-            <EditText
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hapticFeedbackEnabled="true"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:id="@+id/endDate"
-                android:hint="Deadline"
-                android:padding="10dp"
-                android:textColor="@color/colorPrimary"
-                android:drawableLeft="@drawable/ic_date_range_black_24dp"
-                android:background="@drawable/edittext_bg_whitebg"
-                android:textSize="18dp"
                 android:layout_marginTop="10dp"
 
+                android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/startDate"
+                    android:layout_weight="0.4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView3"
+                    android:padding="10dp"
+                    android:textColor="@color/colorPrimary"
+                    android:drawableLeft="@drawable/ic_date_range_black_24dp"
+                    android:background="@drawable/edittext_bg_whitebg"
+                    android:textSize="18dp"
+                    android:enabled="false"
+                    android:inputType="date" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="to"
+                    android:textStyle="bold|italic"
+                    android:layout_weight="0.2"/>
 
-                />
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="date"
-                android:id="@+id/startDate"
-                android:hint="DD/MM/YYYY"
-                android:enabled="false"
-                android:padding="10dp"
-                android:textColor="@color/colorPrimary"
-                android:drawableLeft="@drawable/ic_date_range_black_24dp"
-                android:background="@drawable/edittext_bg_whitebg"
-                android:textSize="18dp"
-                android:layout_marginTop="10dp"
-                />
+                <EditText
+                    android:id="@+id/endDate"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.4"
+                    android:layout_height="wrap_content"
+                    android:hint="Type Here"
+                    android:layout_below="@+id/textView3"
+                    android:padding="10dp"
+                    android:textColor="@color/colorPrimary"
+                    android:drawableLeft="@drawable/ic_date_range_black_24dp"
+                    android:background="@drawable/edittext_bg_whitebg"
+                    android:textSize="18dp"
+
+                    android:inputType="date"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    />
+
+            </LinearLayout>
+
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
                 android:layout_height="50dp" />

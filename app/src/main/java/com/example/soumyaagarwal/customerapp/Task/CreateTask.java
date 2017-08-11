@@ -234,14 +234,6 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
     }
 
     @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(CreateTask.this, Tabs.class);
-        intent.putExtra("page",0);
-        startActivity(intent);
-        finish();
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
@@ -391,7 +383,34 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
                 }
                 return;
             }
+
         }
+
     }
+    @Override
+    public void onBackPressed() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to exit?")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, int id) {
+                        Intent intent = new Intent(CreateTask.this, Tabs.class);
+                        intent.putExtra("id", customerId);
+                        startActivity(intent);
+                        finish();
+                    }
+
+
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
 
 }

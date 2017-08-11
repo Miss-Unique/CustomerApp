@@ -1,8 +1,10 @@
 package com.example.soumyaagarwal.customerapp.tablayout;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.widget.FrameLayout;
 
 import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
@@ -72,5 +74,27 @@ public class Tabs extends drawer implements TabLayout.OnTabSelectedListener {
     public void onTabReselected(TabLayout.Tab tab) {
 
     }
+    @Override
+    public void onBackPressed() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to exit?")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, int id) {
+                        Tabs.super.onBackPressed();
+                    }
+
+
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
 
 }
