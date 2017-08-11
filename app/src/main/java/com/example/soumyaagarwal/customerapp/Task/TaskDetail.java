@@ -24,7 +24,6 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
 import com.example.soumyaagarwal.customerapp.Model.CompletedBy;
 import com.example.soumyaagarwal.customerapp.Model.Quotation;
@@ -49,14 +48,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import org.w3c.dom.Text;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 import static com.example.soumyaagarwal.customerapp.CustomerApp.sendNotif;
 import static com.example.soumyaagarwal.customerapp.CustomerApp.sendNotifToAllCoordinators;

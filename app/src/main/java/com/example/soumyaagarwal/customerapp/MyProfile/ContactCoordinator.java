@@ -15,6 +15,7 @@ import com.example.soumyaagarwal.customerapp.Model.Customer;
 import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.adapter.coordinator_adapter;
 import com.example.soumyaagarwal.customerapp.chat.ChatActivity;
+import com.example.soumyaagarwal.customerapp.tablayout.Tabs;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -160,4 +161,11 @@ public class ContactCoordinator extends AppCompatActivity implements coordinator
         callIntent.setData(Uri.parse("tel:" + num));
         startActivity(callIntent);
     }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, Tabs.class);
+        startActivity(intent);
+        finish();
+    }
+
 }

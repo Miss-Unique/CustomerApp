@@ -1,12 +1,8 @@
 package com.example.soumyaagarwal.customerapp.tablayout;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
@@ -14,7 +10,6 @@ import com.example.soumyaagarwal.customerapp.MyProfile.MyProfile;
 import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.drawer;
 import com.example.soumyaagarwal.customerapp.helper.MarshmallowPermissions;
-import com.example.soumyaagarwal.customerapp.notification.NotificationActivity;
 
 public class Tabs extends drawer implements TabLayout.OnTabSelectedListener {
 
@@ -77,4 +72,5 @@ public class Tabs extends drawer implements TabLayout.OnTabSelectedListener {
     public void onTabReselected(TabLayout.Tab tab) {
 
     }
+
 }

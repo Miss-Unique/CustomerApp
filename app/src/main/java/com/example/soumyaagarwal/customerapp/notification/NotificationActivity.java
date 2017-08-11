@@ -1,5 +1,4 @@
 package com.example.soumyaagarwal.customerapp.notification;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,19 +6,18 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
 import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
 import com.example.soumyaagarwal.customerapp.Model.Notif;
 import com.example.soumyaagarwal.customerapp.R;
-import com.example.soumyaagarwal.customerapp.Task.TaskDetail;
 import com.example.soumyaagarwal.customerapp.adapter.notification_adapter;
 import com.example.soumyaagarwal.customerapp.tablayout.Tabs;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
@@ -69,6 +67,7 @@ public class NotificationActivity extends AppCompatActivity{
                 if (dataSnapshot.exists()) {
                     notif = dataSnapshot.getValue(Notif.class);
                     list.add(notif);
+                    sortNotification();
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -94,5 +93,12 @@ public class NotificationActivity extends AppCompatActivity{
             }
         });
     }
-
+    private void sortNotification() {
+        Collections.sort(list, new Comparator<Notif>() {
+            @Override
+            public int compare(Notif o1, Notif o2) {
+                return Long.parseLong(o1.getId()) < Long.parseLong(o2.getId()) ? -1 : 0; // Decreasing Order
+            }
+        });
+    }
 }

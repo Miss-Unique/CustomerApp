@@ -67,6 +67,8 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import droidninja.filepicker.FilePickerBuilder;
@@ -361,6 +363,7 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
                     }
 
                     chatList.add(comment);
+                    sortChatMessages();
                     mAdapter.notifyDataSetChanged();
 
                     if(chatList.size()>0)
@@ -698,6 +701,14 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
                 });
                 break;
         }
+    }
+    private void sortChatMessages() {
+        Collections.sort(chatList, new Comparator<ChatMessage>() {
+            @Override
+            public int compare(ChatMessage o1, ChatMessage o2) {
+                return Long.parseLong(o1.getId()) < Long.parseLong(o2.getId()) ? -1 : 0; // Decreasing Order
+            }
+        });
     }
 
 
