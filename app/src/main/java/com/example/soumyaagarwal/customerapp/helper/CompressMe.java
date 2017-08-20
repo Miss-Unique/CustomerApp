@@ -19,6 +19,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static com.example.soumyaagarwal.customerapp.CustomerApp.AppName;
+
 /**
  * Created by SoumyaAgarwal on 7/7/2017.
  */
@@ -147,7 +149,7 @@ public class CompressMe
     }
 
     public String getFilename() {
-        File file = new File(Environment.getExternalStorageDirectory().getPath(), "MeChat/Images");
+        File file = new File(Environment.getExternalStorageDirectory().getPath(), AppName+"/Images");
         if (!file.exists()) {
             file.mkdirs();
         }

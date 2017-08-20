@@ -22,6 +22,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 
+import static com.example.soumyaagarwal.customerapp.CustomerApp.AppName;
+
 public class DownloadFileService extends IntentService {
 
     String TaskId;
@@ -72,7 +74,7 @@ public class DownloadFileService extends IntentService {
 
         String h = url;
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl(url);
-        File rootPath = new File(Environment.getExternalStorageDirectory(), "MeChat/Images");
+        File rootPath = new File(Environment.getExternalStorageDirectory(), AppName +"/Images");
         if (!rootPath.exists()) {
             rootPath.mkdirs();
         }

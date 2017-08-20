@@ -18,6 +18,7 @@ public class CustomerApp extends android.support.multidex.MultiDexApplication {
     public static DatabaseReference DBREF;
     private CustomerSession session;
     public static SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy hh:mm aa");
+    public static String AppName = "MeChat";
 
     @Override
     public void onCreate() {
@@ -28,7 +29,7 @@ public class CustomerApp extends android.support.multidex.MultiDexApplication {
         if (!FirebaseApp.getApps(this).isEmpty()) {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         }
-        DBREF = FirebaseDatabase.getInstance().getReference().child("MeChat").getRef();
+        DBREF = FirebaseDatabase.getInstance().getReference().child(AppName).getRef();
         session = new CustomerSession(this);
         String userkey = session.getUsername();
         setOnlineStatus(userkey);

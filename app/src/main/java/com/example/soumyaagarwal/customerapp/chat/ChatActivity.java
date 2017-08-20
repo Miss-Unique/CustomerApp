@@ -60,6 +60,7 @@ import java.util.List;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 
+import static com.example.soumyaagarwal.customerapp.CustomerApp.AppName;
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 import static com.example.soumyaagarwal.customerapp.CustomerApp.formatter;
 
@@ -618,7 +619,7 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
 
         switch (type) {
             case "photo":
-                File rootPath = new File(Environment.getExternalStorageDirectory(), "MeChat/Images");
+                File rootPath = new File(Environment.getExternalStorageDirectory(), AppName+"/Images");
                 if (!rootPath.exists()) {
                     rootPath.mkdirs();
                 }
@@ -644,7 +645,7 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
                 });
                 break;
             case "doc":
-                rootPath = new File(Environment.getExternalStorageDirectory(), "MeChat/Docs");
+                rootPath = new File(Environment.getExternalStorageDirectory(), AppName+"/Docs");
                 if (!rootPath.exists()) {
                     rootPath.mkdirs();
                 }

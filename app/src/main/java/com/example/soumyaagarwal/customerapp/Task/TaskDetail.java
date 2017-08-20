@@ -11,7 +11,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+
 import com.example.soumyaagarwal.customerapp.helper.DividerItemDecoration;
+
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,6 +26,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
 import com.example.soumyaagarwal.customerapp.Model.CompletedBy;
 import com.example.soumyaagarwal.customerapp.Model.Quotation;
@@ -48,11 +51,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
 import org.w3c.dom.Text;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import static com.example.soumyaagarwal.customerapp.CustomerApp.AppName;
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 import static com.example.soumyaagarwal.customerapp.CustomerApp.sendNotif;
 import static com.example.soumyaagarwal.customerapp.CustomerApp.sendNotifToAllCoordinators;
@@ -81,7 +88,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
     bigimage_adapter adapter;
     CustomerSession session;
     String num;
-    private Button approveQuote,approveMeasurement;
+    private Button approveQuote, approveMeasurement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +106,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
         assign_and_hideme = (TextView) findViewById(R.id.assign_and_hideme);
         measure_and_hideme = (TextView) findViewById(R.id.measure_and_hideme);
         approveQuote = (Button) findViewById(R.id.approveQuote);
-        approveMeasurement = (Button)findViewById(R.id.approveMeasurement);
+        approveMeasurement = (Button) findViewById(R.id.approveMeasurement);
         startDate = (EditText) findViewById(R.id.startDate);
         endDate = (EditText) findViewById(R.id.endDate);
         quantity = (EditText) findViewById(R.id.quantity);
@@ -257,14 +264,12 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                     approveMeasurement.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            sendNotifToAllCoordinators(mykey,"approveMeaurement",session.getName()+ " approved the measurements for "+task.getName(),task_id);
-                            sendNotif(mykey,mykey,"approveMeasurement","You approved the measurements for "+task.getName(),task_id);
-                            Toast.makeText(TaskDetail.this,"You approved the measurements for "+task.getName(),Toast.LENGTH_LONG).show();
+                            sendNotifToAllCoordinators(mykey, "approveMeaurement", session.getName() + " approved the measurements for " + task.getName(), task_id);
+                            sendNotif(mykey, mykey, "approveMeasurement", "You approved the measurements for " + task.getName(), task_id);
+                            Toast.makeText(TaskDetail.this, "You approved the measurements for " + task.getName(), Toast.LENGTH_LONG).show();
                         }
                     });
-                }
-                else
-                {
+                } else {
                     approveMeasurement.setVisibility(View.GONE);
                 }
             }
@@ -341,8 +346,8 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                 if (dataSnapshot.exists()) {
                     appByCustomer.setVisibility(View.VISIBLE);
                     final Quotation quotation = dataSnapshot.getValue(Quotation.class);
-                    if(quotation.getApprovedByCust()!=null)
-                    appByCustomer.setText(" " + quotation.getApprovedByCust());
+                    if (quotation.getApprovedByCust() != null)
+                        appByCustomer.setText(" " + quotation.getApprovedByCust());
                     uploadStatus.setText(" Yes");
                     approveQuote.setVisibility(View.VISIBLE);
                     download.setVisibility(View.VISIBLE);
@@ -353,11 +358,9 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                                 sendNotifToAllCoordinators(mykey, "approveQuotation", session.getName() + " approved the quotation for " + task.getName(), task_id);
                                 sendNotif(mykey, mykey, "approveQuotation", "You approved the quotation for " + task.getName(), task_id);
                                 dbQuotation.child("approvedByCust").setValue("Yes");
-                                Toast.makeText(TaskDetail.this,"You approved the quotation for " + task.getName(),Toast.LENGTH_LONG).show();
-                            }
-                            else
-                            {
-                                Toast.makeText(TaskDetail.this,"Quotation Already Approved",Toast.LENGTH_LONG).show();
+                                Toast.makeText(TaskDetail.this, "You approved the quotation for " + task.getName(), Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(TaskDetail.this, "Quotation Already Approved", Toast.LENGTH_LONG).show();
                             }
 
                         }
@@ -461,7 +464,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
 
         CompletedBy completedBy = assignedtoList.get(position);
         id = completedBy.getEmpId();
-        FirebaseDatabase.getInstance().getReference().child("MeChat").child("Employee").child(id).child("phone_num").addValueEventListener(new ValueEventListener() {
+        DBREF.child("Employee").child(id).child("phone_num").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 num = dataSnapshot.getValue(String.class);
@@ -486,7 +489,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
             holder.download_taskdetail_image.setVisibility(View.GONE);
             String url = DescImages.get(position);
             StorageReference str = FirebaseStorage.getInstance().getReferenceFromUrl(url);
-            File rootPath = new File(Environment.getExternalStorageDirectory(), "MeChat/TaskDetailImages");
+            File rootPath = new File(Environment.getExternalStorageDirectory(), AppName+"/TaskDetailImages");
 
             if (!rootPath.exists()) {
                 rootPath.mkdirs();
@@ -514,6 +517,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
             });
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.task_detail_menu, menu);
@@ -536,7 +540,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                                         .setCancelable(false)
                                         .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                             public void onClick(final DialogInterface dialog, final int id) {
-                                                sendNotifToAllCoordinators(mykey, "completeJob", session.getName()+" marked the task"+task.getName()+" as complete", task_id);
+                                                sendNotifToAllCoordinators(mykey, "completeJob", session.getName() + " marked the task" + task.getName() + " as complete", task_id);
                                                 sendNotif(mykey, mykey, "completeJob", "You marked task " + task.getName() + " as successfully completed", task_id);
                                                 Toast.makeText(TaskDetail.this, "You marked task " + task.getName() + " as successfully completed", Toast.LENGTH_SHORT).show();
                                                 dialog.dismiss();
@@ -550,21 +554,20 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                                         });
                                 AlertDialog alert = builderCompleteTask.create();
                                 alert.show();
-                            }
-                            else {
+                            } else {
                                 Toast.makeText(TaskDetail.this, "Task is yet to be completed", Toast.LENGTH_LONG).show();
                             }
                         }
 
                     }
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                                    }
-                                });
-                                break;
-                            }
-            return true;
+                    }
+                });
+                break;
         }
+        return true;
+    }
 }
