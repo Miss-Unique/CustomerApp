@@ -11,6 +11,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
+
+import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.helper.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,7 +31,6 @@ import android.widget.Toast;
 import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
 import com.example.soumyaagarwal.customerapp.Model.ChatMessage;
 import com.example.soumyaagarwal.customerapp.Model.NameAndStatus;
-import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.adapter.ViewImageAdapter;
 import com.example.soumyaagarwal.customerapp.adapter.chatAdapter;
 import com.example.soumyaagarwal.customerapp.helper.CompressMe;

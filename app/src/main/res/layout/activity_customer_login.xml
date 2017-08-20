@@ -92,7 +92,44 @@
             android:text="Login"
             android:textColor="#000000"
             android:textSize="15dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <LinearLayout
+                android:layout_width="30dp"
+                android:layout_height="1dp"
+                android:background="@color/bpDark_gray"
+                android:layout_weight="0.48"></LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OR"
+                android:gravity="center_horizontal"
+                android:layout_weight="0.04"/>
+            <LinearLayout
+                android:layout_width="30dp"
+                android:layout_height="1dp"
+                android:background="@color/bpDark_gray"
+                android:gravity="center_vertical"
+                android:layout_weight="0.48"></LinearLayout>
+
+        </LinearLayout>
+        <Button
+            android:id="@+id/signUp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:textSize="15dp"
+
+            android:background="@color/colorPrimary"
+            android:text="New Customer ?? Sign Up"
+            android:textColor="@color/white" />
+
 
     </LinearLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>

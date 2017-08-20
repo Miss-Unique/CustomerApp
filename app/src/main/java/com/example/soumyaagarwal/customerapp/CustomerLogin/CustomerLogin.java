@@ -28,7 +28,7 @@ import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 public class CustomerLogin extends AppCompatActivity {
 
     EditText username, password;
-    Button button;
+    Button button,signUp;
     String Username,Password;
     DatabaseReference database;
     CustomerSession session;
@@ -41,6 +41,7 @@ public class CustomerLogin extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_login);
+        signUp = (Button) findViewById(R.id.signUp);
         session = new CustomerSession(getApplicationContext());
         sharedPreferences = getSharedPreferences("myFCMToken",MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -59,6 +60,13 @@ public class CustomerLogin extends AppCompatActivity {
         input_email = (TextInputLayout)findViewById(R.id.input_emaillogin);
         input_password = (TextInputLayout)findViewById(R.id.input_passwordlogin);
         database = DBREF.child("Customer").getRef();
+        signUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(CustomerLogin.this, CustomerSignUp.class));
+                finish();
+            }
+        });
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +75,7 @@ public class CustomerLogin extends AppCompatActivity {
                 Password = password.getText().toString().trim();
 
                 if (TextUtils.isEmpty(Username)) {
-                    input_email.setError("Enter Email");
+                    input_email.setError("Enter Username");
                     if (input_email.requestFocus()) {
                         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                     }
