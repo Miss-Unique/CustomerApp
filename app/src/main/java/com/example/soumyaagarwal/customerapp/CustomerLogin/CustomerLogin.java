@@ -1,5 +1,6 @@
 package com.example.soumyaagarwal.customerapp.CustomerLogin;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.design.widget.TextInputLayout;
@@ -28,13 +29,14 @@ import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 public class CustomerLogin extends AppCompatActivity {
 
     EditText username, password;
-    Button button,signUp;
-    String Username,Password;
+    Button button, signUp;
+    String Username, Password;
     DatabaseReference database;
     CustomerSession session;
     TextInputLayout input_email, input_password;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+    ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,22 +45,20 @@ public class CustomerLogin extends AppCompatActivity {
         setContentView(R.layout.activity_customer_login);
         signUp = (Button) findViewById(R.id.signUp);
         session = new CustomerSession(getApplicationContext());
-        sharedPreferences = getSharedPreferences("myFCMToken",MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("myFCMToken", MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        if(FirebaseInstanceId.getInstance().getToken()!=null)
-        {
-            editor.putString("myFCMToken",FirebaseInstanceId.getInstance().getToken());
+        if (FirebaseInstanceId.getInstance().getToken() != null) {
+            editor.putString("myFCMToken", FirebaseInstanceId.getInstance().getToken());
             editor.commit();
         }
-        if(session.isolduser()==true)
-        {
+        if (session.isolduser() == true) {
             goToTabLayout();
         }
         username = (EditText) findViewById(R.id.editText2);
         password = (EditText) findViewById(R.id.editText3);
         button = (Button) findViewById(R.id.login);
-        input_email = (TextInputLayout)findViewById(R.id.input_emaillogin);
-        input_password = (TextInputLayout)findViewById(R.id.input_passwordlogin);
+        input_email = (TextInputLayout) findViewById(R.id.input_emaillogin);
+        input_password = (TextInputLayout) findViewById(R.id.input_passwordlogin);
         database = DBREF.child("Customer").getRef();
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,11 +89,10 @@ public class CustomerLogin extends AppCompatActivity {
                     }
                 }
 
-                if(!TextUtils.isEmpty(Username) && !TextUtils.isEmpty(Password)){
+                if (!TextUtils.isEmpty(Username) && !TextUtils.isEmpty(Password)) {
                     login();
-                }
-                else
-                    Toast.makeText(getBaseContext(),"Enter Complete Details", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(getBaseContext(), "Enter Complete Details", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -104,38 +103,42 @@ public class CustomerLogin extends AppCompatActivity {
 
         DatabaseReference db = DBREF.child("Customer").child(Username).getRef();
 
+        pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Logging in...");
+        pDialog.setCancelable(true);
+        pDialog.show();
+
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())
-                {
+                if (dataSnapshot.exists()) {
 
                     Customer customer = dataSnapshot.getValue(Customer.class);
                     if (!customer.getPassword().equals(Password)) {
+                        pDialog.dismiss();
                         Toast.makeText(getBaseContext(), "Wrong Password", Toast.LENGTH_SHORT).show();
-                    } else
-                    {
-                        session.create_oldusersession(Username,customer.getName(),customer.getPhone_num(),customer.getAddress());
+                    } else {
+                        session.create_oldusersession(Username, customer.getName(), customer.getPhone_num(), customer.getAddress());
                         CustomerApp.setOnlineStatus(Username);
 
+                        pDialog.dismiss();
+
                         String myFCMToken;
-                        if(FirebaseInstanceId.getInstance().getToken()==null)
-                            myFCMToken =sharedPreferences.getString("myFCMToken","");
+                        if (FirebaseInstanceId.getInstance().getToken() == null)
+                            myFCMToken = sharedPreferences.getString("myFCMToken", "");
 
                         else
                             myFCMToken = FirebaseInstanceId.getInstance().getToken();
 
-                        if(!myFCMToken.equals("")) {
+                        if (!myFCMToken.equals("")) {
                             DBREF.child("Fcmtokens").child(Username).child("token").setValue(myFCMToken);
                             goToTabLayout();
-                        }
-                        else
-                            Toast.makeText(CustomerLogin.this,"You will need to clear the app data or reinstall the app to make it work properly",Toast.LENGTH_LONG).show();
+                        } else
+                            Toast.makeText(CustomerLogin.this, "You will need to clear the app data or reinstall the app to make it work properly", Toast.LENGTH_LONG).show();
                     }
 
-                }
-                else
-                {
+                } else {
+                    pDialog.dismiss();
                     Toast.makeText(getBaseContext(), "Customer Not Registered", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -146,10 +149,10 @@ public class CustomerLogin extends AppCompatActivity {
             }
         });
     }
-    private void goToTabLayout()
-    {
+
+    private void goToTabLayout() {
         Intent intent = new Intent(CustomerLogin.this, Tabs.class);
-        intent.putExtra("page",0);
+        intent.putExtra("page", 0);
         startActivity(intent);
         finish();
 
