@@ -1,5 +1,6 @@
 package com.example.soumyaagarwal.customerapp.Task;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 
 import android.content.DialogInterface;
@@ -7,11 +8,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 
+import com.example.soumyaagarwal.customerapp.adapter.ViewImageAdapter;
+import com.example.soumyaagarwal.customerapp.helper.CompressMe;
 import com.example.soumyaagarwal.customerapp.helper.DividerItemDecoration;
 
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +27,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +44,10 @@ import com.example.soumyaagarwal.customerapp.adapter.measurement_adapter;
 import com.example.soumyaagarwal.customerapp.adapter.taskdetailDescImageAdapter;
 import com.example.soumyaagarwal.customerapp.chat.ChatActivity;
 import com.example.soumyaagarwal.customerapp.helper.MarshmallowPermissions;
+import com.example.soumyaagarwal.customerapp.listener.ClickListener;
+import com.example.soumyaagarwal.customerapp.listener.RecyclerTouchListener;
 import com.example.soumyaagarwal.customerapp.services.DownloadFileService;
+import com.example.soumyaagarwal.customerapp.services.UploadTaskPhotosServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
@@ -51,6 +59,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.zfdang.multiple_images_selector.ImagesSelectorActivity;
+import com.zfdang.multiple_images_selector.SelectorSettings;
 
 import org.w3c.dom.Text;
 
@@ -83,12 +93,18 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
     DatabaseReference dbQuotation;
     ProgressDialog progressDialog;
     private MarshmallowPermissions marshmallowPermissions;
-    private AlertDialog viewSelectedImages;
+    private AlertDialog viewSelectedImages, edit_description;
     LinearLayoutManager linearLayoutManager;
     bigimage_adapter adapter;
     CustomerSession session;
     String num;
     private Button approveQuote, approveMeasurement;
+    ImageButton written_desc, photo_desc;
+    private int REQUEST_CODE = 1;
+    private ArrayList<String> mResults;
+    CompressMe compressMe;
+    private ArrayList<String> picUriList = new ArrayList<>();
+    ViewImageAdapter madapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +130,8 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
         rec_assignedto = (RecyclerView) findViewById(R.id.rec_assignedto);
         rec_measurement = (RecyclerView) findViewById(R.id.rec_measurement);
         rec_DescImages = (RecyclerView) findViewById(R.id.rec_DescImages);
+        photo_desc = (ImageButton) findViewById(R.id.photo_desc);
+        written_desc = (ImageButton) findViewById(R.id.written_desc);
 
         mykey = session.getUsername();
 
@@ -176,7 +194,149 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
             }
         });
 
+        written_desc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edit_description = new AlertDialog.Builder(TaskDetail.this)
+                        .setView(R.layout.edit_description).create();
+                edit_description.show();
+
+                final EditText description2 = (EditText) edit_description.findViewById(R.id.description);
+                final EditText olddescription = (EditText) edit_description.findViewById(R.id.olddescription);
+                Button oksave = (Button) edit_description.findViewById(R.id.oksave);
+                Button okcancel = (Button) edit_description.findViewById(R.id.okcancel);
+
+                String desc;
+                if (description.getVisibility() == View.VISIBLE) {
+                    desc = description.getText().toString().trim();
+                    olddescription.setText(desc);
+                }
+                oksave.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String newdesc = description2.getText().toString().trim();
+                        DBREF.child("Task").child(task_id).child("desc").setValue(olddescription.getText().toString()+ " " +newdesc);
+                        edit_description.dismiss();
+                    }
+                });
+
+                okcancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        edit_description.dismiss();
+                    }
+                });
+            }
+        });
+
+        photo_desc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!marshmallowPermissions.checkPermissionForCamera() && !marshmallowPermissions.checkPermissionForExternalStorage()) {
+                    ActivityCompat.requestPermissions(TaskDetail.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
+                            2);
+                } else {
+                    Intent intent = new Intent(TaskDetail.this, ImagesSelectorActivity.class);
+                    intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 5);
+                    intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, true);
+                    startActivityForResult(intent, REQUEST_CODE);
+                }
+            }
+        });
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            if (data != null) {
+                mResults = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
+                assert mResults != null;
+
+                System.out.println(String.format("Totally %d images selected:", mResults.size()));
+                for (String result : mResults) {
+                    String l = compressMe.compressImage(result, getApplicationContext());
+                    picUriList.add(l);
+                }
+                if (picUriList.size() > 0) {
+                    viewSelectedImages = new AlertDialog.Builder(TaskDetail.this)
+                            .setTitle("Selected Images").setView(R.layout.activity_view_selected_image).create();
+                    viewSelectedImages.show();
+
+                    final ImageView ImageViewlarge = (ImageView) viewSelectedImages.findViewById(R.id.ImageViewlarge);
+                    ImageButton cancel = (ImageButton) viewSelectedImages.findViewById(R.id.cancel);
+                    Button canceldone = (Button) viewSelectedImages.findViewById(R.id.canceldone);
+                    Button okdone = (Button) viewSelectedImages.findViewById(R.id.okdone);
+                    RecyclerView rv = (RecyclerView) viewSelectedImages.findViewById(R.id.viewImages);
+
+                    linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+                    rv.setLayoutManager(linearLayoutManager);
+                    rv.setItemAnimator(new DefaultItemAnimator());
+                    rv.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.HORIZONTAL));
+
+                    madapter = new ViewImageAdapter(picUriList, this);
+                    rv.setAdapter(madapter);
+
+                    final String[] item = {picUriList.get(0)};
+                    ImageViewlarge.setImageURI(Uri.parse(item[0]));
+
+                    rv.addOnItemTouchListener(new RecyclerTouchListener(this, rv, new ClickListener() {
+                        @Override
+                        public void onClick(View view, int position) {
+                            madapter.selectedPosition = position;
+                            madapter.notifyDataSetChanged();
+                            item[0] = picUriList.get(position);
+                            ImageViewlarge.setImageURI(Uri.parse(item[0]));
+                        }
+
+                        @Override
+                        public void onLongClick(View view, int position) {
+
+                        }
+                    }));
+
+                    cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            int i = picUriList.indexOf(item[0]);
+                            if (i == picUriList.size() - 1)
+                                i = 0;
+                            picUriList.remove(item[0]);
+                            madapter.selectedPosition = i;
+                            madapter.notifyDataSetChanged();
+                            item[0] = picUriList.get(i);
+                            ImageViewlarge.setImageURI(Uri.parse(item[0]));
+                        }
+                    });
+
+                    canceldone.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            viewSelectedImages.dismiss();
+                        }
+                    });
+
+                    okdone.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            if (picUriList.size() > 0) {
+                                Intent serviceIntent = new Intent(getApplicationContext(), UploadTaskPhotosServices.class);
+                                serviceIntent.putStringArrayListExtra("picUriList", picUriList);
+                                serviceIntent.putExtra("taskid", task_id);
+                                startService(serviceIntent);
+                                finish();
+                            } else {
+                                viewSelectedImages.dismiss();
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    }
+
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();

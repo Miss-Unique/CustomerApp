@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapSentences"
-                android:id="@+id/custId"
+                android:id="@+id/custName"
                 android:enabled="false"
                 android:padding="10dp"
                 android:textColor="@color/colorPrimary"

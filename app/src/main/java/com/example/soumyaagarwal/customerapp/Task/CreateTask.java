@@ -57,7 +57,7 @@ import static com.example.soumyaagarwal.customerapp.CustomerApp.sendNotifToAllCo
 
 public class CreateTask extends AppCompatActivity implements CalendarDatePickerDialogFragment.OnDateSetListener {
     DatabaseReference dbRef;
-    EditText taskName,startDate,endDate,quantity,description;
+    EditText taskName,startDate,endDate,quantity,description,custName;
     RecyclerView desc_photo_grid;
     ImageButton written_desc, photo_desc;
     String customerId,customerName,curdate;
@@ -88,9 +88,11 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
         customerSession = new CustomerSession(this);
         customerName = customerSession.getName();
         customerId = customerSession.getUsername();
+        custName = (EditText) findViewById(R.id.custName);
         taskName = (EditText) findViewById(R.id.taskName);
         startDate = (EditText) findViewById(R.id.startDate);
         endDate = (EditText) findViewById(R.id.endDate);
+        custName.setText(customerName);
         endDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,13 +179,9 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
     void createTask()
     {
         String taskname = taskName.getText().toString().trim();
-
         String qty = quantity.getText().toString().trim();
-
         String desc = description.getText().toString().trim();
-
         String enddate = endDate.getText().toString().trim();
-
         String startdate= startDate.getText().toString().trim();
 
         long curTime = Calendar.getInstance().getTimeInMillis();
