@@ -112,9 +112,9 @@ public class drawer extends AppCompatActivity implements NavigationView.OnNaviga
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             CustomerAccount customerAccount = dataSnapshot.getValue(CustomerAccount.class);
-                            total.setText("Total "+customerAccount.getTotal() + "");
-                            advance.setText("Advance Paid "+customerAccount.getAdvance() + "");
-                            balance.setText("Balance "+(customerAccount.getTotal() - customerAccount.getAdvance()) + "");
+                            total.setText("Total :  "+customerAccount.getTotal() + "");
+                            advance.setText("Advance Paid :  "+customerAccount.getAdvance() + "");
+                            balance.setText("Balance :  "+(customerAccount.getTotal() - customerAccount.getAdvance()) + "");
                         }
                     }
 

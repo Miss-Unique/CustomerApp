@@ -48,7 +48,7 @@ android:layout_height="wrap_content">
         android:layout_marginTop="10dp"
         android:inputType="textCapSentences"
         android:enabled="false"
-        android:text="Total 0"/>
+        android:text="Total :  0"/>
 
     <EditText
         android:id="@+id/advance"
@@ -62,7 +62,7 @@ android:layout_height="wrap_content">
         android:inputType="phone"
         android:textSize="18dp"
         android:enabled="false"
-        android:text="Advance Paid 0"/>
+        android:text="Advance Paid :  0"/>
 
 
 <LinearLayout
@@ -80,7 +80,7 @@ android:layout_height="wrap_content">
         android:background="@drawable/edittext_bg_peach"
         android:inputType="textPostalAddress"
         android:enabled="false"
-        android:text="Balance 0"/>
+        android:text="Balance :  0"/>
 </LinearLayout>
 </LinearLayout>
 <android.support.v7.widget.CardView

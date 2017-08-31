@@ -1,12 +1,18 @@
 package com.example.soumyaagarwal.customerapp.services;
 
 import android.app.IntentService;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.example.soumyaagarwal.customerapp.Model.ChatMessage;
+import com.example.soumyaagarwal.customerapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
@@ -29,9 +35,13 @@ import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 public class UploadPhotoAndFile extends IntentService {
     StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
 
+    private NotificationManager notificationManager;
+    private NotificationCompat.Builder mBuilder;
+
     public UploadPhotoAndFile() {
         super("UploadPhotoAndFile");
     }
+
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -49,13 +59,13 @@ public class UploadPhotoAndFile extends IntentService {
         }
     }
 
-    public void uploadFile(final String path, String type, final String mykey, final String otheruserkey, final String receiverToken, final String dbTableKey, final DatabaseReference dbChat, final String timestamp, final long id) {
+    public void uploadFile(final String path, final String type, final String mykey, final String otheruserkey, final String receiverToken, final String dbTableKey, final DatabaseReference dbChat, final String timestamp, final long id) {
         //if there is a file to upload
         //put case
 //        System.out.println("uri found" + Uri.fromFile(new File(path)));
         if (Uri.fromFile(new File(path)) != null) {
             //displaying a progress dialog while upload is going on
-            StorageReference riversRef = mStorageRef.child(dbTableKey).child("files");
+            StorageReference riversRef = mStorageRef.child(dbTableKey).child("ChatImages").child(id+"");
 
             switch (type) {
                 case "photo":
@@ -66,11 +76,10 @@ public class UploadPhotoAndFile extends IntentService {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                    ChatMessage cm = new ChatMessage(mykey, otheruserkey, timestamp, "photo", id + "", "0", downloadUrl.toString(), receiverToken, dbTableKey, 100, path, "");
+                                    ChatMessage cm = new ChatMessage(mykey, otheruserkey, timestamp, type, id + "", "0", downloadUrl.toString(), receiverToken, dbTableKey, 100, path, "");
                                     dbChat.child(String.valueOf(id)).setValue(cm);
                                     Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
                                     DBREF.child("Chats").child(dbTableKey).child("lastMsg").setValue(id);
-
 
                                 }
                             })
@@ -79,7 +88,6 @@ public class UploadPhotoAndFile extends IntentService {
                                 public void onFailure(@NonNull Exception exception) {
                                     dbChat.child(String.valueOf(id)).removeValue();
                                     Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-
                                 }
                             })
                             .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -87,21 +95,19 @@ public class UploadPhotoAndFile extends IntentService {
                                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                                     int progress = (int) ((100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
                                     dbChat.child(String.valueOf(id)).child("percentUploaded").setValue(progress);
-                                    //displaying percentage in progress dialog
-                                    //                              progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+
                                 }
                             });
                     break;
                 //if there is not any file
                 case "doc":
                     //create msg with 2 extra nodes
-
                     riversRef.putFile(Uri.fromFile(new File(path)))
                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                    ChatMessage cm = new ChatMessage(mykey, otheruserkey, timestamp, "doc", id + "", "0", downloadUrl.toString(), receiverToken, dbTableKey, 100, path, "");
+                                    ChatMessage cm = new ChatMessage(mykey, otheruserkey, timestamp, type, id + "", "0", downloadUrl.toString(), receiverToken, dbTableKey, 100, path, "");
                                     dbChat.child(String.valueOf(id)).setValue(cm);
                                     Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
                                     DBREF.child("Chats").child(dbTableKey).child("lastMsg").setValue(id);
@@ -112,7 +118,6 @@ public class UploadPhotoAndFile extends IntentService {
                                 public void onFailure(@NonNull Exception exception) {
                                     dbChat.child(String.valueOf(id)).removeValue();
                                     Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-
                                 }
                             })
                             .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -120,8 +125,6 @@ public class UploadPhotoAndFile extends IntentService {
                                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                                     int progress = (int) ((100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
                                     dbChat.child(String.valueOf(id)).child("percentUploaded").setValue(progress);
-                                    //displaying percentage in progress dialog
-                                    //                              progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
                                 }
                             });
 
@@ -130,4 +133,5 @@ public class UploadPhotoAndFile extends IntentService {
 
         }
     }
+
 }

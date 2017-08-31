@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:id="@+id/download_chatimage"
-                android:src="@mipmap/ic_download"
+                android:src="@mipmap/ic_downloadchat"
                 android:visibility="gone"/>
 
             <ProgressBar

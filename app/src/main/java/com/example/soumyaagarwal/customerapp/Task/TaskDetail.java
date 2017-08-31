@@ -58,6 +58,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.zfdang.multiple_images_selector.ImagesSelectorActivity;
 import com.zfdang.multiple_images_selector.SelectorSettings;
@@ -98,7 +100,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
     bigimage_adapter adapter;
     CustomerSession session;
     String num;
-    private Button approveQuote, approveMeasurement;
+    private Button approveQuote, approveMeasurement, approveDesc;
     ImageButton written_desc, photo_desc;
     private int REQUEST_CODE = 1;
     private ArrayList<String> mResults;
@@ -114,6 +116,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
         session = new CustomerSession(getApplicationContext());
         marshmallowPermissions = new MarshmallowPermissions(this);
         dbRef = DBREF;
+        compressMe = new CompressMe(this);
         progressDialog = new ProgressDialog(this);
         download = (ImageButton) findViewById(R.id.download);
         progressBar = (ProgressBar) findViewById(R.id.progress);
@@ -122,6 +125,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
         assign_and_hideme = (TextView) findViewById(R.id.assign_and_hideme);
         measure_and_hideme = (TextView) findViewById(R.id.measure_and_hideme);
         approveQuote = (Button) findViewById(R.id.approveQuote);
+        approveDesc = (Button) findViewById(R.id.approveDesc);
         approveMeasurement = (Button) findViewById(R.id.approveMeasurement);
         startDate = (EditText) findViewById(R.id.startDate);
         endDate = (EditText) findViewById(R.id.endDate);
@@ -162,6 +166,15 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
         dbMeasurement = dbTask.child("Measurement").getRef();
         dbDescImages = dbTask.child("DescImages").getRef();
 
+        approveDesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendNotifToAllCoordinators(mykey, "approveDescription", session.getName() + " approved the description for " + task.getName(), task_id);
+                sendNotif(mykey, mykey, "approveMeasurement", "You approved the description for " + task.getName(), task_id);
+                Toast.makeText(TaskDetail.this, "You approved the description for " + task.getName(), Toast.LENGTH_LONG).show();
+
+            }
+        });
         prepareListData();
 
         dbTask.addValueEventListener(new ValueEventListener() {
@@ -215,7 +228,11 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                     @Override
                     public void onClick(View v) {
                         String newdesc = description2.getText().toString().trim();
-                        DBREF.child("Task").child(task_id).child("desc").setValue(olddescription.getText().toString()+ " " +newdesc);
+                        DBREF.child("Task").child(task_id).child("desc").setValue(olddescription.getText().toString() + " " + newdesc);
+                        String contentforme = "You created a new Job " + task.getName();
+                        sendNotif(session.getUsername(), session.getUsername(), "createJob", contentforme, task_id);
+                        String contentforother = session.getName() + " created new Job " + task.getName();
+                        sendNotifToAllCoordinators(session.getUsername(), "createJob", contentforother, task_id);
                         edit_description.dismiss();
                     }
                 });
@@ -261,13 +278,13 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                 }
                 if (picUriList.size() > 0) {
                     viewSelectedImages = new AlertDialog.Builder(TaskDetail.this)
-                            .setTitle("Selected Images").setView(R.layout.activity_view_selected_image).create();
+                            .setView(R.layout.activity_view_selected_image).create();
                     viewSelectedImages.show();
 
                     final ImageView ImageViewlarge = (ImageView) viewSelectedImages.findViewById(R.id.ImageViewlarge);
                     ImageButton cancel = (ImageButton) viewSelectedImages.findViewById(R.id.cancel);
-                    Button canceldone = (Button) viewSelectedImages.findViewById(R.id.canceldone);
-                    Button okdone = (Button) viewSelectedImages.findViewById(R.id.okdone);
+                    ImageButton canceldone = (ImageButton) viewSelectedImages.findViewById(R.id.canceldone);
+                    ImageButton okdone = (ImageButton) viewSelectedImages.findViewById(R.id.okdone);
                     RecyclerView rv = (RecyclerView) viewSelectedImages.findViewById(R.id.viewImages);
 
                     linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -299,20 +316,28 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                     cancel.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
                             int i = picUriList.indexOf(item[0]);
                             if (i == picUriList.size() - 1)
                                 i = 0;
-                            picUriList.remove(item[0]);
-                            madapter.selectedPosition = i;
-                            madapter.notifyDataSetChanged();
-                            item[0] = picUriList.get(i);
-                            ImageViewlarge.setImageURI(Uri.parse(item[0]));
+                            if (picUriList.size() == 1) {
+                                picUriList.clear();
+                                viewSelectedImages.dismiss();
+
+                            } else {
+                                picUriList.remove(item[0]);
+                                madapter.selectedPosition = i;
+                                madapter.notifyDataSetChanged();
+                                item[0] = picUriList.get(i);
+                                ImageViewlarge.setImageURI(Uri.parse(item[0]));
+                            }
                         }
                     });
 
                     canceldone.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            picUriList.clear();
                             viewSelectedImages.dismiss();
                         }
                     });
@@ -362,7 +387,6 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                     Quotation quotation = dataSnapshot.getValue(Quotation.class);
                     url[0] = quotation.getUrl();
                     Intent serviceIntent = new Intent(getApplicationContext(), DownloadFileService.class);
-                    serviceIntent.putExtra("TaskId", task_id);
                     serviceIntent.putExtra("url", url[0]);
                     startService(serviceIntent);
                 } else {
@@ -543,7 +567,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
     @Override
     public void onImageClicked(int position) {
         viewSelectedImages = new AlertDialog.Builder(TaskDetail.this)
-                .setTitle("Images").setView(R.layout.view_image_on_click).create();
+                .setView(R.layout.view_image_on_click).create();
         viewSelectedImages.show();
 
         RecyclerView bigimage = (RecyclerView) viewSelectedImages.findViewById(R.id.bigimage);
@@ -648,31 +672,41 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
             holder.progressBar.setVisibility(View.VISIBLE);
             holder.download_taskdetail_image.setVisibility(View.GONE);
             String url = DescImages.get(position);
-            StorageReference str = FirebaseStorage.getInstance().getReferenceFromUrl(url);
-            File rootPath = new File(Environment.getExternalStorageDirectory(), AppName+"/TaskDetailImages");
 
-            if (!rootPath.exists()) {
-                rootPath.mkdirs();
-            }
-            String uriSting = System.currentTimeMillis() + ".jpg";
-
-            final File localFile = new File(rootPath, uriSting);
-
-            str.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            final StorageReference mStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl(url);
+            final String[] ext = new String[1];
+            mStorageRef.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
                 @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    Log.e("firebase ", ";local tem file created  created " + localFile.toString());
-                    holder.download_taskdetail_image.setVisibility(View.VISIBLE);
-                    holder.progressBar.setVisibility(View.GONE);
-                    Toast.makeText(TaskDetail.this, "Image " + position + 1 + " Downloaded", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Log.e("firebase ", ";local tem file not created  created " + exception.toString());
-                    holder.download_taskdetail_image.setVisibility(View.VISIBLE);
-                    holder.progressBar.setVisibility(View.GONE);
-                    Toast.makeText(TaskDetail.this, "Failed to download image " + position + 1, Toast.LENGTH_SHORT).show();
+                public void onSuccess(StorageMetadata storageMetadata) {
+                    ext[0] = storageMetadata.getContentType();
+                    int p = ext[0].lastIndexOf("/");
+                    String l = "." + ext[0].substring(p + 1);
+
+                    File rootPath = new File(Environment.getExternalStorageDirectory(), AppName + "/TaskDetailImages");
+
+                    if (!rootPath.exists()) {
+                        rootPath.mkdirs();
+                    }
+                    String uriSting = System.currentTimeMillis() + l;
+                    final File localFile = new File(rootPath, uriSting);
+
+                    mStorageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            Log.e("firebase ", ";local tem file created  created " + localFile.toString());
+                            holder.download_taskdetail_image.setVisibility(View.VISIBLE);
+                            holder.progressBar.setVisibility(View.GONE);
+                            Toast.makeText(TaskDetail.this, "Image " + position + 1 + " Downloaded", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Log.e("firebase ", ";local tem file not created  created " + exception.toString());
+                            holder.download_taskdetail_image.setVisibility(View.VISIBLE);
+                            holder.progressBar.setVisibility(View.GONE);
+                            Toast.makeText(TaskDetail.this, "Failed to download image " + position + 1, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             });
         }

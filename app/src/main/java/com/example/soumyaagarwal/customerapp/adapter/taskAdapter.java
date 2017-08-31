@@ -81,15 +81,17 @@ public class taskAdapter extends RecyclerView.Adapter<taskAdapter.MyViewHolder> 
                   final DatabaseReference dbTask = DBREF.child("Customer").child(customerSession.getUsername()).child("Task").child(list.get(position)).getRef();
                     dbTask.addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String status = dataSnapshot.getValue(String.class);
-                            if(status.equals("pending"))
-                                holder.tv_status.setText("Pending");
-                            else{
-                                holder.tv_status.setText("Complete");
-                                dbTask.removeEventListener(this);
+                        public void onDataChange(DataSnapshot dataSnapshot)
+                        {
+                            if(dataSnapshot.exists()) {
+                                String status = dataSnapshot.getValue(String.class);
+                                if (status.equals("pending"))
+                                    holder.tv_status.setText("Pending");
+                                else {
+                                    holder.tv_status.setText("Complete");
+                                    dbTask.removeEventListener(this);
+                                }
                             }
-
                         }
 
                         @Override

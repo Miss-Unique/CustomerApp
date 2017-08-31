@@ -38,6 +38,8 @@ import com.example.soumyaagarwal.customerapp.helper.MarshmallowPermissions;
 import com.example.soumyaagarwal.customerapp.helper.TouchImageView;
 import com.example.soumyaagarwal.customerapp.listener.ClickListener;
 import com.example.soumyaagarwal.customerapp.listener.RecyclerTouchListener;
+import com.example.soumyaagarwal.customerapp.services.DownloadFileForChatService;
+import com.example.soumyaagarwal.customerapp.services.DownloadFileService;
 import com.example.soumyaagarwal.customerapp.services.UploadPhotoAndFile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -55,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import droidninja.filepicker.FilePickerBuilder;
@@ -222,19 +225,20 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case FilePickerConst.REQUEST_CODE_PHOTO:
-                if (resultCode == Activity.RESULT_OK && data != null) {
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
                     photoPaths = new ArrayList<>();
                     photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
 
                     if (photoPaths.size() > 0) {
                         viewSelectedImages = new AlertDialog.Builder(ChatActivity.this)
-                                .setTitle("Selected Images").setView(R.layout.activity_view_selected_image).create();
+                                .setView(R.layout.activity_view_selected_image).create();
                         viewSelectedImages.show();
 
                         final ImageView ImageViewlarge = (ImageView) viewSelectedImages.findViewById(R.id.ImageViewlarge);
                         ImageButton cancel = (ImageButton) viewSelectedImages.findViewById(R.id.cancel);
-                        Button canceldone = (Button) viewSelectedImages.findViewById(R.id.canceldone);
-                        Button okdone = (Button) viewSelectedImages.findViewById(R.id.okdone);
+                        ImageButton canceldone = (ImageButton) viewSelectedImages.findViewById(R.id.canceldone);
+                        ImageButton okdone = (ImageButton) viewSelectedImages.findViewById(R.id.okdone);
                         RecyclerView rv = (RecyclerView) viewSelectedImages.findViewById(R.id.viewImages);
 
                         linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -269,17 +273,27 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
                                 int i = photoPaths.indexOf(item[0]);
                                 if (i == photoPaths.size() - 1)
                                     i = 0;
-                                photoPaths.remove(item[0]);
-                                adapter.selectedPosition = i;
-                                adapter.notifyDataSetChanged();
-                                item[0] = photoPaths.get(i);
-                                ImageViewlarge.setImageURI(Uri.parse(item[0]));
+                                if(photoPaths.size()==1)
+                                {
+                                    photoPaths.clear();
+                                    viewSelectedImages.dismiss();
+
+                                }
+                                else {
+                                    photoPaths.remove(item[0]);
+                                    adapter.selectedPosition = i;
+                                    adapter.notifyDataSetChanged();
+                                    item[0] = photoPaths.get(i);
+                                    ImageViewlarge.setImageURI(Uri.parse(item[0]));
+                                }
+
                             }
                         });
 
                         canceldone.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                photoPaths.clear();
                                 viewSelectedImages.dismiss();
                             }
                         });
@@ -322,11 +336,8 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
         long curTime = Calendar.getInstance().getTimeInMillis();
         final long id = curTime;
 
-        ChatMessage cm = new ChatMessage(mykey, otheruserkey, timestamp, "photo", id + "", "0", "nourl", receiverToken, dbTableKey, 0, filePath, "");
+        ChatMessage cm = new ChatMessage(mykey, otheruserkey, timestamp, type, id + "", "0", "nourl", receiverToken, dbTableKey, 0, filePath, "");
         dbChat.child(String.valueOf(id)).setValue(cm);
-
-
-//        uploadFileService.uploadFile(filePath, type, mykey, otheruserkey, receiverToken, dbTableKey, dbChat, timestamp, id);
 
         Intent intent = new Intent(this, UploadPhotoAndFile.class);
         intent.putExtra("filePath",filePath);
@@ -372,7 +383,6 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
@@ -610,66 +620,19 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
     }
 
     @Override
-    public void download_chatimageClicked(final int position, final chatAdapter.MyViewHolder holder) {
-
+    public void download_chatimageClicked(final int position, final chatAdapter.MyViewHolder holder)
+    {
         mAdapter.showProgressBar(holder);
         final ChatMessage comment = chatList.get(position);
-        StorageReference str = FirebaseStorage.getInstance().getReferenceFromUrl(comment.getImgurl());
         String type = comment.getType();
 
-        switch (type) {
-            case "photo":
-                File rootPath = new File(Environment.getExternalStorageDirectory(), AppName+"/Images");
-                if (!rootPath.exists()) {
-                    rootPath.mkdirs();
-                }
-                String uriSting = System.currentTimeMillis() + ".jpg";
+        Intent serviceIntent = new Intent(getApplicationContext(), DownloadFileForChatService.class);
+        serviceIntent.putExtra("type", type);
+        serviceIntent.putExtra("url", comment.getImgurl());
+        serviceIntent.putExtra("dbTableKey", dbTableKey);
+        serviceIntent.putExtra("Id", comment.getId());
+        startService(serviceIntent);
 
-                final File localFile = new File(rootPath, uriSting);
-                final String localuri = (rootPath.getAbsolutePath() + "/" + uriSting);
-                str.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        Log.e("firebase ", ";local tem file created  created " + localFile.toString());
-                        dbChat = DBREF.child("Chats").child(dbTableKey).child("ChatMessages").getRef();
-                        dbChat.child(comment.getId()).child("othersenderlocal_storage").setValue(localuri);
-                        comment.setOthersenderlocal_storage(localuri);
-                        mAdapter.dismissProgressBar(holder);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        mAdapter.dismissProgressBar(holder);
-                        Log.e("firebase ", ";local tem file not created  created " + exception.toString());
-                    }
-                });
-                break;
-            case "doc":
-                rootPath = new File(Environment.getExternalStorageDirectory(), AppName+"/Docs");
-                if (!rootPath.exists()) {
-                    rootPath.mkdirs();
-                }
-                uriSting = System.currentTimeMillis() + ".jpg";
-
-                final File localdocFile = new File(rootPath, uriSting);
-                final String localdocuri = (rootPath.getAbsolutePath() + "/" + uriSting);
-                str.getFile(localdocFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        dbChat = DBREF.child("Chats").child(dbTableKey).child("ChatMessages").getRef();
-                        dbChat.child(comment.getId()).child("othersenderlocal_storage").setValue(localdocuri);
-                          comment.setOthersenderlocal_storage(localdocuri);
-                        mAdapter.dismissProgressBar(holder);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        mAdapter.dismissProgressBar(holder);
-                        Log.e("firebase ", ";local tem file not created  created " + exception.toString());
-                    }
-                });
-                break;
-        }
     }
     private void sortChatMessages() {
         Collections.sort(chatList, new Comparator<ChatMessage>() {
@@ -679,6 +642,26 @@ public class ChatActivity extends AppCompatActivity implements chatAdapter.ChatA
             }
         });
     }
-
-
 }
+
+/*chat activity  //cancel.    //ImageButton
+task detail
+create task
+
+upload file function in chat activity "photo" =  type
+
+.pdf
+.jpg
+
+add notification to uploadfileandphotos && "photo", "doc" = ***type
+add service to download photos and document.    .jpg problem(file format)
+
+dont show download button until imgurl = "nourl"
+
+change pdf placeholder
+
+download file service //onprogress //delete the code here
+                      //remove task id from here.
+
+chat activity ...... downloadimageclicked    intent to service
+*/

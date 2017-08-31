@@ -43,17 +43,16 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
     private SparseBooleanArray animationItemsIndex;
     private boolean reverseAllAnimations = false;
     private ChatAdapterListener listener;
-    private HashMap<DatabaseReference,ValueEventListener> commentStatusHashMap,progressListenerHashmap;
+    private HashMap<DatabaseReference, ValueEventListener> commentStatusHashMap, progressListenerHashmap;
 
-
-    public chatAdapter(ArrayList<ChatMessage> list, Context context, String dbTableKey,ChatAdapterListener listener) {
+    public chatAdapter(ArrayList<ChatMessage> list, Context context, String dbTableKey, ChatAdapterListener listener) {
         this.list = list;
         this.context = context;
         session = new CustomerSession(context);
         this.dbTablekey = dbTableKey;
         selectedItems = new SparseBooleanArray();
         animationItemsIndex = new SparseBooleanArray();
-        this.listener =  listener;
+        this.listener = listener;
         commentStatusHashMap = new HashMap<>();
         progressListenerHashmap = new HashMap<>();
 
@@ -68,25 +67,30 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
     @Override
     public void onBindViewHolder(chatAdapter.MyViewHolder holder, int position) {
         ChatMessage comment = list.get(position);
-        if (comment.getSenderUId().equals(session.getUsername())) {
+        if (comment.getSenderUId().equals(session.getUsername()))
+        {
+            holder.parent_layout.setVisibility(View.VISIBLE);
             holder.messageContainer.setBackgroundResource(R.drawable.chatbubble_right);
             holder.parent_layout.setGravity(Gravity.RIGHT);
-            holder.parent_layout.setPadding(150,0,0,0);  //(left,top,right,bottom)
+            holder.parent_layout.setPadding(150, 0, 0, 0);  //(left,top,right,bottom)
             holder.status.setVisibility(View.VISIBLE);
-            holder.meSender_Timestampdate.setText(comment.getSendertimestamp().substring(0,11));
+            holder.meSender_Timestampdate.setText(comment.getSendertimestamp().substring(0, 11));
             holder.meSender_Timestamptime.setText(comment.getSendertimestamp().substring(12));
             applyStatus(comment, holder);
-            applyprogressbar(comment,holder);
+            applyprogressbar(comment, holder);
         } else {
+            holder.parent_layout.setVisibility(View.VISIBLE);
             holder.parent_layout.setGravity(Gravity.LEFT);
-            holder.parent_layout.setPadding(0,0,150,0);
+            holder.parent_layout.setPadding(0, 0, 150, 0);
             holder.messageContainer.setBackgroundResource(R.drawable.chatbubble_left);
-            holder.meSender_Timestampdate.setText(comment.getSendertimestamp().substring(0,11));
+            holder.meSender_Timestampdate.setText(comment.getSendertimestamp().substring(0, 11));
             holder.meSender_Timestamptime.setText(comment.getSendertimestamp().substring(12));
             holder.status.setVisibility(View.GONE);
+            applyprogressbar2(comment, holder);
+            if (!comment.getType().equals("text") && comment.getImgurl().equals("nourl"))
+                showrow(holder, position);
         }
-        applyClickEvents(holder,position);
-        //applyProgressBar(holder,comment);
+        applyClickEvents(holder, position);
         String type = comment.getType();
         switch (type) {
             case "text":
@@ -102,14 +106,11 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
                 holder.photo.setVisibility(View.VISIBLE);
                 holder.progressBar.setVisibility(View.GONE);
                 holder.download_chatimage.setVisibility(View.GONE);
-                if (comment.getSenderUId().equals(session.getUsername())){
-                    if (!comment.getMesenderlocal_storage().equals(""))
-                    {
+                if (comment.getSenderUId().equals(session.getUsername())) {
+                    if (!comment.getMesenderlocal_storage().equals("")) {
                         holder.photo.setImageURI(Uri.parse(comment.getMesenderlocal_storage()));
                         break;
-                    }
-                    else
-                    {
+                    } else {
                         Glide.with(context)
                                 .load(Uri.parse(comment.getImgurl()))
                                 .placeholder(R.color.black)
@@ -118,17 +119,12 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
                                 .into(holder.photo);
                         break;
                     }
-                }
-                else
-                {
-                    if (!comment.getOthersenderlocal_storage().equals(""))
-                    {
+                } else {
+                    if (!comment.getOthersenderlocal_storage().equals("")) {
                         holder.download_chatimage.setVisibility(View.GONE);
                         holder.photo.setImageURI(Uri.parse(comment.getOthersenderlocal_storage()));
                         break;
-                    }
-                    else
-                    {
+                    } else {
                         holder.download_chatimage.setVisibility(View.VISIBLE);
                         Glide.with(context)
                                 .load(Uri.parse(comment.getImgurl()))
@@ -145,47 +141,35 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
                 holder.photo.setVisibility(View.VISIBLE);
                 holder.progressBar.setVisibility(View.GONE);
                 holder.download_chatimage.setVisibility(View.GONE);
-                if (comment.getSenderUId().equals(session.getUsername())){
-                    if (!comment.getMesenderlocal_storage().equals(""))
-                    {
+                if (comment.getSenderUId().equals(session.getUsername())) {
+                    if (!comment.getMesenderlocal_storage().equals("")) {
                         Glide.with(context)
                                 .load(R.drawable.download_pdf)
-                                .placeholder(R.color.black)
+                                .crossFade()
+                                .centerCrop()
+                                .into(holder.photo);
+                        break;
+                    } else {
+                        Glide.with(context)
+                                .load(R.drawable.download_pdf)
                                 .crossFade()
                                 .centerCrop()
                                 .into(holder.photo);
                         break;
                     }
-                    else
-                    {
-                        Glide.with(context)
-                                .load(R.drawable.download_pdf)
-                                .placeholder(R.color.black)
-                                .crossFade()
-                                .centerCrop()
-                                .into(holder.photo);
-                        break;
-                    }
-                }
-                else
-                {
-                    if (!comment.getOthersenderlocal_storage().equals(""))
-                    {
+                } else {
+                    if (!comment.getOthersenderlocal_storage().equals("")) {
                         holder.download_chatimage.setVisibility(View.GONE);
                         Glide.with(context)
                                 .load(R.drawable.download_pdf)
-                                .placeholder(R.color.black)
                                 .crossFade()
                                 .centerCrop()
                                 .into(holder.photo);
                         break;
-                    }
-                    else
-                    {
+                    } else {
                         holder.download_chatimage.setVisibility(View.VISIBLE);
                         Glide.with(context)
                                 .load(R.drawable.download_pdf)
-                                .placeholder(R.color.black)
                                 .crossFade()
                                 .centerCrop()
                                 .into(holder.photo);
@@ -218,7 +202,6 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
                             break;
                     }
                 }
-
             }
 
             @Override
@@ -226,8 +209,8 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
 
             }
         });
-        if(dbCommentStatusListener!=null)
-            commentStatusHashMap.put(dbCommentStatus,dbCommentStatusListener);
+        if (dbCommentStatusListener != null)
+            commentStatusHashMap.put(dbCommentStatus, dbCommentStatusListener);
     }
 
     private void applyprogressbar(ChatMessage comment, final MyViewHolder holder) {
@@ -237,12 +220,9 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     String imgurl = dataSnapshot.getValue(String.class);
-                    if (imgurl.equals("nourl"))
-                    {
+                    if (imgurl.equals("nourl")) {
                         holder.progressBar.setVisibility(View.VISIBLE);
-                    }
-                    else
-                    {
+                    } else {
                         holder.progressBar.setVisibility(View.GONE);
                         dbUploadProgress.removeEventListener(this);
                     }
@@ -254,19 +234,90 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
 
             }
         });
-        if(dbUploadProgressListener!=null)
-        {
-            progressListenerHashmap.put(dbUploadProgress,dbUploadProgressListener);
+        if (dbUploadProgressListener != null) {
+            progressListenerHashmap.put(dbUploadProgress, dbUploadProgressListener);
+        }
+    }
+
+    private void applyprogressbar2(final ChatMessage comment, final MyViewHolder holder)
+    {
+        final DatabaseReference dbUploadProgress = DBREF.child("Chats").child(dbTablekey).child("ChatMessages").child(comment.getId()).child("othersenderlocal_storage").getRef();
+        final ValueEventListener dbUploadProgressListener = dbUploadProgress.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String othersenderlocal_storage = dataSnapshot.getValue(String.class);
+                    if (!othersenderlocal_storage.equals("")) {
+                        if (holder.progressBar.getVisibility() == View.VISIBLE) {
+                            holder.progressBar.setVisibility(View.GONE);
+                            dbUploadProgress.removeEventListener(this);
+                            comment.setOthersenderlocal_storage(othersenderlocal_storage);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        if (dbUploadProgressListener != null) {
+            progressListenerHashmap.put(dbUploadProgress, dbUploadProgressListener);
         }
 
     }
-    public void showProgressBar(final MyViewHolder holder)
+
+    private void showrow( final MyViewHolder holder, final int position)
     {
+        final DatabaseReference dbUploadProgress = DBREF.child("Chats").child(dbTablekey).child("ChatMessages").child(list.get(position).getId()).child("imgurl").getRef();
+        ValueEventListener dbUploadProgressListener = dbUploadProgress.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String imgurl = dataSnapshot.getValue(String.class);
+                    if (imgurl.equals("nourl")) {
+                        holder.parent_layout.setVisibility(View.GONE);
+                    } else {
+                        holder.parent_layout.setVisibility(View.VISIBLE);
+                        list.get(position).setImgurl(imgurl);
+                        if (list.get(position).getType()=="photo")
+                        {
+                        Glide.with(context)
+                                .load(Uri.parse(list.get(position).getImgurl()))
+                                .placeholder(R.color.black)
+                                .crossFade()
+                                .centerCrop()
+                                .into(holder.photo);
+                    }
+                    else
+                        {
+                            Glide.with(context)
+                                    .load(R.drawable.download_pdf)
+                                    .crossFade()
+                                    .centerCrop()
+                                    .into(holder.photo);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        if (dbUploadProgressListener != null) {
+            progressListenerHashmap.put(dbUploadProgress, dbUploadProgressListener);
+        }
+    }
+
+    public void showProgressBar(final MyViewHolder holder) {
         holder.download_chatimage.setVisibility(View.GONE);
         holder.progressBar.setVisibility(View.VISIBLE);
     }
-    public void dismissProgressBar(final MyViewHolder holder)
-    {
+
+    public void dismissProgressBar(final MyViewHolder holder) {
         holder.progressBar.setVisibility(View.GONE);
     }
 
@@ -277,7 +328,7 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView meSender_Timestampdate, meSender_Timestamptime, commentString;
-        LinearLayout parent_layout,messageContainer;
+        LinearLayout parent_layout, messageContainer;
         ImageView photo, status;
 
         ProgressBar progressBar;
@@ -285,11 +336,11 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            messageContainer = (LinearLayout)itemView.findViewById(R.id.sender_message_container);
+            messageContainer = (LinearLayout) itemView.findViewById(R.id.sender_message_container);
             parent_layout = (LinearLayout) itemView.findViewById(R.id.parent_layout);
-            progressBar = (ProgressBar)itemView.findViewById(R.id.progress);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.progress);
             status = (ImageView) itemView.findViewById(R.id.status);
-            download_chatimage = (ImageButton)itemView.findViewById(R.id.download_chatimage);
+            download_chatimage = (ImageButton) itemView.findViewById(R.id.download_chatimage);
             meSender_Timestampdate = (TextView) itemView.findViewById(R.id.meSender_TimeStampdate);
             meSender_Timestamptime = (TextView) itemView.findViewById(R.id.meSender_TimeStamptime);
 
@@ -304,6 +355,7 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
         reverseAllAnimations = false;
         animationItemsIndex.clear();
     }
+
     public void toggleSelection(int pos) {
         currentSelectedIndex = pos;
         if (selectedItems.get(pos, false)) {
@@ -343,15 +395,18 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
     private void resetCurrentIndex() {
         currentSelectedIndex = -1;
     }
+
     public interface ChatAdapterListener {
 
 
         void onMessageRowClicked(int position);
 
         void onRowLongClicked(int position);
-        void download_chatimageClicked(int position,MyViewHolder holder);
+
+        void download_chatimageClicked(int position, MyViewHolder holder);
 
     }
+
     private void applyRowAnimation(MyViewHolder holder, int position) {
         if ((reverseAllAnimations && animationItemsIndex.get(position, false)) || currentSelectedIndex == position) {
             //FlipAnimator.flipView(mContext, holder.iconBack, holder.iconFront, false);
@@ -360,6 +415,7 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
         }
 
     }
+
     private void applyClickEvents(final MyViewHolder holder, final int position) {
 
         holder.messageContainer.setOnClickListener(new View.OnClickListener() {
@@ -381,23 +437,21 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.MyViewHolder> 
         holder.download_chatimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.download_chatimageClicked(position,holder);
+                listener.download_chatimageClicked(position, holder);
             }
         });
     }
 
-    public  void removeListeners()
-    {
-        Iterator<HashMap.Entry<DatabaseReference,ValueEventListener>> iterator2 = commentStatusHashMap.entrySet().iterator();
+    public void removeListeners() {
+        Iterator<HashMap.Entry<DatabaseReference, ValueEventListener>> iterator2 = commentStatusHashMap.entrySet().iterator();
         while (iterator2.hasNext()) {
-            HashMap.Entry<DatabaseReference,ValueEventListener> entry = (HashMap.Entry<DatabaseReference,ValueEventListener>) iterator2.next();
-            if(entry.getValue()!=null) entry.getKey().removeEventListener(entry.getValue());
+            HashMap.Entry<DatabaseReference, ValueEventListener> entry = (HashMap.Entry<DatabaseReference, ValueEventListener>) iterator2.next();
+            if (entry.getValue() != null) entry.getKey().removeEventListener(entry.getValue());
         }
-        Iterator<HashMap.Entry<DatabaseReference,ValueEventListener>> iterator = progressListenerHashmap.entrySet().iterator();
+        Iterator<HashMap.Entry<DatabaseReference, ValueEventListener>> iterator = progressListenerHashmap.entrySet().iterator();
         while (iterator.hasNext()) {
-            HashMap.Entry<DatabaseReference,ValueEventListener> entry = (HashMap.Entry<DatabaseReference,ValueEventListener>) iterator.next();
-            if(entry.getValue()!=null) entry.getKey().removeEventListener(entry.getValue());
+            HashMap.Entry<DatabaseReference, ValueEventListener> entry = (HashMap.Entry<DatabaseReference, ValueEventListener>) iterator.next();
+            if (entry.getValue() != null) entry.getKey().removeEventListener(entry.getValue());
         }
     }
 }
-

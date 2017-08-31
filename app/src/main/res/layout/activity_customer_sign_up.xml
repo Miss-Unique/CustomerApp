@@ -136,7 +136,7 @@
                     android:background="@drawable/register"
                     android:drawableRight="@drawable/ic_call_me"
                     android:hint="Enter Contact"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:padding="5dp"
                     android:textColorHint="@color/black" />
 

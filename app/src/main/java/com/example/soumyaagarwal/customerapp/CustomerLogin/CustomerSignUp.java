@@ -109,7 +109,7 @@ public class CustomerSignUp extends AppCompatActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
-                                Toast.makeText(getBaseContext(), "Customer Already Registered", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getBaseContext(), "This username is not available", Toast.LENGTH_SHORT).show();
                             } else {
                                 login();
                             }

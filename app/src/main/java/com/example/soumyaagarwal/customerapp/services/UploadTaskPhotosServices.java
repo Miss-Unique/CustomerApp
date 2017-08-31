@@ -39,8 +39,6 @@ public class UploadTaskPhotosServices extends IntentService
     private static int s = 0;
     private static int f = 0;
 
-    //private boolean isSuccess;
-
     public UploadTaskPhotosServices() {
         super("Upload");
     }
@@ -111,7 +109,6 @@ public class UploadTaskPhotosServices extends IntentService
                         if (f+s==totalnoofimages)
                         {
                             updateNotification(s+" Uploaded ,"+f+" Failed ");
-                            stopSelf();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -121,7 +118,6 @@ public class UploadTaskPhotosServices extends IntentService
                         if (f+s==totalnoofimages)
                         {
                             updateNotification(s+" Uploaded ,"+f+" Failed ");
-                            stopSelf();
                         }
                     }
                 });
@@ -147,6 +143,7 @@ public class UploadTaskPhotosServices extends IntentService
         synchronized (this) {
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(0, mBuilder.build());
+            stopSelf();
         }
     }
 }

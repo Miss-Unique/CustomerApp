@@ -48,6 +48,12 @@ public class phonebook_adapter extends RecyclerView.Adapter<phonebook_adapter.My
 
         holder.Name.setText(phonenumber.getName());
         holder.Desig.setText(phonenumber.getDesignation());
+        holder.contact.setText(phonenumber.getContact());
+        if ( phonenumber.getEmail()!=null && !phonenumber.getEmail().equals("") ) {
+            holder.email.setText(phonenumber.getEmail());
+            holder.email.setVisibility(View.VISIBLE);
+        } else
+            holder.email.setVisibility(View.GONE);
         String caps = phonenumber.getName().toUpperCase();
         holder.icon_text.setText(caps.charAt(0) + "");
 
@@ -81,7 +87,7 @@ public class phonebook_adapter extends RecyclerView.Adapter<phonebook_adapter.My
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView Name, icon_text, Desig;
+        TextView Name, icon_text, Desig, contact, email;
         LinearLayout employee_row;
         ImageButton callme;
         ImageView imgProfile;
@@ -91,6 +97,8 @@ public class phonebook_adapter extends RecyclerView.Adapter<phonebook_adapter.My
 
             Name = (TextView) itemView.findViewById(R.id.Name);
             Desig = (TextView) itemView.findViewById(R.id.Desig);
+            contact = (TextView) itemView.findViewById(R.id.contact);
+            email = (TextView) itemView.findViewById(R.id.email);
             icon_text = (TextView) itemView.findViewById(R.id.icon_text);
             employee_row = (LinearLayout) itemView.findViewById(R.id.employee_row);
             imgProfile = (ImageView) itemView.findViewById(R.id.icon_profile);
@@ -100,6 +108,7 @@ public class phonebook_adapter extends RecyclerView.Adapter<phonebook_adapter.My
 
     public interface phonebook_adapterListener {
         void onCALLMEclicked(int position);
+
     }
 
     private void applyClickEvents(MyViewHolder holder, final int position) {
