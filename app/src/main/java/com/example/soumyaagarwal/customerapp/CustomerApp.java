@@ -18,7 +18,7 @@ public class CustomerApp extends android.support.multidex.MultiDexApplication {
     public static DatabaseReference DBREF;
     private CustomerSession session;
     public static SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy hh:mm aa");
-    public static String AppName = "demo";
+    public static String AppName = "MeChat";
 
     @Override
     public void onCreate() {
