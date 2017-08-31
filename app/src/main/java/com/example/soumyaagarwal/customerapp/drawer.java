@@ -150,6 +150,7 @@ public class drawer extends AppCompatActivity implements NavigationView.OnNaviga
             case R.id.notif:
                 Intent intent = new Intent(getApplicationContext(), NotificationActivity.class);
                 startActivity(intent);
+                finish();
                 break;
         }
         return true;
