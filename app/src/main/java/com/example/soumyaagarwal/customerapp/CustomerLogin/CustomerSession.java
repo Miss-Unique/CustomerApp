@@ -73,5 +73,15 @@ public class CustomerSession {
         editor.clear();
         editor.commit();
     }
+    public void set_ShortCutInstalled()
+    {
+        editor.putBoolean("shortCutInstalled",true);
+        editor.commit();
+    }
+    public Boolean get_ShortCutInstalled()
+    {
+        return pref.getBoolean("shortCutInstalled",false);
+    }
+
 }
 

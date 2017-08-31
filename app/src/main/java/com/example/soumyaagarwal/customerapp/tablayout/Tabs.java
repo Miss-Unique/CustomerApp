@@ -1,12 +1,15 @@
 package com.example.soumyaagarwal.customerapp.tablayout;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.widget.FrameLayout;
 
+import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerLogin;
 import com.example.soumyaagarwal.customerapp.CustomerLogin.CustomerSession;
 import com.example.soumyaagarwal.customerapp.MyProfile.MyProfile;
 import com.example.soumyaagarwal.customerapp.R;
@@ -24,9 +27,14 @@ public class Tabs extends drawer implements TabLayout.OnTabSelectedListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        session = new CustomerSession(getApplicationContext());
 
         FrameLayout frame = (FrameLayout) findViewById(R.id.frame);
         getLayoutInflater().inflate(R.layout.activity_tabs, frame);
+        if(session.get_ShortCutInstalled()==false)
+        {
+            createShortCut();
+        }
 
         marshmallowPermissions = new MarshmallowPermissions(this);
         if (!marshmallowPermissions.checkPermissionForCamera())
@@ -36,7 +44,6 @@ public class Tabs extends drawer implements TabLayout.OnTabSelectedListener {
         if (!marshmallowPermissions.checkPermissionForLocations())
             marshmallowPermissions.requestPermissionForLocations();
 
-        session = new CustomerSession(getApplicationContext());
         if (getIntent().getExtras() != null)
             page = getIntent().getIntExtra("page", 0);
         else
@@ -95,6 +102,18 @@ public class Tabs extends drawer implements TabLayout.OnTabSelectedListener {
         alert.show();
 
     }
+    public void createShortCut(){
+        Intent shortcutintent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+        shortcutintent.putExtra("duplicate", false);
+        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.app_name));
+        Parcelable icon = Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher);
+        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
+        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, new Intent(getApplicationContext(), CustomerLogin.class));
+        sendBroadcast(shortcutintent);
+        session.set_ShortCutInstalled();
+
+    }
+
 
 
 }
