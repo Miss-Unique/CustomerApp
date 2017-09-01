@@ -20,7 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".CustomerLogin.CustomerLogin"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,10 +30,14 @@
         </activity>
         <activity
             android:name=".tablayout.Tabs"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Task.TaskDetail" />
-        <activity android:name=".Task.CreateTask" />
-        <activity android:name=".chat.ChatActivity" />
+        <activity android:name=".Task.TaskDetail"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Task.CreateTask"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".chat.ChatActivity"
+            android:screenOrientation="portrait"/>
 
         <receiver android:name=".CheckInternetConnectivity.NetWatcher">
             <intent-filter>
@@ -48,7 +53,8 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <activity android:name=".CustomerLogin.CustomerSignUp"></activity>
+        <activity android:name=".CustomerLogin.CustomerSignUp"
+            android:screenOrientation="portrait"></activity>
 
         <service android:name=".services.MyFirebaseInstanceIDService">
             <intent-filter>
@@ -65,14 +71,19 @@
             android:name=".services.UploadTaskPhotosServices"
             android:exported="false" />
 
-        <activity android:name=".notification.NotificationActivity" />
-        <activity android:name=".MyProfile.MyProfile" />
+        <activity android:name=".notification.NotificationActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MyProfile.MyProfile"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".drawer"
             android:label="@string/title_activity_drawer1"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MyProfile.ContactCoordinator" />
-        <activity android:name=".MyProfile.phonebook"></activity>
+        <activity android:name=".MyProfile.ContactCoordinator"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MyProfile.phonebook"
+            android:screenOrientation="portrait"></activity>
 
         <service
             android:name=".services.UploadPhotoAndFile"
