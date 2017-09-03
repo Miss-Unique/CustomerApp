@@ -42,7 +42,6 @@ public class NotificationActivity extends AppCompatActivity{
         recview = (RecyclerView) findViewById(R.id.notification_list);
         recview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recview.setItemAnimator(new DefaultItemAnimator());
-        recview.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
 
         adapter = new notification_adapter(list, getApplicationContext());
         recview.setAdapter(adapter);
