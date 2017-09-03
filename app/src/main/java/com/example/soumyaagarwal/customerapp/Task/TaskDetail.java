@@ -71,6 +71,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import droidninja.filepicker.FilePickerBuilder;
+import droidninja.filepicker.FilePickerConst;
+
 import static com.example.soumyaagarwal.customerapp.CustomerApp.AppName;
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 import static com.example.soumyaagarwal.customerapp.CustomerApp.sendNotif;
@@ -254,10 +257,9 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
                             2);
                 } else {
-                    Intent intent = new Intent(TaskDetail.this, ImagesSelectorActivity.class);
-                    intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 5);
-                    intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, true);
-                    startActivityForResult(intent, REQUEST_CODE);
+                    FilePickerBuilder.getInstance().setMaxCount(10)
+                            .setActivityTheme(R.style.AppTheme)
+                            .pickPhoto(TaskDetail.this);
                 }
             }
         });
@@ -266,9 +268,10 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == FilePickerConst.REQUEST_CODE_PHOTO) {
             if (data != null) {
-                mResults = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
+                mResults = new ArrayList<>();
+                mResults.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
                 assert mResults != null;
 
                 System.out.println(String.format("Totally %d images selected:", mResults.size()));
