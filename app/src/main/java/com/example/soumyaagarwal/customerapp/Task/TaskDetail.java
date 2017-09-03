@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 
+import com.bumptech.glide.Glide;
 import com.example.soumyaagarwal.customerapp.adapter.ViewImageAdapter;
 import com.example.soumyaagarwal.customerapp.helper.CompressMe;
 import com.example.soumyaagarwal.customerapp.helper.DividerItemDecoration;
@@ -37,13 +38,13 @@ import com.example.soumyaagarwal.customerapp.Model.CompletedBy;
 import com.example.soumyaagarwal.customerapp.Model.Quotation;
 import com.example.soumyaagarwal.customerapp.Model.Task;
 import com.example.soumyaagarwal.customerapp.Model.measurement;
-import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.adapter.assignedto_adapter;
 import com.example.soumyaagarwal.customerapp.adapter.bigimage_adapter;
 import com.example.soumyaagarwal.customerapp.adapter.measurement_adapter;
 import com.example.soumyaagarwal.customerapp.adapter.taskdetailDescImageAdapter;
 import com.example.soumyaagarwal.customerapp.chat.ChatActivity;
 import com.example.soumyaagarwal.customerapp.helper.MarshmallowPermissions;
+import com.example.soumyaagarwal.customerapp.helper.TouchImageView;
 import com.example.soumyaagarwal.customerapp.listener.ClickListener;
 import com.example.soumyaagarwal.customerapp.listener.RecyclerTouchListener;
 import com.example.soumyaagarwal.customerapp.services.DownloadFileService;
@@ -79,7 +80,7 @@ import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 import static com.example.soumyaagarwal.customerapp.CustomerApp.sendNotif;
 import static com.example.soumyaagarwal.customerapp.CustomerApp.sendNotifToAllCoordinators;
 
-public class TaskDetail extends AppCompatActivity implements taskdetailDescImageAdapter.ImageAdapterListener, assignedto_adapter.assignedto_adapterListener, bigimage_adapter.bigimage_adapterListener {
+public class TaskDetail extends AppCompatActivity implements taskdetailDescImageAdapter.ImageAdapterListener, assignedto_adapter.assignedto_adapterListener, bigimage_adapter.bigimage_adapterListener, measurement_adapter.measurement_adapterListener {
 
     private DatabaseReference dbRef, dbTask, dbAssigned, dbMeasurement, dbDescImages;
     ImageButton download;
@@ -98,7 +99,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
     DatabaseReference dbQuotation;
     ProgressDialog progressDialog;
     private MarshmallowPermissions marshmallowPermissions;
-    private AlertDialog viewSelectedImages, edit_description;
+    private AlertDialog viewSelectedImages, edit_description, viewSelectedImages_measure;
     LinearLayoutManager linearLayoutManager;
     bigimage_adapter adapter;
     CustomerSession session;
@@ -755,7 +756,6 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                                 Toast.makeText(TaskDetail.this, "Task is yet to be completed", Toast.LENGTH_LONG).show();
                             }
                         }
-
                     }
 
                     @Override
@@ -766,5 +766,32 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onImageClicked(int position, measurement_adapter.MyViewHolder holder) {
+        viewSelectedImages_measure = new AlertDialog.Builder(TaskDetail.this)
+                .setView(R.layout.viewmeasureimage).create();
+        viewSelectedImages_measure.show();
+
+        measurement m = measurementList.get(position);
+        String uri = m.getFleximage();
+
+        TouchImageView viewchatimage = (TouchImageView) viewSelectedImages_measure.findViewById(R.id.chatimage);
+        ImageButton backbutton = (ImageButton) viewSelectedImages_measure.findViewById(R.id.back);
+
+        Glide.with(getApplicationContext())
+                .load(Uri.parse(uri))
+                .placeholder(R.color.black)
+                .crossFade()
+                .centerCrop()
+                .into(viewchatimage);
+
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewSelectedImages_measure.dismiss();
+            }
+        });
     }
 }

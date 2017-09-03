@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.soumyaagarwal.customerapp.Model.measurement;
-import com.example.soumyaagarwal.customerapp.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -20,11 +19,12 @@ public class measurement_adapter extends  RecyclerView.Adapter<measurement_adapt
 {
     List<measurement> list = new ArrayList<>();
     private Context context;
+    measurement_adapterListener measurement_adapterListener;
 
-    public measurement_adapter(List<measurement> list, Context context)
-    {
+    public measurement_adapter(List<measurement> list, Context context, measurement_adapterListener measurement_adapterListener) {
         this.list = list;
         this.context = context;
+        this.measurement_adapterListener = measurement_adapterListener;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -58,6 +58,7 @@ public class measurement_adapter extends  RecyclerView.Adapter<measurement_adapt
         holder.height.setText(msr.getHeight());
         holder.unit.setText(msr.getUnit());
         Picasso.with(context).load(msr.getFleximage()).into(holder.fleximage);
+        applyClickEvents(holder, position);
 
     }
 
@@ -66,6 +67,18 @@ public class measurement_adapter extends  RecyclerView.Adapter<measurement_adapt
         return list.size();
     }
 
+    public interface measurement_adapterListener {
+        void onImageClicked(int position,MyViewHolder holder);
+    }
+    private void applyClickEvents(final MyViewHolder holder, final int position) {
+
+        holder.fleximage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                measurement_adapterListener.onImageClicked(position,holder);
+            }
+        });
+    }
     }
 
 
