@@ -24,7 +24,8 @@
         <TextView
             android:id="@+id/tv_taskname"
             android:text="Task"
-            android:layout_width="match_parent"
+            android:layout_gravity="left"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lines="1"
