@@ -31,6 +31,6 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="yellow">#ffd54f</color>
-
+    <color name="bpDark_gray">#363636</color>
 
 </resources>

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.soumyaagarwal.customerapp.Model.measurement;
+import com.example.soumyaagarwal.customerapp.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

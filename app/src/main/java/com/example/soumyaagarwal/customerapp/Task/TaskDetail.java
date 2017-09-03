@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 
 import com.bumptech.glide.Glide;
+import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.adapter.ViewImageAdapter;
 import com.example.soumyaagarwal.customerapp.helper.CompressMe;
 import com.example.soumyaagarwal.customerapp.helper.DividerItemDecoration;
@@ -155,7 +156,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
         rec_measurement.setLayoutManager(new LinearLayoutManager(this));
         rec_measurement.setItemAnimator(new DefaultItemAnimator());
         rec_measurement.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        adapter_measurement = new measurement_adapter(measurementList, this);
+        adapter_measurement = new measurement_adapter(measurementList, this, this);
         rec_measurement.setAdapter(adapter_measurement);
 
         rec_DescImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
