@@ -57,6 +57,7 @@
             </LinearLayout>
 
 
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -65,7 +66,33 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Width : "
+                    android:drawableLeft="@mipmap/ic_arrow_horizontal"
+                    android:gravity="center_vertical"
+                    android:textSize="15dp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TAG"
+                    android:textSize="15dp"
+
+                    android:id="@+id/width"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal"
+                android:layout_margin="1dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="Height : "
+
+                    android:drawableLeft="@mipmap/ic_arrow_vertical"
                     android:gravity="center_vertical"
                     android:textSize="15dp"
                     android:textColor="@color/black"/>
@@ -79,27 +106,6 @@
                     android:textColor="@color/black"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="1dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Width : "
-                    android:gravity="center_vertical"
-                    android:textSize="15dp"
-                    android:textColor="@color/black"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="TAG"
-                    android:textSize="15dp"
-                    android:id="@+id/width"
-                    android:textColor="@color/black"/>
-            </LinearLayout>
         </LinearLayout>
 
 <de.hdodenhof.circleimageview.CircleImageView
