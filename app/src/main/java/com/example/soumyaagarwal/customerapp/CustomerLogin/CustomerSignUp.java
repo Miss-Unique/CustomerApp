@@ -172,7 +172,7 @@ public class CustomerSignUp extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, CustomerSignUp.class);
+        Intent intent = new Intent(this, CustomerLogin.class);
         startActivity(intent);
         finish();
     }
