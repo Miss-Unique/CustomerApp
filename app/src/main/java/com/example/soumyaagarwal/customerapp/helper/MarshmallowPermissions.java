@@ -12,12 +12,13 @@ import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 public class MarshmallowPermissions {
+    public static final int READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 1;
 
     public static final int EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 2;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
     public static final int READSMS_REQUEST_CODE= 4;
     public static final int RECVSMS_REQUEST_CODE= 5;
-    public static final int LOCSERV_REQUEST_CODE= 5;
+    public static final int LOCSERV_REQUEST_CODE= 6;
     Activity activity;
 
     public MarshmallowPermissions(Activity activity) {
@@ -32,6 +33,15 @@ public class MarshmallowPermissions {
             return false;
         }
     }
+    public boolean checkPermissionForReadExternalStorage(){
+        int result = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (result == PackageManager.PERMISSION_GRANTED){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     public boolean checkPermissionForCamera(){
         int result = ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA);
@@ -59,6 +69,14 @@ public class MarshmallowPermissions {
             return false;
         }
     }
+    public void requestPermissionForReadExternalStorage(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.READ_EXTERNAL_STORAGE)){
+            Toast.makeText(activity, "External Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE);
+        }
+    }
+
 
     public void requestPermissionForExternalStorage(){
         if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
