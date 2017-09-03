@@ -36,7 +36,11 @@ public class Tabs extends drawer implements TabLayout.OnTabSelectedListener {
             createShortCut();
         }
 
+
         marshmallowPermissions = new MarshmallowPermissions(this);
+        if (!marshmallowPermissions.checkPermissionForReadExternalStorage())
+            marshmallowPermissions.requestPermissionForReadExternalStorage();
+
         if (!marshmallowPermissions.checkPermissionForCamera())
             marshmallowPermissions.requestPermissionForCamera();
         if (!marshmallowPermissions.checkPermissionForExternalStorage())
