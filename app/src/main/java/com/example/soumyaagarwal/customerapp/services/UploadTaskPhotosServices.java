@@ -143,7 +143,8 @@ public class UploadTaskPhotosServices extends IntentService
         synchronized (this) {
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(0, mBuilder.build());
-            stopSelf();
-        }
+            }
+        stopSelf();
+
     }
 }

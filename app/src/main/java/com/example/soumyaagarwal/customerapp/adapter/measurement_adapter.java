@@ -34,6 +34,7 @@ public class measurement_adapter extends  RecyclerView.Adapter<measurement_adapt
 
         public MyViewHolder(View itemView) {
             super(itemView);
+
             tag = (TextView) itemView.findViewById(R.id.tag);
             width = (TextView) itemView.findViewById(R.id.width);
             height = (TextView) itemView.findViewById(R.id.height);
