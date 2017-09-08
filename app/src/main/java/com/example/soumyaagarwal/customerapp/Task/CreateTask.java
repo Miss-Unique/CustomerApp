@@ -65,7 +65,7 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
     ImageButton written_desc, photo_desc;
     String customerId,customerName,curdate;
     Button submit_task;
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     MarshmallowPermissions marshMallowPermission;
     private ArrayList<String> mResults;
     private AlertDialog descriptionDialog, viewSelectedImages ;
@@ -240,7 +240,15 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
 
     @Override
     public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-        endDate.setText(dayOfMonth+"/"+(monthOfYear+1)+"/"+year);
+        String day=String.valueOf(dayOfMonth);
+        if(dayOfMonth<10)
+        {
+            day= "0"+String.valueOf(dayOfMonth);
+        }
+        if(monthOfYear<9)
+            endDate.setText(day + "-0" + (monthOfYear + 1) + "-" + year);
+        else
+            endDate.setText(day + "-" + (monthOfYear + 1) + "-" + year);
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
