@@ -146,6 +146,7 @@ public class CustomerSignUp extends AppCompatActivity {
         session.create_oldusersession(Username, Name, Contact, Address);
         CustomerApp.setOnlineStatus(Username);
 
+        DBREF.child("Customer").child(Username).child("pendingTask").setValue(1000);
         DBREF.child("Users").child("Usersessions").child(Username).child("name").setValue(Name);
         DBREF.child("Users").child("Usersessions").child(Username).child("num").setValue(Contact);
         String myFCMToken;

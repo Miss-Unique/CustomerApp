@@ -69,7 +69,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 if (dataSnapshot.exists()) {
                     NameAndStatus nameAndStatus = dataSnapshot.getValue(NameAndStatus.class);
                     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(MyFirebaseMessagingService.this)
-                            .setSmallIcon(R.mipmap.ic_chat_white)
+                            .setSmallIcon(R.mipmap.ic_launcher)
                             .setContentTitle("New Notification from " + nameAndStatus.getName())
                             .setContentText(body)
                             .setAutoCancel(true)
@@ -121,7 +121,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             }
         });
-        if (isAppIsInForeground(this) == false&& !chatnotifList.contains(msgid)) {
+        if (!chatnotifList.contains(msgid)) {
             DatabaseReference dbOnlineStatus = DBREF.child("Users").child("Usersessions").child(senderuid).getRef();
             dbOnlineStatus.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -129,7 +129,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     if (dataSnapshot.exists()) {
                         NameAndStatus nameAndStatus = dataSnapshot.getValue(NameAndStatus.class);
                         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(MyFirebaseMessagingService.this)
-                                .setSmallIcon(R.mipmap.ic_chat_white)
+                                .setSmallIcon(R.mipmap.ic_launcher)
                                 .setContentTitle("New Message from " + nameAndStatus.getName())
                                 .setContentText(msg)
                                 .setAutoCancel(true)
@@ -150,8 +150,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             });
         }
     }
-
-
     private boolean isAppIsInForeground(Context context) {
         boolean isInForeground = false;
         ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);

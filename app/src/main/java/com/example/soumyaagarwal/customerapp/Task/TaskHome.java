@@ -3,14 +3,21 @@ package com.example.soumyaagarwal.customerapp.Task;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import com.example.soumyaagarwal.customerapp.helper.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -28,7 +35,7 @@ import java.util.ArrayList;
 
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 
-public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListener {
+public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListener,SwipeRefreshLayout.OnRefreshListener  {
     RecyclerView task_list;
     DatabaseReference dbTask;
     LinearLayoutManager linearLayoutManager;
@@ -40,6 +47,8 @@ public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListene
     private String custId = "nocust";
     CustomerSession session;
     FloatingActionButton create_task;
+    SwipeRefreshLayout swipeLayout;
+    private View myFragmentView;
 
     public TaskHome() {
         // Required empty public constructor
@@ -48,9 +57,9 @@ public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_task_home, container, false);
-
+        myFragmentView = inflater.inflate(R.layout.fragment_task_home, container, false);
+        setHasOptionsMenu(true);
+        return myFragmentView;
     }
 
     @Override
@@ -61,6 +70,14 @@ public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListene
         if (bundle != null) {
             custId = bundle.getString("custId");
         }
+
+        swipeLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipe_container);
+        swipeLayout.setOnRefreshListener(this);
+        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
         session = new CustomerSession(getActivity());
         marshMallowPermission = new MarshmallowPermissions(getActivity());
         progressDialog = new ProgressDialog(getActivity());
@@ -141,4 +158,15 @@ public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListene
         });
     }
 
+    @Override
+    public void onRefresh() {
+        TaskList.clear();
+        LoadData();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                swipeLayout.setRefreshing(false);
+            }
+        }, 1000);
+    }
 }

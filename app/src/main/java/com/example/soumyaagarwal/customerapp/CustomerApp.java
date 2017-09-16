@@ -19,6 +19,7 @@ public class CustomerApp extends android.support.multidex.MultiDexApplication {
     private CustomerSession session;
     public static SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy hh:mm aa");
     public static String AppName = "MeChat";
+    public static SimpleDateFormat simpleDateFormatWithMonthName = new SimpleDateFormat("dd-MMM-yyyy");
 
     @Override
     public void onCreate() {
