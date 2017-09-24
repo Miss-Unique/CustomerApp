@@ -46,7 +46,7 @@ public class DownloadFileService extends IntentService {
         mBuilder.setSmallIcon(icon)
                 .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.ic_download))
                 .setContentTitle(getString(R.string.app_name))
-                .setOngoing(true)
+                .setOngoing(false)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setColor(getApplicationContext().getResources().getColor(R.color.white))
                 .setContentText("Downloading Quotation...");
