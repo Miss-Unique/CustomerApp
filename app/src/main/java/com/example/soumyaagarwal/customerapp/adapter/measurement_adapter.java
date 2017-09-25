@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.soumyaagarwal.customerapp.Model.measurement;
@@ -31,6 +32,7 @@ public class measurement_adapter extends  RecyclerView.Adapter<measurement_adapt
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tag,width,height,unit;
         CircleImageView fleximage;
+        public LinearLayout ll_amount;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -40,6 +42,8 @@ public class measurement_adapter extends  RecyclerView.Adapter<measurement_adapt
             height = (TextView) itemView.findViewById(R.id.height);
             fleximage = (CircleImageView)itemView.findViewById(R.id.fleximage);
             unit = (TextView)itemView.findViewById(R.id.unit);
+            ll_amount = (LinearLayout)itemView.findViewById(R.id.ll_amount);
+
         }
 
     }
@@ -56,9 +60,18 @@ public class measurement_adapter extends  RecyclerView.Adapter<measurement_adapt
     public void onBindViewHolder(final measurement_adapter.MyViewHolder holder, int position) {
         measurement msr = list.get(position);
         holder.tag.setText(msr.getTag());
-        holder.width.setText(msr.getWidth());
-        holder.height.setText(msr.getHeight());
+        String unit = msr.getUnit();
+        holder.width.setText(msr.getWidth()+ " "+ unit);
+        holder.height.setText(msr.getHeight()+" "+ unit);
         holder.unit.setText(msr.getUnit());
+        if(msr.getFleximage()!=null&&!msr.getFleximage().equals(""))
+            if(msr.getAmount()!=null&&!msr.getAmount().equals("")) {
+                holder.ll_amount.setVisibility(View.VISIBLE);
+                holder.unit.setText("Rs."+msr.getAmount());
+            }
+            else
+                holder.ll_amount.setVisibility(View.GONE);
+
         Picasso.with(context).load(msr.getFleximage()).into(holder.fleximage);
         applyClickEvents(holder, position);
 
@@ -82,5 +95,3 @@ public class measurement_adapter extends  RecyclerView.Adapter<measurement_adapt
         });
     }
     }
-
-

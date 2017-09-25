@@ -45,7 +45,7 @@ import java.util.Iterator;
 
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 
-public class ChatHome extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class ChatHome extends Fragment {
     private View myFragmentView;
     FragmentManager fmm;
     ArrayList<ChatListModel> list = new ArrayList<>();
@@ -57,7 +57,6 @@ public class ChatHome extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     private HashMap<DatabaseReference, ValueEventListener> dbLastMessageHashMap = new HashMap<>();
     private ChildEventListener dbChatCHE;
     private HashMap<DatabaseReference, ValueEventListener> dbProfileRefHashMap = new HashMap<>();
-    SwipeRefreshLayout swipeLayout;
     FloatingActionButton chat_add;
 
     public static ChatHome newInstance() {
@@ -83,13 +82,6 @@ public class ChatHome extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fmm = getFragmentManager();
-
-        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-        swipeLayout.setOnRefreshListener(this);
-        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
 
         chat_add = (FloatingActionButton) getView().findViewById(R.id.add_chat);
         CustomerSession coordinatorSession = new CustomerSession(getActivity());
@@ -146,20 +138,16 @@ public class ChatHome extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             }
 
             @Override
-            public boolean onQueryTextChange(String newText)
-            {
-                if (newText.equals(""))
-                {
+            public boolean onQueryTextChange(String newText) {
+                if (newText.equals("")) {
                     mAdapter = new chatListAdapter(list, getActivity());
                     recyclerView.setAdapter(mAdapter);
                     b = list;
-                }
-                else
-                {
+                } else {
                     final ArrayList<ChatListModel> filteredModelList = filter(list, newText);
                     mAdapter = new chatListAdapter(filteredModelList, getContext());
                     recyclerView.setAdapter(mAdapter);
-                    b= filteredModelList;
+                    b = filteredModelList;
                 }
 
                 return true;
@@ -334,15 +322,4 @@ public class ChatHome extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         });
     }
 
-    @Override
-    public void onRefresh() {
-        list.clear();
-        LoadData();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                swipeLayout.setRefreshing(false);
-            }
-        }, 1000);
-    }
 }

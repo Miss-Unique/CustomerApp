@@ -187,6 +187,38 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
             public void onDataChange(DataSnapshot dataSnapshot) {
                 task = dataSnapshot.getValue(Task.class);
                 setValue(task);
+                dbMeasurement.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists())
+                        {
+                            if(task.getMeasurementApproved()!=null) {
+                                if (task.getMeasurementApproved() == Boolean.TRUE)
+                                {
+                                    measure_and_hideme.setText("Approved By Me: Yes");
+                                    approveMeasurement.setVisibility(View.GONE);
+                                }
+                                else
+                                {
+                                    measure_and_hideme.setText("Approved By Me: No");
+                                    approveMeasurement.setVisibility(View.VISIBLE);
+                                }
+                            }
+
+                        }
+                        else {
+                            approveMeasurement.setVisibility(View.GONE);
+                            measure_and_hideme.setText("No measurement taken for this job");
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
                 getSupportActionBar().setTitle(task.getName());
             }
 
@@ -445,7 +477,6 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists()) {
-                    measure_and_hideme.setVisibility(View.GONE);
                     measurement item = dataSnapshot.getValue(measurement.class);
                     measurementList.add(item);
                     adapter_measurement.notifyDataSetChanged();
@@ -453,13 +484,12 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                     approveMeasurement.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            sendNotifToAllCoordinators(mykey, "approveMeaurement", session.getName() + " approved the measurements for " + task.getName(), task_id);
+                            dbTask.child("measurementApproved").setValue(Boolean.TRUE);
+                            sendNotifToAllCoordinators(mykey, "approveMeasurement", session.getName() + " approved the measurements for " + task.getName(), task_id);
                             sendNotif(mykey, mykey, "approveMeasurement", "You approved the measurements for " + task.getName(), task_id);
                             Toast.makeText(TaskDetail.this, "You approved the measurements for " + task.getName(), Toast.LENGTH_LONG).show();
                         }
                     });
-                } else {
-                    approveMeasurement.setVisibility(View.GONE);
                 }
             }
 

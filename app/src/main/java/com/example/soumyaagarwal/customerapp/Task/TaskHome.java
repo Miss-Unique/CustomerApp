@@ -35,7 +35,7 @@ import java.util.ArrayList;
 
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 
-public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListener,SwipeRefreshLayout.OnRefreshListener  {
+public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListener{
     RecyclerView task_list;
     DatabaseReference dbTask;
     LinearLayoutManager linearLayoutManager;
@@ -47,7 +47,6 @@ public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListene
     private String custId = "nocust";
     CustomerSession session;
     FloatingActionButton create_task;
-    SwipeRefreshLayout swipeLayout;
     private View myFragmentView;
 
     public TaskHome() {
@@ -70,13 +69,6 @@ public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListene
         if (bundle != null) {
             custId = bundle.getString("custId");
         }
-
-        swipeLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipe_container);
-        swipeLayout.setOnRefreshListener(this);
-        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
 
         session = new CustomerSession(getActivity());
         marshMallowPermission = new MarshmallowPermissions(getActivity());
@@ -156,17 +148,5 @@ public class TaskHome extends Fragment implements taskAdapter.TaskAdapterListene
 
             }
         });
-    }
-
-    @Override
-    public void onRefresh() {
-        TaskList.clear();
-        LoadData();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                swipeLayout.setRefreshing(false);
-            }
-        }, 1000);
     }
 }

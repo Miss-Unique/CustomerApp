@@ -96,6 +96,7 @@
                             android:elevation="10dp"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
+                            android:visibility="gone"
                             android:text=" Approve Description "
                             android:textColor="@color/colortext"
                             android:textSize="12sp" />
@@ -135,7 +136,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:enabled="false"
-                            android:inputType="numberSigned"
+                            android:inputType="text"
                             android:textColor="@color/colortext"
                             android:textSize="15dp" />
                     </LinearLayout>
@@ -343,7 +344,6 @@
                         android:id="@+id/measure_and_hideme"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="No measurements taken for this job"
                         android:textColor="@color/colortext" />
 
                     <android.support.v7.widget.RecyclerView
