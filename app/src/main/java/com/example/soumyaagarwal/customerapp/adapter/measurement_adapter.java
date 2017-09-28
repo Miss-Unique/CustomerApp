@@ -1,5 +1,4 @@
 package com.example.soumyaagarwal.customerapp.adapter;
-
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,8 +16,8 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class measurement_adapter extends  RecyclerView.Adapter<measurement_adapter.MyViewHolder>
-{
+
+public class measurement_adapter extends RecyclerView.Adapter<measurement_adapter.MyViewHolder> {
     List<measurement> list = new ArrayList<>();
     private Context context;
     measurement_adapterListener measurement_adapterListener;
@@ -30,28 +29,25 @@ public class measurement_adapter extends  RecyclerView.Adapter<measurement_adapt
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tag,width,height,unit;
+        TextView tag, width, height, unit;
         CircleImageView fleximage;
-        public LinearLayout ll_amount;
+        LinearLayout ll_amount;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-
             tag = (TextView) itemView.findViewById(R.id.tag);
             width = (TextView) itemView.findViewById(R.id.width);
             height = (TextView) itemView.findViewById(R.id.height);
-            fleximage = (CircleImageView)itemView.findViewById(R.id.fleximage);
-            unit = (TextView)itemView.findViewById(R.id.unit);
+            fleximage = (CircleImageView) itemView.findViewById(R.id.fleximage);
+            unit = (TextView) itemView.findViewById(R.id.unit);
             ll_amount = (LinearLayout)itemView.findViewById(R.id.ll_amount);
-
         }
 
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-    {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.measurement_row,parent,false);
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.measurement_row, parent, false);
         return new MyViewHolder(view);
 
     }
@@ -59,22 +55,21 @@ public class measurement_adapter extends  RecyclerView.Adapter<measurement_adapt
     @Override
     public void onBindViewHolder(final measurement_adapter.MyViewHolder holder, int position) {
         measurement msr = list.get(position);
-        holder.tag.setText(msr.getTag());
         String unit = msr.getUnit();
         holder.width.setText(msr.getWidth()+ " "+ unit);
         holder.height.setText(msr.getHeight()+" "+ unit);
         holder.unit.setText(msr.getUnit());
-        if(msr.getFleximage()!=null&&!msr.getFleximage().equals(""))
-            if(msr.getAmount()!=null&&!msr.getAmount().equals("")) {
-                holder.ll_amount.setVisibility(View.VISIBLE);
-                holder.unit.setText("Rs."+msr.getAmount());
-            }
-            else
-                holder.ll_amount.setVisibility(View.GONE);
+        holder.tag.setText(msr.getTag());
+        if(!msr.getFleximage().equals(""))
+            Picasso.with(context).load(msr.getFleximage()).placeholder(R.drawable.wait).into(holder.fleximage);
+        if(msr.getAmount()!=null&&!msr.getAmount().equals("")) {
+            holder.ll_amount.setVisibility(View.VISIBLE);
+            holder.unit.setText("Rs."+msr.getAmount());
+        }
+        else
+            holder.ll_amount.setVisibility(View.GONE);
 
-        Picasso.with(context).load(msr.getFleximage()).into(holder.fleximage);
         applyClickEvents(holder, position);
-
     }
 
     @Override
@@ -94,4 +89,6 @@ public class measurement_adapter extends  RecyclerView.Adapter<measurement_adapt
             }
         });
     }
-    }
+}
+
+

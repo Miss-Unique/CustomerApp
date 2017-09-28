@@ -17,7 +17,7 @@
         android:name=".CustomerApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="aa cust"
+        android:label="JobTracker"
         tools:replace="label"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">

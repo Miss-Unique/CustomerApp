@@ -325,7 +325,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="8dp">
 
@@ -349,7 +349,7 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rec_measurement"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginTop="5dp"
                         android:nestedScrollingEnabled="true"></android.support.v7.widget.RecyclerView>
                     <Button

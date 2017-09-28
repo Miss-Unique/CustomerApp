@@ -26,21 +26,20 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/ic_arrow_horizontal"
                     android:gravity="center_vertical"
-                    android:text="Unit : "
+                    android:text=" Width : "
                     android:textColor="@color/black"
                     android:textSize="15dp" />
 
                 <TextView
-                    android:id="@+id/unit"
+                    android:id="@+id/width"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TAG"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
             </LinearLayout>
-
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -50,18 +49,17 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@mipmap/ic_arrow_horizontal"
+                    android:drawableLeft="@mipmap/ic_arrow_vertical"
                     android:gravity="center_vertical"
-                    android:text="Width : "
+                    android:text=" Height : "
                     android:textColor="@color/black"
                     android:textSize="15dp" />
 
                 <TextView
-                    android:id="@+id/width"
+                    android:id="@+id/height"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TAG"
-
                     android:textColor="@color/black"
                     android:textSize="15dp" />
             </LinearLayout>
@@ -91,29 +89,26 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:layout_margin="1dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@mipmap/ic_arrow_vertical"
-
-                    android:gravity="center_vertical"
-                    android:text="Height : "
+                    android:layout_margin="1dp"
+                    android:text="Description : "
                     android:textColor="@color/black"
                     android:textSize="15dp" />
 
                 <TextView
-                    android:id="@+id/height"
+                    android:id="@+id/tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TAG"
+                    android:text=""
+                    android:inputType="textMultiLine"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
-            </LinearLayout>
 
+            </LinearLayout>
         </LinearLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -121,7 +116,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
+            android:layout_alignParentTop="true"
             android:src="@drawable/fleximage" />
 
     </RelativeLayout>
