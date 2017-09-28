@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -53,6 +55,18 @@ public class CustomerSignUp extends AppCompatActivity {
         input_address = (TextInputLayout) findViewById(R.id.input_addresslogin);
         signUp = (Button) findViewById(R.id.signUpButton);
         session = new CustomerSession(getApplicationContext());
+
+        final CheckBox showPasswordCheckBox = (CheckBox) findViewById(R.id.checkbox);
+        showPasswordCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (showPasswordCheckBox.isChecked()){
+                    password.setTransformationMethod(null);
+                }else{
+                    password.setTransformationMethod(new PasswordTransformationMethod());
+                }
+            }
+        });
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,6 +146,7 @@ public class CustomerSignUp extends AppCompatActivity {
         session.create_oldusersession(Username, Name, Contact, Address);
         CustomerApp.setOnlineStatus(Username);
 
+        DBREF.child("Customer").child(Username).child("pendingTask").setValue(1000);
         DBREF.child("Users").child("Usersessions").child(Username).child("name").setValue(Name);
         DBREF.child("Users").child("Usersessions").child(Username).child("num").setValue(Contact);
         String myFCMToken;
@@ -158,7 +173,7 @@ public class CustomerSignUp extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, CustomerSignUp.class);
+        Intent intent = new Intent(this, CustomerLogin.class);
         startActivity(intent);
         finish();
     }

@@ -14,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 
+import com.bumptech.glide.Glide;
+import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.adapter.ViewImageAdapter;
 import com.example.soumyaagarwal.customerapp.helper.CompressMe;
 import com.example.soumyaagarwal.customerapp.helper.DividerItemDecoration;
@@ -37,13 +39,13 @@ import com.example.soumyaagarwal.customerapp.Model.CompletedBy;
 import com.example.soumyaagarwal.customerapp.Model.Quotation;
 import com.example.soumyaagarwal.customerapp.Model.Task;
 import com.example.soumyaagarwal.customerapp.Model.measurement;
-import com.example.soumyaagarwal.customerapp.R;
 import com.example.soumyaagarwal.customerapp.adapter.assignedto_adapter;
 import com.example.soumyaagarwal.customerapp.adapter.bigimage_adapter;
 import com.example.soumyaagarwal.customerapp.adapter.measurement_adapter;
 import com.example.soumyaagarwal.customerapp.adapter.taskdetailDescImageAdapter;
 import com.example.soumyaagarwal.customerapp.chat.ChatActivity;
 import com.example.soumyaagarwal.customerapp.helper.MarshmallowPermissions;
+import com.example.soumyaagarwal.customerapp.helper.TouchImageView;
 import com.example.soumyaagarwal.customerapp.listener.ClickListener;
 import com.example.soumyaagarwal.customerapp.listener.RecyclerTouchListener;
 import com.example.soumyaagarwal.customerapp.services.DownloadFileService;
@@ -71,12 +73,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import droidninja.filepicker.FilePickerBuilder;
+import droidninja.filepicker.FilePickerConst;
+
 import static com.example.soumyaagarwal.customerapp.CustomerApp.AppName;
 import static com.example.soumyaagarwal.customerapp.CustomerApp.DBREF;
 import static com.example.soumyaagarwal.customerapp.CustomerApp.sendNotif;
 import static com.example.soumyaagarwal.customerapp.CustomerApp.sendNotifToAllCoordinators;
 
-public class TaskDetail extends AppCompatActivity implements taskdetailDescImageAdapter.ImageAdapterListener, assignedto_adapter.assignedto_adapterListener, bigimage_adapter.bigimage_adapterListener {
+public class TaskDetail extends AppCompatActivity implements taskdetailDescImageAdapter.ImageAdapterListener, assignedto_adapter.assignedto_adapterListener, bigimage_adapter.bigimage_adapterListener, measurement_adapter.measurement_adapterListener {
 
     private DatabaseReference dbRef, dbTask, dbAssigned, dbMeasurement, dbDescImages;
     ImageButton download;
@@ -95,7 +100,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
     DatabaseReference dbQuotation;
     ProgressDialog progressDialog;
     private MarshmallowPermissions marshmallowPermissions;
-    private AlertDialog viewSelectedImages, edit_description;
+    private AlertDialog viewSelectedImages, edit_description, viewSelectedImages_measure;
     LinearLayoutManager linearLayoutManager;
     bigimage_adapter adapter;
     CustomerSession session;
@@ -151,7 +156,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
         rec_measurement.setLayoutManager(new LinearLayoutManager(this));
         rec_measurement.setItemAnimator(new DefaultItemAnimator());
         rec_measurement.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        adapter_measurement = new measurement_adapter(measurementList, this);
+        adapter_measurement = new measurement_adapter(measurementList, this, this);
         rec_measurement.setAdapter(adapter_measurement);
 
         rec_DescImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -182,6 +187,38 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
             public void onDataChange(DataSnapshot dataSnapshot) {
                 task = dataSnapshot.getValue(Task.class);
                 setValue(task);
+                dbMeasurement.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists())
+                        {
+                            if(task.getMeasurementApproved()!=null) {
+                                if (task.getMeasurementApproved() == Boolean.TRUE)
+                                {
+                                    measure_and_hideme.setText("Approved By Me: Yes");
+                                    approveMeasurement.setVisibility(View.GONE);
+                                }
+                                else
+                                {
+                                    measure_and_hideme.setText("Approved By Me: No");
+                                    approveMeasurement.setVisibility(View.VISIBLE);
+                                }
+                            }
+
+                        }
+                        else {
+                            approveMeasurement.setVisibility(View.GONE);
+                            measure_and_hideme.setText("No measurement taken for this job");
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
                 getSupportActionBar().setTitle(task.getName());
             }
 
@@ -254,10 +291,9 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
                             2);
                 } else {
-                    Intent intent = new Intent(TaskDetail.this, ImagesSelectorActivity.class);
-                    intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 5);
-                    intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, true);
-                    startActivityForResult(intent, REQUEST_CODE);
+                    FilePickerBuilder.getInstance().setMaxCount(10)
+                            .setActivityTheme(R.style.AppTheme)
+                            .pickPhoto(TaskDetail.this);
                 }
             }
         });
@@ -266,9 +302,10 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == FilePickerConst.REQUEST_CODE_PHOTO) {
             if (data != null) {
-                mResults = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS);
+                mResults = new ArrayList<>();
+                mResults.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
                 assert mResults != null;
 
                 System.out.println(String.format("Totally %d images selected:", mResults.size()));
@@ -440,7 +477,6 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists()) {
-                    measure_and_hideme.setVisibility(View.GONE);
                     measurement item = dataSnapshot.getValue(measurement.class);
                     measurementList.add(item);
                     adapter_measurement.notifyDataSetChanged();
@@ -448,13 +484,12 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                     approveMeasurement.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            sendNotifToAllCoordinators(mykey, "approveMeaurement", session.getName() + " approved the measurements for " + task.getName(), task_id);
+                            dbTask.child("measurementApproved").setValue(Boolean.TRUE);
+                            sendNotifToAllCoordinators(mykey, "approveMeasurement", session.getName() + " approved the measurements for " + task.getName(), task_id);
                             sendNotif(mykey, mykey, "approveMeasurement", "You approved the measurements for " + task.getName(), task_id);
                             Toast.makeText(TaskDetail.this, "You approved the measurements for " + task.getName(), Toast.LENGTH_LONG).show();
                         }
                     });
-                } else {
-                    approveMeasurement.setVisibility(View.GONE);
                 }
             }
 
@@ -752,7 +787,6 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                                 Toast.makeText(TaskDetail.this, "Task is yet to be completed", Toast.LENGTH_LONG).show();
                             }
                         }
-
                     }
 
                     @Override
@@ -763,5 +797,32 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onImageClicked(int position, measurement_adapter.MyViewHolder holder) {
+        viewSelectedImages_measure = new AlertDialog.Builder(TaskDetail.this)
+                .setView(R.layout.viewmeasureimage).create();
+        viewSelectedImages_measure.show();
+
+        measurement m = measurementList.get(position);
+        String uri = m.getFleximage();
+
+        TouchImageView viewchatimage = (TouchImageView) viewSelectedImages_measure.findViewById(R.id.chatimage);
+        ImageButton backbutton = (ImageButton) viewSelectedImages_measure.findViewById(R.id.back);
+
+        Glide.with(getApplicationContext())
+                .load(Uri.parse(uri))
+                .placeholder(R.color.black)
+                .crossFade()
+                .centerCrop()
+                .into(viewchatimage);
+
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewSelectedImages_measure.dismiss();
+            }
+        });
     }
 }

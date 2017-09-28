@@ -53,7 +53,7 @@ public class UploadTaskPhotosServices extends IntentService
         mBuilder.setSmallIcon(icon)
                 .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.ic_upload))
                 .setContentTitle(getString(R.string.app_name))
-                .setOngoing(true)
+                .setOngoing(false)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setColor(getApplicationContext().getResources().getColor(R.color.white))
                 .setContentText("Uploading photos...");
@@ -143,7 +143,8 @@ public class UploadTaskPhotosServices extends IntentService
         synchronized (this) {
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(0, mBuilder.build());
-            stopSelf();
-        }
+            }
+        stopSelf();
+
     }
 }

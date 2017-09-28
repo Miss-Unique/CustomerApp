@@ -5,5 +5,6 @@
     <item
         android:id="@+id/taskcomplete"
         android:icon="@mipmap/ic_task_complete"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:title="Completed" />
 </menu>

@@ -20,6 +20,7 @@
 
             <RelativeLayout
                 android:id="@+id/icon_front"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp">
@@ -59,7 +60,7 @@
                         android:layout_alignParentStart="true"
                         android:text="Sender of Notification"
                         android:textSize="15sp"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/colorPrimaryDark"/>
 
                     <TextView
                         android:id="@+id/notification_time"

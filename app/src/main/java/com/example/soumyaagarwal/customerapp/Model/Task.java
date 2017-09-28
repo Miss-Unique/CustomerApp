@@ -9,6 +9,16 @@ import java.io.Serializable;
 public class Task implements Serializable {
     private String taskId,name,startDate,expEndDate,quotationId,qty,desc,customerId;
     private int color = -1;
+    private Boolean measurementApproved;
+
+    public Boolean getMeasurementApproved() {
+        return measurementApproved;
+    }
+
+    public void setMeasurementApproved(Boolean measurementApproved) {
+        this.measurementApproved = measurementApproved;
+    }
+
 
     public int getColor() {
         return color;
@@ -94,5 +104,6 @@ public class Task implements Serializable {
         this.desc = desc;
         this.customerId = customerId;
         this.color = color;
+        measurementApproved=false;
     }
 }
