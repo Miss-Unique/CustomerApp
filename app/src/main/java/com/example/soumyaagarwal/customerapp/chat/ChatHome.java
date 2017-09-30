@@ -104,6 +104,7 @@ public class ChatHome extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), ContactCoordinator.class));
+                getActivity().finish();
             }
         });
 

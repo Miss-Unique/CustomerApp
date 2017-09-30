@@ -69,6 +69,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 if (dataSnapshot.exists()) {
                     NameAndStatus nameAndStatus = dataSnapshot.getValue(NameAndStatus.class);
                     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(MyFirebaseMessagingService.this)
+                            .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.ic_launcher))
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setContentTitle("New Notification from " + nameAndStatus.getName())
                             .setContentText(body)

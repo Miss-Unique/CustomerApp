@@ -568,7 +568,10 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                     if (quotation.getApprovedByCust() != null)
                         appByCustomer.setText(" " + quotation.getApprovedByCust());
                     uploadStatus.setText(" Yes");
+                    if(!quotation.getApprovedByCust().equals("Yes"))
                     approveQuote.setVisibility(View.VISIBLE);
+                    else
+                        approveQuote.setVisibility(View.GONE);
                     download.setVisibility(View.VISIBLE);
                     approveQuote.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -577,6 +580,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                                 sendNotifToAllCoordinators(mykey, "approveQuotation", session.getName() + " approved the quotation for " + task.getName(), task_id);
                                 sendNotif(mykey, mykey, "approveQuotation", "You approved the quotation for " + task.getName(), task_id);
                                 dbQuotation.child("approvedByCust").setValue("Yes");
+                                approveQuote.setVisibility(View.GONE);
                                 Toast.makeText(TaskDetail.this, "You approved the quotation for " + task.getName(), Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(TaskDetail.this, "Quotation Already Approved", Toast.LENGTH_LONG).show();
