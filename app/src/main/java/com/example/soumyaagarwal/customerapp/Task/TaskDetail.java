@@ -388,8 +388,7 @@ public class TaskDetail extends AppCompatActivity implements taskdetailDescImage
                                 serviceIntent.putStringArrayListExtra("picUriList", picUriList);
                                 serviceIntent.putExtra("taskid", task_id);
                                 startService(serviceIntent);
-                                finish();
-                            } else {
+                                } else {
                                 viewSelectedImages.dismiss();
                             }
                         }

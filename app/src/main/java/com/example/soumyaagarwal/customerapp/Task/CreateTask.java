@@ -266,7 +266,7 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
                 if (picUriList.size() > 0)
                 {
                     viewSelectedImages = new AlertDialog.Builder(CreateTask.this)
-                            .setTitle("Selected Images").setView(R.layout.activity_view_selected_image).create();
+                            .setView(R.layout.activity_view_selected_image).create();
                     viewSelectedImages.show();
 
                     final ImageView ImageViewlarge = (ImageView) viewSelectedImages.findViewById(R.id.ImageViewlarge);

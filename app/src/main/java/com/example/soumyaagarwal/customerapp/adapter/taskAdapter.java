@@ -40,6 +40,7 @@ public class taskAdapter extends RecyclerView.Adapter<taskAdapter.MyViewHolder> 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView taskname, timestamp, icon_text,tv_status;
         ImageView imgProfile;
+        RelativeLayout rl_overall;
         public LinearLayout messageContainer;
 
         public MyViewHolder(View itemView) {
@@ -50,6 +51,7 @@ public class taskAdapter extends RecyclerView.Adapter<taskAdapter.MyViewHolder> 
             imgProfile = (ImageView) itemView.findViewById(R.id.icon_profile);
             tv_status=(TextView)itemView.findViewById(R.id.tv_status);
             messageContainer = (LinearLayout) itemView.findViewById(R.id.message_container);
+            rl_overall = (RelativeLayout)itemView.findViewById(R.id.rl_overall);
         }
     }
 
@@ -90,6 +92,7 @@ public class taskAdapter extends RecyclerView.Adapter<taskAdapter.MyViewHolder> 
                                 else {
                                     holder.tv_status.setText("Complete");
                                     dbTask.removeEventListener(this);
+                                    holder.rl_overall.setBackgroundResource(R.color.backgroundColorLight);
                                 }
                             }
                         }

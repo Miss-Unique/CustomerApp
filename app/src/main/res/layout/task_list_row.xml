@@ -6,6 +6,7 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
+    android:id="@+id/rl_overall"
     android:paddingBottom="@dimen/padding_list_row"
     android:paddingLeft="?listPreferredItemPaddingLeft"
     android:paddingRight="?listPreferredItemPaddingRight"
