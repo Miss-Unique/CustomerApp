@@ -69,7 +69,7 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
     MarshmallowPermissions marshMallowPermission;
     private ArrayList<String> mResults;
     private AlertDialog descriptionDialog, viewSelectedImages ;
-    static private ArrayList<String> picUriList = new ArrayList<>();
+    private ArrayList<String> picUriList = new ArrayList<>();
     private int REQUEST_CODE =1;
     private String desc;
     LinearLayoutManager linearLayoutManager;
@@ -345,6 +345,7 @@ public class CreateTask extends AppCompatActivity implements CalendarDatePickerD
 
                                 tadapter = new taskimagesadapter(picUriList, getApplicationContext());
                                 desc_photo_grid.setAdapter(tadapter);
+                                //picUriList.clear();
                                 viewSelectedImages.dismiss();
 
                             } else {
